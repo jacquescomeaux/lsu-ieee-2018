@@ -3,11 +3,11 @@
 
 class Coord {
   public:
-    double x;
-    double y;
+    float x;
+    float y;
     Coord();
-    Coord(double, double);
-    double dist(Coord); //distance between this coord and another coord
+    Coord(float, float);
+    float dist(Coord); //distance between this coord and another coord
 };
 
 #endif

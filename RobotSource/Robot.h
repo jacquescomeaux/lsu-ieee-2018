@@ -19,16 +19,26 @@ static const int PORTNUM = 24;
 class Robot {
   private:
     Coord location;
-    double heading;
-    double totaldist; //Total distance covered
-    double totalrot; //Total robot rotation
-    double totalvert; //Total vertical arm movement
+    float heading;
+    //float totaldist; //Total distance covered
+    //float totalrot; //Total robot rotation
+    //float totalvert; //Total vertical arm movement
     
     union multinum {
       float floating;
       int integer;
       unsigned char data[4];
     };
+    
+//    Drivetrain wheels;
+//    ProximitySensor ultra;
+//    SensorRing line_sensors;
+//    Camera logitech;
+//    Camera noir;
+//    
+//    MotorController arduino;
+//    RGBSensor token sensor;
+//    SortingSystem sorter;
     
     int receiveNumber() const;
     float receiveNumber() const;
@@ -43,26 +53,32 @@ class Robot {
     Robot(Coord l);
     Controller control;
     
+    void determineLocation();
+
     Coord getLocation() const;
+    float getHeading() const;
     
-    Coord getLocation() const;
-    double getHeading() const;
-    //void moveToLocation(Coord);
-    void rotateToAngle(double);
-    void moveToNearestToken(Board*); //Moves robot to nearest incorrect token on board
-    void pickUpToken(Board*);  //Picks up first token found within GRAB_DIST
+    void rotateToAngle(float);
+    void followLine(); //Follows line until intersection
+    
+    
+    void pickUpToken();  
     color_opt checkTokenColor() const; //Returns color of currently held token
     void dropToken(); //Drops currently held token
     void printDists() const; //Prints distance totals to stdout
-    double getDist() const;
-    double getRot() const;
-    double getVert() const;
-    void recordMoves(bool);
+    //void moveToLocation(Coord);
+    //void moveToNearestToken(Board*); //Moves robot to nearest incorrect token on board
+    
+    
+    //void recordMoves(bool);
+    //float getDist() const;
+    //float getRot() const;
+    //float getVert() const;
 };
 
 class SortBot : public Robot {
   private:
-    double totalplate;
+    float totalplate;
     int topplate; //Sorting plate position
     int botplate; //Selector plate positon
     std::vector<Token*> stacks[NUM_COLORS]; //Sorting stacks on robot, one for each color
@@ -75,7 +91,7 @@ class SortBot : public Robot {
     void sortToken(); //Places currently held token in appropriate color stack
     void dropStack(color_opt); //Drops entire colored stack of tokens
     void printDists() const;
-    double getPlate() const;
+    float getPlate() const;
 };
 
 #endif
