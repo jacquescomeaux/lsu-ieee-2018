@@ -15,7 +15,7 @@ class Robot : private Drivetrain {
     Camera location_cam;
     Drivetrain drivetrain;
     SensorRing line_sensor_array;
-    ProximitySensor prox_sensor;
+    ProximitySensor prox_sensors[4];
     LineFollower line_follower;
 };
 
