@@ -11,6 +11,13 @@ class SerialLink {
     float receiveNumber() const;
     void transmitNumber(int) const;
     void transmitNumber(float) const;
+    void receiveBuffer(void*, int) const;
+    void transmitBuffer(void*, int) const;
+    union multinum {
+      float floating;
+      int integer;
+      unsigned char data[4];
+    };
 };
 
 #endif

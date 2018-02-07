@@ -10,29 +10,40 @@ SerialLink::~SerialLink() {
 }
 
 int SerialLink::receiveNumber() const {
-  return 0;
+  union multinum n;
+  //int bytes_received = 0;
+  SerialLink::receiveBuffer(n.data, sizeof(int));
+  //while(bytes_received != sizeof(int)) bytes_received += RS232_PollComport(PORTNUM, n.data + bytes_received, sizeof(int) - bytes_received);
+  return n.integer;
 }
 
-    union multinum {
-      float floating;
-      int integer;
-      unsigned char data[4];
-    };
 float SerialLink::receiveNumber() const {
-  union intchar n;
-  int bytes_received = 0;
-  while(bytes_received != 4) bytes_received += RS232_PollComport(PORTNUM, n.data + bytes_received, sizeof(int) - bytes_received);
-  return n.number;
-  return 0;
+  union multinum n;
+  SerialLink::receiveBuffer(n.data, sizeof(float));
+  //float bytes_received = 0;
+  //while(bytes_received != sizeof(float)) bytes_received += RS232_PollComport(PORTNUM, n.data + bytes_received, sizeof(float) - bytes_received);
+  return n.floating;
 }
 
-void SerialLink::transmitNumber(int) const {
-  union intchar n;
-  n.number = t;
-  RS232_SendBuf(PORTNUM, n.data, sizeof(int));
-  return;
+void SerialLink::transmitNumber(int n) const {
+  //union multinum n;
+  //n.integer = t;
+  //RS232_SendBuf(PORTNUM, n.data, sizeof(int));
+  SerialLink::transmitBuffer(&n, sizeof(int));
 }
 
 void SerialLink::transmitNumber(float) const {
-  return;
+  //union multinum n;
+  //n.floating = t;
+  //RS232_SendBuf(PORTNUM, n.data, sizeof(float));
+  SerialLink::transmitBuffer(&n, sizeof(float));
+}
+
+void receiveBuffer(void* buf, int size) const {
+  int bytes_received = 0;
+  while(bytes_received != size) RS232_PollComport(PROTNUM, buf + bytes_received, size - bytes_received);
+}
+
+void transmitBuffer(void* buf, int size) const {
+  RS232_SendBuf(PORTNUM, buf, size);
 }

@@ -41,15 +41,15 @@ class Robot {
   public:
     Robot();
     Robot(Coord l);
-    Controller control;
+    //Controller control;
     
-    void determineLocation();
+    //void determineLocation();
 
     Coord getLocation() const;
     float getHeading() const;
     
-    void rotateToAngle(float);
-    void followLine(); //Follows line until intersection
+    //void rotateToAngle(float);
+    //void followLine(); //Follows line until intersection
     
     
     void pickUpToken();  

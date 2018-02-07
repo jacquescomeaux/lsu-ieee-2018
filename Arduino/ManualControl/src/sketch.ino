@@ -10,13 +10,18 @@ int currentSpeeds[4];
 void setup() {
   AFMS[0] = Adafruit_MotorShield(0x61);
   AFMS[1] = Adafruit_MotorShield(0x62);
-  motors[0] = AFMS[0].getMotor(1);
+  for(int i = 0; i < 4; i++) motors[i] = AFMS[i/2].getMotor((i%2)+1);
+  /*motors[0] = AFMS[0].getMotor(1);
   motors[1] = AFMS[0].getMotor(2);
   motors[2] = AFMS[1].getMotor(1);
   motors[3] = AFMS[1].getMotor(2);
+  */
+  
   for(int i = 0; i < 2; i++) AFMS[i].begin();  // create with the default frequency 1.6KHz
+
   for(int i = 0; i < 4; i++) motors[i]->setSpeed(55);
   for(int i = 0; i < 4; i++) currentSpeeds[i] = 55;
+  
   for(int i = 0; i < 4; i++) motors[i]->run(RELEASE);
   Serial.begin(9600);
   Serial.println("Adafruit Motorshield v2 - DC Motor test!");
