@@ -1,3 +1,7 @@
+<<<<<<< HEAD
+=======
+#include "BufferToggle.h"
+>>>>>>> 565aa7f17a599692e95f159fc34535c5d90dd8ae
 #include <iostream>
 #include "rs232.h"
 
