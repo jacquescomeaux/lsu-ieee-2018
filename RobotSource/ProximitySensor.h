@@ -2,8 +2,9 @@
 #define PROXIMITYSENSOR_H
 
 class ProximitySensor : private SerialLink {
-  public:
+  protected:
     ProximitySensor();
+  public:
     float getDistance();
 };
 

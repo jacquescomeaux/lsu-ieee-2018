@@ -4,7 +4,7 @@
 #include "Coord.h"
 #include "Drivetrain.h"
 
-class Robot : private Drivetrain {
+class Robot : private Drivetrain, private SensorRing, private, ProximitySensor, private LineFollower {
   private:
     Coord location;
   public:
@@ -19,7 +19,7 @@ class Robot : private Drivetrain {
     LineFollower line_follower;
 };
 
-class SortBot : public Robot {
+class SortBot : public Robot, private SortingSystem {
   public:
     SortBot();
     SortingSystem sorter;

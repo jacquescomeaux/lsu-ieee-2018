@@ -2,8 +2,9 @@
 #define LINEFOLLOWER_H
 
 class LineFollower : private SerialLink {
-  public:
+  protected:
     LineFollower();
+  public:
     void followUntilIntersection();
 };
 

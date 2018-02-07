@@ -13,8 +13,9 @@ class SensorRing : private SerialLink {
         bool onLine() {return true;}
     };
     SensorStrip line_sensors[8];
-  public:
+  protected:
     SensorRing();
+  public:
     bool onLine();
     bool atIntersection();
 };
