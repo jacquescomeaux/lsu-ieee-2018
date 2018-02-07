@@ -1,7 +1,3 @@
-<<<<<<< HEAD
-=======
-#include "BufferToggle.h"
->>>>>>> 565aa7f17a599692e95f159fc34535c5d90dd8ae
 #include <iostream>
 #include "rs232.h"
 
@@ -11,7 +7,7 @@ int main() {
   RS232_OpenComport(PORTNUM, 9600, "8N1");
   unsigned char ch = '\0';
   std::cout << "Press q to quit\n";
-  while(ch != 'q') {
+  while(ch != 'p') {
     RS232_SendByte(PORTNUM, ch);
     std::cin >> ch;
   }
