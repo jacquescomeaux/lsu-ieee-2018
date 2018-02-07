@@ -2,19 +2,24 @@
 #define SORTINGSYSTEM_H
 
 #include "Token.h"
+#include "Color.h"
 
-class SortingSystem : private MagnetArm {
+#include <vector>
+
+class SortingSystem : private MagnetArm, private RGBSensor, private SortingPlate  {
   private:
     MagnetArm token_arm;
     LED token_light;
     RGBSensor color_sensor;
     SortingPlate storage_plate, selector_plate;
+    std::vector<Token> tokens;
   protected:
     SortingSystem();
   public:
-    int checkTokenColor();
+    void pickUpToken();
+    Color checkTokenColor();
     void sortToken();
-    void dropTokenStack();
+    void dropTokenStack(Color);
 };
 
 #endif

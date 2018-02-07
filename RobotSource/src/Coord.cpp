@@ -1,4 +1,5 @@
-#include "Coord.h"
+#include "../include/Coord.h"
+
 #include <cmath>
 
 Coord::Coord() {}

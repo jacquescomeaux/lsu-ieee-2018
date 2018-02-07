@@ -1,4 +1,4 @@
-#include "Magnet.h"
+#include "../include/Magnet.h"
 
 void MagnetArm::goToHeight(float h) {}
 

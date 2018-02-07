@@ -1,4 +1,4 @@
-#include "Camera.h"
+#include "../include/Camera.h"
 
 Camera::Camera() {
   name = "untitled_camera";

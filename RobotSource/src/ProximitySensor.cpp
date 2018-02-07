@@ -1,4 +1,4 @@
-#include "ProximitySensor.h"
+#include "../include/ProximitySensor.h"
 
 ProximitySensor::ProximitySensor() {}
 
