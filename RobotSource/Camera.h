@@ -7,6 +7,7 @@ class Camera {
   private:
     std::string name;
   public:
+    Camera();
     Camera(std::string name);
     std::string getName();
 };

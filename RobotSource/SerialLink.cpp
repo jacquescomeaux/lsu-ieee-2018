@@ -41,7 +41,7 @@ void SerialLink::transmitNumber(float) const {
 
 void receiveBuffer(void* buf, int size) const {
   int bytes_received = 0;
-  while(bytes_received != size) RS232_PollComport(PROTNUM, buf + bytes_received, size - bytes_received);
+  while(bytes_received != size) RS232_PollComport(PORTNUM, buf + bytes_received, size - bytes_received);
 }
 
 void transmitBuffer(void* buf, int size) const {
