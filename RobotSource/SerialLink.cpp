@@ -1,11 +1,11 @@
 #include "SerialLink.h"
 #include "rs232.h"
 
-SerialLink::SerialLink() : PORTNUM(24), BAUD(9600), THING("8N1"){
-  RS232_OpenComport(PORTNUM, 9600, "8N1");
+SerialLink::SerialLink() : PORTNUM(24), BAUD(9600), CONFIG("8N1") {
+  RS232_OpenComport(PORTNUM, BAUD, CONFIG);
 }
 
-SerialLink::~SerialLink() : PORTNUM(24) {
+SerialLink::~SerialLink() {
   RS232_CloseComport(PORTNUM);
 }
 
@@ -13,6 +13,11 @@ int SerialLink::receiveNumber() const {
   return 0;
 }
 
+    union multinum {
+      float floating;
+      int integer;
+      unsigned char data[4];
+    };
 float SerialLink::receiveNumber() const {
   union intchar n;
   int bytes_received = 0;

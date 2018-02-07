@@ -5,7 +5,8 @@ class SerialLink {
   protected:
     SerialLink();
     ~SerialLink();
-    const int PORTNUM;
+    const string CONFIG:
+    const int PORTNUM, BAUD;
     int receiveNumber() const;
     float receiveNumber() const;
     void transmitNumber(int) const;

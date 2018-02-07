@@ -14,7 +14,6 @@ static const double VERT_DIST = 0.20; //Arm vertical displacement
 static const double SIDE_DIST = 0.10; //StoreBot arm horizontal displacement
 static const int STACK_POS[NUM_COLORS] = {4, 3, 2, 5, 6, 7, 1}; //Order of token colors on sorting plate
 
-static const int PORTNUM = 24;
 
 class Robot {
   private:
@@ -24,11 +23,6 @@ class Robot {
     //float totalrot; //Total robot rotation
     //float totalvert; //Total vertical arm movement
     
-    union multinum {
-      float floating;
-      int integer;
-      unsigned char data[4];
-    };
     
 //    Drivetrain wheels;
 //    ProximitySensor ultra;
@@ -40,10 +34,6 @@ class Robot {
 //    RGBSensor token sensor;
 //    SortingSystem sorter;
     
-    int receiveNumber() const;
-    float receiveNumber() const;
-    void transmitNumber(int t) const{
-    void transmitNumber(float t) const{
 
   protected:
     Token* held; //Token arm currently held token
