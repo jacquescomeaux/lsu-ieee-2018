@@ -9,7 +9,7 @@
 #include "LineFollower.h"
 #include "SortingSystem.h"
 
-class Robot : private Drivetrain, private LineFollower {
+class Robot : public Drivetrain, public LineFollower {
   private:
     Coord location;
     Camera token_cam;
@@ -22,7 +22,7 @@ class Robot : private Drivetrain, private LineFollower {
     void setLocation(Coord);
 };
 
-class SortBot : public Robot, private SortingSystem {
+class SortBot : public Robot, public SortingSystem {
   public:
     SortBot();
     SortingSystem sorter;
