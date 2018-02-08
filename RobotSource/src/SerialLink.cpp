@@ -2,10 +2,16 @@
 #include "../include/rs232.h"
 
 SerialLink::SerialLink() : PORTNUM(24), BAUD(9600), CONFIG("8N1") {
-  RS232_OpenComport(PORTNUM, BAUD, CONFIG);
 }
 
 SerialLink::~SerialLink() {
+}
+
+void SerialLink::serialInit() {
+  RS232_OpenComport(PORTNUM, BAUD, CONFIG);
+}
+
+void SerialLink::serialQuit() {
   RS232_CloseComport(PORTNUM);
 }
 

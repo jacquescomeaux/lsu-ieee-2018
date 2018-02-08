@@ -1,6 +1,12 @@
 #include "../include/Robot.h"
 
-Robot::Robot() {}
+Robot::Robot() {
+  serialInit();
+}
+
+Robot::~Robot() {
+  serialQuit();
+}
 
 Coord Robot::getLocation() {
   return location;
