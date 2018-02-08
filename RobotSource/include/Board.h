@@ -42,9 +42,10 @@ class Board {
     Board(double, double);
     double getLength() const;
     double getWidth() const;
-    void populate(int); //Generate a random token arrangement per round specifications
+    /*void populate(int); //Generate a random token arrangement per round specifications
     void populate(const std::vector<Token>&); //Load a premade list of tokens onto the board
     void populate(const std::vector<Token>&, int); //Load a premade list of tokens into the token depressions
+    */
     void checkTokens() const; //Print token locations and check for correct placement
     void clear(); //Remove all tokens from board
 };

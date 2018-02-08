@@ -16,14 +16,14 @@ double Board::getWidth() const {
   return width;
 }
 
-void Board::populate(int round) { 
+/*void Board::populate(int round) { 
   if(!tokens.empty()) return;
-  for(int i = 0; i < NUM_COLORS-1; i++) for(int j = 0; j < round+1 && j < 3; j++) tokens.push_back(Token(static_cast<color_opt>(i)));
+  for(int i = 0; i < NUM_COLORS-1; i++) for(int j = 0; j < round+1 && j < 3; j++) tokens.push_back(Token(static_cast<Color>(i)));
   if(round == 3) for(int i = 0; i < 6; i++) tokens.push_back(Token(GRAY));
   std::random_device rd;
   std::mt19937 g(rd());
   std::shuffle(std::begin(tokens), std::end(tokens), g);
-  for(int i = 0; i < tokens.size(); i++) if(tokens[i].getColor() == static_cast<color_opt>(i%6)) {
+  for(int i = 0; i < tokens.size(); i++) if(tokens[i].getColor() == static_cast<Color>(i%6)) {
     int s = 0;
     while(tokens[s].getColor() == tokens[i].getColor()) s++;
     std::iter_swap(tokens.begin()+s, tokens.begin()+i);
@@ -39,29 +39,29 @@ void Board::populate(const std::vector<Token>& t) {
 void Board::populate(const std::vector<Token>& t, int r) {
   tokens = t;
   for(int i = 0; i < 6*(r+1); i++) tokens[i].setLocation(HOLES[i/6][i%6]);
-}
+}*/
 
 void Board::checkTokens() const {
   if(tokens.empty()) return;
   for(int i = 0; i < tokens.size(); i++) {
     double x = tokens[i].getLocation().x;
     double y = tokens[i].getLocation().y;
-    color_opt c = tokens[i].getColor();
+    Color c = tokens[i].getColor();
     std::string s;
     switch(c) {
-      case RED : s = "Red";
+      case Color::RED : s = "Red";
         break;
-      case GREEN : s = "Green";
+      case Color::GREEN : s = "Green";
         break;
-      case BLUE : s = "Blue";
+      case Color::BLUE : s = "Blue";
         break;
-      case CYAN : s = "Cyan";
+      case Color::CYAN : s = "Cyan";
         break;
-      case MAGENTA : s = "Magenta";
+      case Color::MAGENTA : s = "Magenta";
         break;
-      case YELLOW : s = "Yellow";
+      case Color::YELLOW : s = "Yellow";
         break;
-      case GRAY : s = "Gray";
+      case Color::GRAY : s = "Gray";
         break;
       default : s = "Error";
     }
