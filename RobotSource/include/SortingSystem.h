@@ -3,10 +3,14 @@
 
 #include "Token.h"
 #include "Color.h"
+#include "MagnetArm.h"
+#include "LED.h"
+#include "RGBSensor.h"
+#include "SortingPlate.h"
 
 #include <vector>
 
-class SortingSystem : private MagnetArm, private RGBSensor, private SortingPlate  {
+class SortingSystem {
   private:
     MagnetArm token_arm;
     LED token_light;

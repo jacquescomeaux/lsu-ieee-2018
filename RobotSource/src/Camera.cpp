@@ -1,13 +1,13 @@
 #include "../include/Camera.h"
 
 Camera::Camera() {
-  name = "untitled_camera";
+  this->name = "untitled_camera";
 }
 
 Camera::Camera(std::string name) {
   this->name = name;
 }
 
-std::string getName() {
+std::string Camera::getName() {
   return name;
 }

@@ -8,4 +8,4 @@ Color SortingSystem::checkTokenColor() {return Color::NONE;}
 
 void SortingSystem::sortToken() {}
 
-void SortingSystem::dropTokenStack() {}
+void SortingSystem::dropTokenStack(Color c) {}

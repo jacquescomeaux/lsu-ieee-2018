@@ -2,4 +2,4 @@
 
 RGBSensor::RGBSensor() {}
 
-Color RGBSensor::getColor() {return COLOR::RED;}
+Color RGBSensor::getColor() {return Color::NONE;}

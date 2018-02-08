@@ -1,8 +1,10 @@
 #ifndef WHEEL_H
 #define WHEEL_H
 
-class Wheel : private SerialLink{
-  protected:
+#include "SerialLink.h"
+
+class Wheel : private SerialLink {
+  public:
     Wheel();
 };
 

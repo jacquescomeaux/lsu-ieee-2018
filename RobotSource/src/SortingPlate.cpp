@@ -1,4 +1,4 @@
-#include "../include/SortingPlate"
+#include "../include/SortingPlate.h"
 
 SortingPlate::SortingPlate() {}
 

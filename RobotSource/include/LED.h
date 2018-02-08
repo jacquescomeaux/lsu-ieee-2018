@@ -1,13 +1,15 @@
 #ifndef LED_H
 #define LED_H
 
-class LED {
+#include "SerialLink.h"
+
+class LED : private SerialLink {
   private:
     bool on;
   public:
     LED();
     void setState(/*LEDSTATE*/);
-    void isOn();
+    bool isOn();
 };
 
 #endif

@@ -2,11 +2,11 @@
 #define RGBSENSOR_H
 
 #include "Color.h"
+#include "SerialLink.h"
 
-class RGBSensor {
-  protected:
-    RGBSensor();
+class RGBSensor : private SerialLink {
   public:
+    RGBSensor();
     Color getColor();
 };
 

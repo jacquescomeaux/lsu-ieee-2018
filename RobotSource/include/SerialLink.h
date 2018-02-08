@@ -5,12 +5,12 @@ class SerialLink {
   protected:
     SerialLink();
     ~SerialLink();
-    const string CONFIG:
+    const char* CONFIG;
     const int PORTNUM, BAUD;
-    int receiveNumber() const;
-    float receiveNumber() const;
-    void transmitNumber(int) const;
-    void transmitNumber(float) const;
+    int receiveInt() const;
+    float receiveFloat() const;
+    void transmitInt(int) const;
+    void transmitFloat(float) const;
     void receiveBuffer(void*, int) const;
     void transmitBuffer(void*, int) const;
     union multinum {

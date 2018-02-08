@@ -1,14 +1,15 @@
 #ifndef SORTINGPLATE_H
 #define SORTINGPLATE_H
 
-class SortingPlate {
+#include "SerialLink.h"
+
+class SortingPlate : private SerialLink {
   private:
     float position;
-  protected:
-    SortingPlate();
   public:
+    SortingPlate();
     void reset();
-    void setPosition();
+    void setPosition(float);
     float getPosition();
 };
 

@@ -1,6 +1,8 @@
 #ifndef SENSORRING_H
 #define SENSORRING_H
 
+#include "SerialLink.h"
+
 class SensorRing : private SerialLink {
   private:
     class SensorStrip {
@@ -13,9 +15,8 @@ class SensorRing : private SerialLink {
         bool onLine() {return true;}
     };
     SensorStrip line_sensors[8];
-  protected:
-    SensorRing();
   public:
+    SensorRing();
     bool onLine();
     bool atIntersection();
 };

@@ -13,9 +13,9 @@ Coord Token::getLocation() const {
 }
 
 void Token::setColor(Color c) {
-  this->color = c;
+  this->bottom_color = c;
 }
 
 Color Token::getColor() const {
-  return this->color;
+  return this->bottom_color;
 }
