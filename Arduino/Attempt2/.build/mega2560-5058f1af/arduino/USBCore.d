@@ -1,5 +1,5 @@
-.build/mega2560/src/sketch.d .build/mega2560/src/sketch.o: .build/mega2560/src/sketch.cpp \
- /home/ieee2018/WorkingDirectory/Arduino/Attempt2/lib/Robot.h \
+.build/mega2560-5058f1af/arduino/USBCore.d .build/mega2560-5058f1af/arduino/USBCore.o: /usr/share/arduino/hardware/arduino/cores/arduino/USBCore.cpp \
+ /usr/share/arduino/hardware/arduino/cores/arduino/Platform.h \
  /usr/share/arduino/hardware/arduino/cores/arduino/Arduino.h \
  /usr/share/arduino/hardware/arduino/cores/arduino/binary.h \
  /usr/share/arduino/hardware/arduino/cores/arduino/WCharacter.h \
@@ -10,8 +10,5 @@
  /usr/share/arduino/hardware/arduino/cores/arduino/Printable.h \
  /usr/share/arduino/hardware/arduino/cores/arduino/new.h \
  /usr/share/arduino/hardware/arduino/variants/mega/pins_arduino.h \
- /usr/share/arduino/libraries/Wire/Wire.h \
- /usr/share/arduino/hardware/arduino/cores/arduino/Stream.h \
- /usr/share/arduino/libraries/Adafruit_Motor_Shield_V2_Library-master/Adafruit_MotorShield.h \
- /usr/share/arduino/libraries/Adafruit_Motor_Shield_V2_Library-master/utility/Adafruit_MS_PWMServoDriver.h \
- /usr/share/arduino/libraries/Adafruit_Motor_Shield_V2_Library-master/utility/Adafruit_MS_PWMServoDriver.h
+ /usr/share/arduino/hardware/arduino/cores/arduino/USBAPI.h \
+ /usr/share/arduino/hardware/arduino/cores/arduino/USBDesc.h

@@ -1,5 +1,4 @@
-.build/mega2560/src/sketch.d .build/mega2560/src/sketch.o: .build/mega2560/src/sketch.cpp \
- /home/ieee2018/WorkingDirectory/Arduino/Attempt2/lib/Robot.h \
+.build_ano/mega2560/src/sketch.ino.cpp.d .build_ano/mega2560/src/sketch.ino.o: .build_ano/mega2560/src/sketch.ino.cpp \
  /usr/share/arduino/hardware/arduino/cores/arduino/Arduino.h \
  /usr/share/arduino/hardware/arduino/cores/arduino/binary.h \
  /usr/share/arduino/hardware/arduino/cores/arduino/WCharacter.h \
