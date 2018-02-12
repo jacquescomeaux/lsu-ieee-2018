@@ -22,10 +22,10 @@ int main() {
   cv::Mat frame;
 
   while(true) {
-    /*cap >> frame;
+    cap >> frame;
     cv::imshow("Live Video", frame);
     if(cv::waitKey(33) >= 0) break;
-    */
+    
     bool bSuccess = cap.read(frame);
     if(!bSuccess) break;
     cv::Mat imgHSV;
