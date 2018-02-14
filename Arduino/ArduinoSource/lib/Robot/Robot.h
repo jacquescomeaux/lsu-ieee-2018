@@ -1,28 +1,28 @@
 #ifndef ROBOT_H
 #define ROBOT_H
 
-//#include "Coord.h"
-//#include "Drivetrain.h"
-//#include "SensorRing.h"
-//#include "ProximitySensor.h"
-//#include "LineFollower.h"
-//#include "SortingSystem.h"
+#include <Wheel.h>
+#include <ProximitySensor.h>
+#include <LineSensor.h>
+#include <SortingSystem.h>
 
-class Robot {//: public Drivetrain, public LineFollower {
-  //private:
-   // Coord location;
-   // SensorRing line_sensor_array;
-   // ProximitySensor prox_sensors[4];
+class Robot {
+  private:
+    Wheel wheels[4];
+    ProximitySensor edge_detectors[4];
+    LineSensor line_sensors[8];
   public:
     Robot();
-    //Coord getLocation();
-    //void setLocation(Coord);
+    //void move();
+    void stop();
+    void checkEdges();
 };
 
-/*class SortBot : public Robot, public SortingSystem {
+class SortBot : public Robot, public SortingSystem {
+  private:
+    SortingSystem sorter;
   public:
     SortBot();
-    SortingSystem sorter;
 };
-*/
+
 #endif

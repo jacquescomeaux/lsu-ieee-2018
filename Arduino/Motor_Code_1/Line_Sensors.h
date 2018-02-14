@@ -8,7 +8,8 @@ class Line_Sensors {
   public:
 
 // Node (Intersection) Identifier
-    void update_node() { 
+// Assigns each recognized intersection to an integer. Ex: tag = 1, 2, 3, ..... 12. These integers are used as ID's for each individual intersection so that the program can keep track of its placement.
+   void update_node() { 
       if (sensors_3[2] > 2000 && sensors_7[2] > 2000){                                                            // Horizontal Line tag
             tag = 1; 
       }
@@ -47,11 +48,15 @@ class Line_Sensors {
         }     
     }
 
-// Horizontl intersection check
+
+
+
+// Horizontal intersection check. Checks all new intersections for any indication of a new intersection while robot is line following.
+// These routines will occur as a check constantly through the looping. This loops with the motors. This will constantly check for any updated intersections. To tell the code to tailor its executions to a new intersection it recognized.  
   void check_node_1() {
        if (sensors_3[2] > 2000 && sensors_7[2] > 2000){ 
             count_1++;
-            setup();
+            setup();        // Loop back to the top of the setup routine in the main code file.
         }
         else if (sensors_1[2] > 2000 && sensors_3[2] > 2000 && sensors_5[2] > 2000 && sensors_7[2] > 2000){
             count_1++;
@@ -621,7 +626,7 @@ class Line_Sensors {
           }
 
 // Blue Intersection check
-  void check_node_count_12(){
+  void check_node_12(){
           if (sensors_3[2] > 2000 && sensors_7[2] > 2000){ 
               count_12++;
               setup();
