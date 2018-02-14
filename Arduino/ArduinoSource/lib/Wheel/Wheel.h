@@ -3,6 +3,8 @@
 
 class Wheel {
   private:
+    Adafruit_MotorShield AFMS[2];
+    Adafruit_DCMotor* motors[4];
   public:
     Wheel(); 
 };
