@@ -15,7 +15,7 @@ void setup() {
 }
 
 void loop() {
-  for(int i; i < 4; i++) if(edge_sensor[i].edgeDetected()) doSomething(i);
-  if(Serial.available()) parseCommand();
-  approachSpeed();
+  for(int i; i < 4; i++);// if(edge_sensor[i].edgeDetected()) doSomething(i);
+  if(Serial.available());// parseCommand();
+  //approachSpeed();
 }
