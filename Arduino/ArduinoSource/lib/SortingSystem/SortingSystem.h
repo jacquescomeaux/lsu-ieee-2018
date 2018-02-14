@@ -1,11 +1,11 @@
 #ifndef SORTINGSYSTEM_H
 #define SORTINGSYSTEM_H
 
-#include <Color.h>
+//#include <Color.h>
 #include <MagnetArm.h>
 #include <LED.h>
-#include <RGBSensor.h>
-#include <SortingPlate.h>
+//#include <RGBSensor.h>
+//#include <SortingPlate.h>
 
 class SortingSystem {
   private:
@@ -17,9 +17,9 @@ class SortingSystem {
     SortingSystem();
   public:
     void pickUpToken();
-    Color checkTokenColor();
+  //  Color checkTokenColor();
     void sortToken();
-    void dropTokenStack(Color);
+    //void dropTokenStack(Color);
 };
 
 #endif

@@ -16,11 +16,10 @@ class Robot {
     //void move();
     void stop();
     void checkEdges();
+    void approachSpeed();
 };
 
 class SortBot : public Robot, public SortingSystem {
-  private:
-    SortingSystem sorter;
   public:
     SortBot();
 };

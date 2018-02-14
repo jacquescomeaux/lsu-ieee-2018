@@ -11,8 +11,8 @@ class LED {
     bool on;
   public:
     LED();
-    void setState(LEDSTATE);
-    void toggleState()
+    void setState(LED_STATE);
+    void toggleState();
     bool isOn();
 };
 
