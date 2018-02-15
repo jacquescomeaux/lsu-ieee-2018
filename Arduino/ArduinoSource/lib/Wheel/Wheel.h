@@ -1,12 +1,16 @@
 #ifndef WHEEL_H
 #define WHEEL_H
 
+#include <Adafruit_MotorShield.h>
+#include "utility/Adafruit_MS_PWMServoDriver.h"
+
 class Wheel {
   private:
-    //Adafruit_MotorShield AFMS[2];
-    //Adafruit_DCMotor* motors[4];
+    int speed;
+    Adafruit_DCMotor* motor;
   public:
-    Wheel(); 
+    Wheel(Adafruit_DCMotor*); 
+    void stop();
 };
 
 #endif
