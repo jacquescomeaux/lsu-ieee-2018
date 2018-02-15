@@ -67,7 +67,23 @@ void Robot::correctErrors() {
   int error = line_sensors[static_cast<int>(current_direction)].getLineError();  
   int adjustment = this->KP * error + this->KD * (error - last_error);
   this->last_error = error;
-  for(int i = 0; i < 4; i++) wheels[i].adjustSpeed((i < 2) ? adjustment : -adjustment);
+  switch(dir) {
+    case(Direction::FRONT || Direction::BACK):
+      for(int i = 0; i < 4; i++) wheels[i].adjustSpeed((i<2)?adjustment:-adjustment);
+      break;
+    case(Direction::LEFT || Direction::RIGHT):
+      for(int i = 0; i < 4; i++) wheels[i].adjustSpeed((i<2)?adjustment:-adjustment);
+      wheels[0].adjustSpeed(adjustment);
+      wheels[1].adjustSpeed(adjustment);
+      wheels[2].adjustSpeed(adjustment);
+      wheels[3].adjustSpeed(adjustment);
+      break;
+    case(Direction::FRONT_LEFT || Direction::BACK_RIGHT):
+      for(int i = 0; i < 4; i++) wheels[i].setSpeed((1 - (i % 2)) * speed);
+      break;
+    case(Direction::FRONT_RIGHT || Direction::BACK_LEFT):
+      for(int i = 0; i < 4; i++) wheels[i].setSpeed(-1 * (i % 2) * speed);
+      break;
 }
 
 void Robot::approachSpeed() {
