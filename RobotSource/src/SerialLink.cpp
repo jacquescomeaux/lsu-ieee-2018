@@ -1,4 +1,6 @@
 #include "../include/SerialLink.h"
+//#include <libserialport.h>
+
 #include "../include/rs232.h"
 
 SerialLink::SerialLink() : PORTNUM(24), BAUD(9600), CONFIG("8N1") {
