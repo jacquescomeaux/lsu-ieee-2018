@@ -1,6 +1,9 @@
 #include "Robot.h"
 
 Robot::Robot() :
+  KP(0.1f),
+  KD(5.0f),
+  default_speed(70),
   AFMS {
     Adafruit_MotorShield(0x61),
     Adafruit_MotorShield(0x62),
@@ -27,25 +30,57 @@ Robot::Robot() :
     LineSensor(48),
     LineSensor(51)
   } {
-  //wow
+  stop();
+} 
+
+void Robot::correctErrors() {
+  int error = line_sensors[static_cast<int>(current_direction)].getLineError();  
+  int adjustment = this->KP * error + this->KD * (error - last_error);
+  this->last_error = error;
+  for(int i = 0; i < 4; i++) wheels[i].adjustSpeed((i<2)?adjustment:-1*adjustment);
 }
 
-/*Robot::Robot() {
-  unsigned char pin = 30;
-  unsigned char u = 0;
-  for(auto s : line_sensors) s = LineSensor((u++)+pin);
-}*/
-
 void Robot::approachSpeed() {
-  
+  for(auto w : wheels) w.approachSpeed();
+  if(following_line) correctErrors();
 }
 
 void Robot::checkEdges() {
   for(auto s : edge_detectors) if(s.edgeDetected()) stop();
 }
 
-void Robot::move(DIRECTION dir) {
+void Robot::move(Direction dir) {
+  move(dir, default_speed);
+}
 
+void Robot::move(Direction dir, int speed) {
+  this->following_line = false;
+  switch(dir) {
+    case(Direction::FRONT):
+      for(auto w : wheels) w.setSpeed(speed); 
+      break;
+    case(Direction::BACK):
+      for(auto w : wheels) w.setSpeed(-speed);
+      break;
+    default: stop();
+  }
+}
+
+void Robot::followLine(Direction dir) {
+  followLine(dir, default_speed);
+}
+
+void Robot::followLine(Direction dir, int speed) {
+  this->following_line = true;
+  switch(dir) {
+    case(Direction::FRONT):
+      for(auto w : wheels) w.setSpeed(speed); 
+      break;
+    case(Direction::BACK):
+      for(auto w : wheels) w.setSpeed(-speed);
+      break;
+    default: stop();
+  }
 }
 
 void Robot::stop() {

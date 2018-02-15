@@ -1,7 +1,7 @@
 #ifndef DIRECTION_H
 #define DIRECTION_H
 
-enum class DIRECTION {
+enum class Direction {
   FRONT,
   BACK,
   LEFT,

@@ -1,6 +1,6 @@
 #include <LineSensor.h>
 
-LineSensor::LineSensor(unsigned char pin) : KP(0.2f), KD(5), qtrrc() {
+LineSensor::LineSensor(unsigned char pin) : qtrrc() {
   unsigned char pins[3] = {pin, pin + 1, pin + 2};
   qtrrc.init(pins, 3);
 }
