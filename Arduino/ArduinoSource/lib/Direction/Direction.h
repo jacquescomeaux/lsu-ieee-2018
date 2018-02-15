@@ -9,7 +9,9 @@ enum class Direction {
   FRONT_LEFT,
   FRONT_RIGHT,
   BACK_LEFT,
-  BACK_RIGHT
+  BACK_RIGHT,
+  CLOCKWISE,
+  COUNTER_CLOCKWISE
 };
 
 #endif

@@ -1,11 +1,9 @@
 #include <Wheel.h>
 
-Wheel::Wheel(Adafruit_DCMotor* m) {
-  this->motor = m;
-}
+Wheel::Wheel(Adafruit_DCMotor* m) : motor(m), speed(0), desired_speed(0), direction_set(false) {motor->run(RELEASE);}
 
-void Wheel::setSpeed(int speed) {
-  this->desired_speed = speed;
+void Wheel::setSpeed(int s) {
+  desired_speed = s;
 }
 
 void Wheel::adjustSpeed(int adjustment) {
@@ -13,10 +11,15 @@ void Wheel::adjustSpeed(int adjustment) {
 }
 
 void Wheel::approachSpeed() {
-  if(speed != desired_speed) {
+  if(this->speed != this->desired_speed) {
+    //Serial.println("WOWOWO");
+    if(speed == 0) direction_set = false;
     speed += (speed < desired_speed) ? 1 : -1;
-    if(speed > 0) this->motor->run(FORWARD);
-    else this->motor->run(BACKWARD);
+    if(!direction_set) {
+      direction_set = true;
+      if(speed > 0) this->motor->run(FORWARD);
+      else this->motor->run(BACKWARD);
+    }
     uint8_t motor_speed;
     if(speed > 255 || speed < -255) motor_speed = 255;
     else motor_speed = static_cast<uint8_t>(abs(speed));
@@ -25,5 +28,7 @@ void Wheel::approachSpeed() {
 }
 
 void Wheel::stop() {
-  this->motor->run(RELEASE);
+  motor->run(RELEASE);
+  motor->setSpeed(0);
+  speed = desired_speed = 0;
 }

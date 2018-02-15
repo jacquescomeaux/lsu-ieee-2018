@@ -1,12 +1,62 @@
 #include "../include/Board.h"
 
 #include <iostream>
-#include <random>
 #include <cmath>
 
-Board::Board() {}
+Board::Board() : Board(8, 8) {}
 
-Board::Board(double l, double w) : length(l), width(w) {}
+Board::Board(double l, double w) : length(l), width(w), NUM_HOLES(24), NUM_COLORS(7) {
+  SQUARES[0] = Coord(-3.5f,  3.5f);     //Red
+  SQUARES[1] = Coord(-3.5f,  0.0f);     //Green
+  SQUARES[2] = Coord(-3.5f, -3.5f);     //Blue
+  SQUARES[3] = Coord( 3.5f,  3.5f);     //Cyan
+  SQUARES[4] = Coord( 3.5f,  0.0f);     //Magenta
+  SQUARES[5] = Coord( 3.5f, -3.5f);     //Yellow
+  SQUARES[6] = Coord( 0.0f,  0.0f);     //Gray
+  //Locations of token depressions
+  HOLES[ 0] = Coord(-1.0f,  1.0f);
+  HOLES[ 1] = Coord(-1.0f,  0.0f);
+  HOLES[ 2] = Coord(-1.0f, -1.0f);
+  HOLES[ 3] = Coord( 1.0f,  1.0f);
+  HOLES[ 4] = Coord( 1.0f,  0.0f);
+  HOLES[ 5] = Coord( 1.0f, -1.0f);
+  HOLES[ 6] = Coord(-2.0f,  2.0f);
+  HOLES[ 7] = Coord(-2.0f,  0.5f);
+  HOLES[ 8] = Coord(-2.0f, -0.0f);
+  HOLES[ 9] = Coord( 2.0f, -3.5f);
+  HOLES[10] = Coord( 2.0f,  3.5f);
+  HOLES[11] = Coord( 2.0f,  0.0f);
+  HOLES[12] = Coord(-1.5f, -3.5f);
+  HOLES[13] = Coord(-1.5f,  0.0f);
+  HOLES[14] = Coord(-1.5f,  3.5f);
+  HOLES[15] = Coord( 1.5f,  0.0f);
+  HOLES[16] = Coord( 1.5f, -3.5f);
+  HOLES[17] = Coord( 1.5f,  3.5f);
+  HOLES[18] = Coord(-2.5f,  0.0f);
+  HOLES[19] = Coord(-2.5f, -3.5f);
+  HOLES[20] = Coord(-2.5f,  0.0f);
+  HOLES[21] = Coord( 2.5f,  3.5f);
+  HOLES[22] = Coord( 2.5f,  0.0f);
+  HOLES[23] = Coord( 2.5f, -3.5f);
+  /*const Coord HOLES[NUM_RINGS][NUM_COLORS-1] = {
+    {Coord(-1,1), Coord(-1,0), Coord(-1,-1),
+     Coord(1, 1), Coord(1, 0), Coord(1, -1)
+    },
+    {Coord(-2,2), Coord(-2,0), Coord(-2,-2),
+    Coord(2, 2), Coord(2, 0), Coord(2, -2)
+    },
+    {Coord(-1.5,1.5), Coord(-1.5,0), Coord(-1.5,-1.5),
+     Coord(1.5, 1.5), Coord(1.5, 0), Coord(1.5, -1.5)
+    },
+    {Coord(-2.5,2.5), Coord(-2.5,0), Coord(-2.5,-2.5),
+    Coord(2.5, 2.5), Coord(2.5, 0), Coord(2.5, -2.5)
+    },
+  };*/
+}
+
+Board::Board(double l, double w, const Coord* squares, int s, const Coord* holes, int h) : length(l), width(w) {
+
+}
 
 double Board::getLength() const {
   return length;
@@ -15,31 +65,6 @@ double Board::getLength() const {
 double Board::getWidth() const {
   return width;
 }
-
-/*void Board::populate(int round) { 
-  if(!tokens.empty()) return;
-  for(int i = 0; i < NUM_COLORS-1; i++) for(int j = 0; j < round+1 && j < 3; j++) tokens.push_back(Token(static_cast<Color>(i)));
-  if(round == 3) for(int i = 0; i < 6; i++) tokens.push_back(Token(GRAY));
-  std::random_device rd;
-  std::mt19937 g(rd());
-  std::shuffle(std::begin(tokens), std::end(tokens), g);
-  for(int i = 0; i < tokens.size(); i++) if(tokens[i].getColor() == static_cast<Color>(i%6)) {
-    int s = 0;
-    while(tokens[s].getColor() == tokens[i].getColor()) s++;
-    std::iter_swap(tokens.begin()+s, tokens.begin()+i);
-    tokens[i].setLocation(HOLES[i/6][i%6]);
-  }
-  for(int i = 0; i < tokens.size(); i++) tokens[i].setLocation(HOLES[i/6][i%6]);
-}
-
-void Board::populate(const std::vector<Token>& t) {
-  tokens = t;
-}
-
-void Board::populate(const std::vector<Token>& t, int r) {
-  tokens = t;
-  for(int i = 0; i < 6*(r+1); i++) tokens[i].setLocation(HOLES[i/6][i%6]);
-}*/
 
 void Board::checkTokens() const {
   if(tokens.empty()) return;

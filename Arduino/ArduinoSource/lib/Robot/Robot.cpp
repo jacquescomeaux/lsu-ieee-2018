@@ -36,10 +36,11 @@ Robot::Robot() :
 void Robot::setWheelSpeeds(Direction dir, int speed) {
   switch(dir) {
     case(Direction::FRONT):
-      for(auto w : wheels) w.setSpeed(speed); 
+      for(int i = 0; i < 4; i++);
+      for(Wheel& w : wheels) w.setSpeed(speed); 
       break;
     case(Direction::BACK):
-      for(auto w : wheels) w.setSpeed(-speed);
+      for(Wheel& w : wheels) w.setSpeed(-speed);
       break;
     case(Direction::LEFT):
       for(int i = 0; i < 4; i++) wheels[i].setSpeed((1 - (2 * (i % 2))) * speed);
@@ -59,6 +60,12 @@ void Robot::setWheelSpeeds(Direction dir, int speed) {
     case(Direction::BACK_RIGHT):
       for(int i = 0; i < 4; i++) wheels[i].setSpeed(((i % 2) - 1) * speed);
       break;
+    case(Direction::CLOCKWISE):
+      for(int i = 0; i < 4; i++) wheels[i].setSpeed(((2 * (i / 2)) - 1) * speed);
+      break;
+    case(Direction::COUNTER_CLOCKWISE):
+      for(int i = 0; i < 4; i++) wheels[i].setSpeed((1 - (2 * (i / 2))) * speed);
+      break;
     default: stop();
   }
 }
@@ -71,15 +78,16 @@ void Robot::correctErrors() {
 }
 
 void Robot::approachSpeed() {
-  for(auto w : wheels) w.approachSpeed();
+  for(Wheel& w : wheels) w.approachSpeed();
   if(following_line) correctErrors();
 }
 
 void Robot::checkEdges() {
-  for(auto s : edge_detectors) if(s.edgeDetected()) stop();
+  for(ProximitySensor& s : edge_detectors) if(s.edgeDetected()) stop();
 }
 
 void Robot::move(Direction dir) {
+  //Serial.println("call to move");//
   move(dir, default_speed);
 }
 
@@ -89,6 +97,7 @@ void Robot::move(Direction dir, int speed) {
 }
 
 void Robot::followLine(Direction dir) {
+  //Serial.println("call to follow");//
   followLine(dir, default_speed);
 }
 
@@ -98,7 +107,7 @@ void Robot::followLine(Direction dir, int speed) {
 }
 
 void Robot::stop() {
-  for(auto w : wheels) w.stop();
+  for(Wheel& w : wheels) w.stop();
 }
 
 SortBot::SortBot() {}
