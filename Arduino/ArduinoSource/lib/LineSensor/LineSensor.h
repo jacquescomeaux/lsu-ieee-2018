@@ -10,8 +10,9 @@ class LineSensor {
     QTRSensorsRC qtrrc;
     unsigned int sensorValues[3];
   public:
-    void calibrateSensors();
     LineSensor(unsigned char);
+    void calibrateSensors();
+    int getLineError();
 };
 
 #endif
