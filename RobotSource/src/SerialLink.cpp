@@ -1,14 +1,18 @@
 #include "../include/SerialLink.h"
-//#include <libserialport.h>
-
-#include "../include/rs232.h"
+#include <libserialport.h>
 
 SerialLink::SerialLink() : PORTNUM(24), BAUD(9600), CONFIG("8N1") {
-  RS232_OpenComport(PORTNUM, BAUD, CONFIG);
+  struct sp_port* port;
+  get_port_by_name("/dev/ACM0", &port);
+  sp_open(port, enum sp_mode flags);	
+  sp_set_baudrate(port, 9600);
 }
 
 SerialLink::~SerialLink() {
-  RS232_CloseComport(PORTNUM);
+  struct sp_port* port;
+  get_port_by_name("/dev/ACM0", &port);
+  sp_close(port, enum sp_mode flags);	
+  sp_set_baudrate(port, 9600);
 }
 
 int SerialLink::receiveInt() const {
