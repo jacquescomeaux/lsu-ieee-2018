@@ -2,13 +2,11 @@
 #define ROBOT_H
 
 #include <Adafruit_MotorShield.h>
-//#include "utility/Adafruit_MS_PWMServoDriver.h"
 #include <Direction.h>
 #include <Wheel.h>
 #include <ProximitySensor.h>
 #include <LineSensor.h>
 #include <SortingSystem.h>
-
 
 class Robot {
   private:
@@ -21,6 +19,7 @@ class Robot {
     bool following_line;
     Direction current_direction;
     int last_error;
+    void setWheelSpeeds(Direction, int); 
     void correctErrors();
   public:
     Robot();

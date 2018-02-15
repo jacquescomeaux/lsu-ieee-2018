@@ -33,6 +33,44 @@ Robot::Robot() :
   stop();
 } 
 
+void Robot::setWheelSpeeds(Direction dir, int speed) {
+  switch(dir) {
+    case(Direction::FRONT):
+      for(auto w : wheels) w.setSpeed(speed); 
+      break;
+    case(Direction::BACK):
+      for(auto w : wheels) w.setSpeed(-speed);
+      break;
+    case(Direction::LEFT):
+      for(auto w : wheels) w.setSpeed(speed); 
+      break;
+    case(Direction::RIGHT):
+      for(auto w : wheels) w.setSpeed(-speed);
+      break;
+    case(Direction::FRONT):
+      for(auto w : wheels) w.setSpeed(speed); 
+      break;
+    case(Direction::BACK):
+      for(auto w : wheels) w.setSpeed(-speed);
+      break;
+    case(Direction::FRONT):
+      for(auto w : wheels) w.setSpeed(speed); 
+      break;
+    case(Direction::BACK):
+      for(auto w : wheels) w.setSpeed(-speed);
+      break;
+    default: stop();
+case 'a': for(int i = 0; i < 4; i++) motors[i]->run(!(i%2)?FORWARD:BACKWARD);
+case 'd': for(int i = 0; i < 4; i++) motors[i]->run((i%2)?FORWARD:BACKWARD);
+case 'q': for(int i = 0; i < 4; i++) motors[i]->run(!(i%2)?FORWARD:RELEASE);
+case 'e': for(int i = 0; i < 4; i++) motors[i]->run((i%2)?FORWARD:RELEASE);
+case 'z': for(int i = 0; i < 4; i++) motors[i]->run(!(i%2)?RELEASE:BACKWARD);
+case 'c': for(int i = 0; i < 4; i++) motors[i]->run((i%2)?RELEASE:BACKWARD);
+case 'u': for(int i = 0; i < 4; i++) motors[i]->run((i/2)?FORWARD:BACKWARD);
+case 'i': for(int i = 0; i < 4; i++) motors[i]->run(!(i/2)?FORWARD:BACKWARD);
+  }
+}
+
 void Robot::correctErrors() {
   int error = line_sensors[static_cast<int>(current_direction)].getLineError();  
   int adjustment = this->KP * error + this->KD * (error - last_error);
@@ -53,17 +91,9 @@ void Robot::move(Direction dir) {
   move(dir, default_speed);
 }
 
-void Robot::move(Direction dir, int speed) {
+void Robot::setWheelSpeeds(Direction dir, int speed) {
   this->following_line = false;
-  switch(dir) {
-    case(Direction::FRONT):
-      for(auto w : wheels) w.setSpeed(speed); 
-      break;
-    case(Direction::BACK):
-      for(auto w : wheels) w.setSpeed(-speed);
-      break;
-    default: stop();
-  }
+  this->setWheelSpeeds(dir, speed);
 }
 
 void Robot::followLine(Direction dir) {
@@ -72,15 +102,7 @@ void Robot::followLine(Direction dir) {
 
 void Robot::followLine(Direction dir, int speed) {
   this->following_line = true;
-  switch(dir) {
-    case(Direction::FRONT):
-      for(auto w : wheels) w.setSpeed(speed); 
-      break;
-    case(Direction::BACK):
-      for(auto w : wheels) w.setSpeed(-speed);
-      break;
-    default: stop();
-  }
+  this->setWheelSpeeds(dir, speed);
 }
 
 void Robot::stop() {
