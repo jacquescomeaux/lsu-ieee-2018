@@ -25,7 +25,6 @@ void setup() {
   for(int i = 0; i < 4; i++) motors[i]->run(RELEASE);
   Serial.begin(9600);
   Serial.println("Adafruit Motorshield v2 - DC Motor test!");
-  motors[3]->run(FORWARD);
 }
 
 void veerRight() {
