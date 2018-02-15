@@ -1,7 +1,7 @@
 #ifndef CAMERA_H
 #define CAMERA_H
 
-#include "Intersection.h"
+//#include "Intersection.h"
 
 #include <string>
 

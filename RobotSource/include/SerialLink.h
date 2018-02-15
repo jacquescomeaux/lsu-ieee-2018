@@ -6,15 +6,16 @@
 class SerialLink {
   protected:
     SerialLink();
-    const char* PORT, CONFIG;
+    ~SerialLink();
+    const char* PORTNAME;//, CONFIG;
     const int BAUD;
     struct sp_port* port;
     int receiveInt() const;
     float receiveFloat() const;
     void transmitInt(int) const;
     void transmitFloat(float) const;
-    void receiveBuffer(void*, int) const;
-    void transmitBuffer(void*, int) const;
+    void receiveBuffer(void*, size_t) const;
+    void transmitBuffer(void*, size_t) const;
     union multinum {
       float floating;
       int integer;

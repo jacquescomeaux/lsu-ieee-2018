@@ -1,7 +1,7 @@
 #include "../include/SerialLink.h"
 
-SerialLink::SerialLink() : PORTNAME("/dev/ttyACM0"), BAUD(9600), CONFIG("8N1") {
-  get_port_by_name(PORTNAME, &port);
+SerialLink::SerialLink() : PORTNAME("/dev/ttyACM0"), BAUD(9600) {//, CONFIG("8N1") {
+  sp_get_port_by_name(PORTNAME, &port);
   sp_open(port, SP_MODE_READ_WRITE);	
   sp_set_baudrate(port, BAUD);
 }
@@ -44,6 +44,6 @@ void SerialLink::receiveBuffer(void* buf, size_t size) const {
   sp_blocking_read(this->port, buf, size, 0);
 }
 
-void SerialLink::transmitBuffer(void* buf, int size) const {
+void SerialLink::transmitBuffer(void* buf, size_t size) const {
   sp_nonblocking_write(this->port, buf, size);
 }
