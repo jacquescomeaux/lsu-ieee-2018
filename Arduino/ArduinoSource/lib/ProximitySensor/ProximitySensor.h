@@ -5,6 +5,7 @@ class ProximitySensor {
   private:
   public:
     ProximitySensor();
+    bool edgeDetected();
 };
 
 #endif

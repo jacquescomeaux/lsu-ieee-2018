@@ -4,13 +4,14 @@ SortBot robot;
 
 void parseCommand() {
   unsigned char command = Serial.read();
-  switch(byte_received) {
-    case 'w': robot.move(DIRECTION::FORWARD); break;
-    case 'a': robot.move(DIRECTION::LEFT); break;
-    case 'x': robot.move(DIRECTION::BACKWARD); break;
-    case 'd': robot.move(DIRECTION::RIGHT); break;
-    default: for(int i = 0; i < 4; i++) motors[i]->run(RELEASE);
-  };
+  switch(command) {
+    //case 'w': robot.move(DIRECTION::FORWARD); break;
+    //case 'a': robot.move(DIRECTION::LEFT); break;
+    //case 'x': robot.move(DIRECTION::BACKWARD); break;
+    //case 'd': robot.move(DIRECTION::RIGHT); break;
+    default: //for(int i = 0; i < 4; i++) motors[i]->run(RELEASE);
+    break;
+  }
 }
 
 void setup() {}

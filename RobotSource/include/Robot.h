@@ -23,8 +23,6 @@ class Robot : public Drivetrain, public LineFollower {
 };
 
 class SortBot : public Robot, public SortingSystem {
-  private:
-    SortingSystem sorter;
   public:
     SortBot();
 };
