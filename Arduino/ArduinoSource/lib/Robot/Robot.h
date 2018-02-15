@@ -1,8 +1,8 @@
 #ifndef ROBOT_H
 #define ROBOT_H
 
-#include <Adafruit_MotorShield.h>
 #include <Direction.h>
+#include <MotorShield.h>
 #include <Wheel.h>
 #include <ProximitySensor.h>
 #include <LineSensor.h>
@@ -12,7 +12,7 @@ class Robot {
   private:
     const float KP, KD;
     const int default_speed;
-    Adafruit_MotorShield AFMS[2];
+    MotorShield motor_shields[2]; 
     Wheel wheels[4];
     ProximitySensor edge_detectors[4];
     LineSensor line_sensors[8];

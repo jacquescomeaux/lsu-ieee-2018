@@ -2,7 +2,6 @@
 #define WHEEL_H
 
 #include <Adafruit_MotorShield.h>
-//#include "utility/Adafruit_MS_PWMServoDriver.h"
 
 class Wheel {
   private:

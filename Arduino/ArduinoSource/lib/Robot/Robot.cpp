@@ -1,18 +1,18 @@
-#include "Robot.h"
+#include <Robot.h>
 
 Robot::Robot() :
   KP(0.1f),
   KD(5.0f),
   default_speed(70),
-  AFMS {
-    Adafruit_MotorShield(0x61),
-    Adafruit_MotorShield(0x62),
+  motor_shields {
+    MotorShield(0x61),
+    MotorShield(0x62)
   },
   wheels {
-    Wheel(AFMS[0].getMotor(1)),
-    Wheel(AFMS[0].getMotor(2)),
-    Wheel(AFMS[1].getMotor(1)),
-    Wheel(AFMS[1].getMotor(2)),
+    Wheel(motor_shields[0].getMotor(1)),
+    Wheel(motor_shields[0].getMotor(2)),
+    Wheel(motor_shields[1].getMotor(1)),
+    Wheel(motor_shields[1].getMotor(2))
   },
   edge_detectors {
     ProximitySensor(),
@@ -42,32 +42,24 @@ void Robot::setWheelSpeeds(Direction dir, int speed) {
       for(auto w : wheels) w.setSpeed(-speed);
       break;
     case(Direction::LEFT):
-      for(auto w : wheels) w.setSpeed(speed); 
+      for(int i = 0; i < 4; i++) wheels[i].setSpeed((1 - (2 * (i % 2))) * speed);
       break;
     case(Direction::RIGHT):
-      for(auto w : wheels) w.setSpeed(-speed);
+      for(int i = 0; i < 4; i++) wheels[i].setSpeed(((2 * (i % 2)) - 1) * speed);
       break;
-    case(Direction::FRONT):
-      for(auto w : wheels) w.setSpeed(speed); 
+    case(Direction::FRONT_LEFT):
+      for(int i = 0; i < 4; i++) wheels[i].setSpeed((1 - (i % 2)) * speed);
       break;
-    case(Direction::BACK):
-      for(auto w : wheels) w.setSpeed(-speed);
+    case(Direction::FRONT_RIGHT):
+      for(int i = 0; i < 4; i++) wheels[i].setSpeed((i % 2) * speed);
       break;
-    case(Direction::FRONT):
-      for(auto w : wheels) w.setSpeed(speed); 
+    case(Direction::BACK_LEFT):
+      for(int i = 0; i < 4; i++) wheels[i].setSpeed(-1 * (i % 2) * speed);
       break;
-    case(Direction::BACK):
-      for(auto w : wheels) w.setSpeed(-speed);
+    case(Direction::BACK_RIGHT):
+      for(int i = 0; i < 4; i++) wheels[i].setSpeed(((i % 2) - 1) * speed);
       break;
     default: stop();
-case 'a': for(int i = 0; i < 4; i++) motors[i]->run(!(i%2)?FORWARD:BACKWARD);
-case 'd': for(int i = 0; i < 4; i++) motors[i]->run((i%2)?FORWARD:BACKWARD);
-case 'q': for(int i = 0; i < 4; i++) motors[i]->run(!(i%2)?FORWARD:RELEASE);
-case 'e': for(int i = 0; i < 4; i++) motors[i]->run((i%2)?FORWARD:RELEASE);
-case 'z': for(int i = 0; i < 4; i++) motors[i]->run(!(i%2)?RELEASE:BACKWARD);
-case 'c': for(int i = 0; i < 4; i++) motors[i]->run((i%2)?RELEASE:BACKWARD);
-case 'u': for(int i = 0; i < 4; i++) motors[i]->run((i/2)?FORWARD:BACKWARD);
-case 'i': for(int i = 0; i < 4; i++) motors[i]->run(!(i/2)?FORWARD:BACKWARD);
   }
 }
 

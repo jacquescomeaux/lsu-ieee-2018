@@ -1,9 +1,16 @@
 #include <Robot.h>
 
+<<<<<<< HEAD
+SortBot* robot;
+
+void parseCommand() {
+/*  unsigned char command = Serial.read();
+=======
 SortBot robot;
 
 void parseCommand() {
   unsigned char command = Serial.read();
+>>>>>>> 11c6fa61a34fd280f2123ae7e70848f10d4baa1a
   switch(command) {
     case 'w': robot.move(Direction::FRONT); break;
     case 'a': robot.move(Direction::LEFT); break;
@@ -22,6 +29,23 @@ void parseCommand() {
     case 'Z': robot.followLine(Direction::BACK_LEFT); break;
     case 'C': robot.followLine(Direction::BACK_RIGHT); break;
     default: robot.stop();
+<<<<<<< HEAD
+  }*/
+}
+
+void setup() {
+  robot = new SortBot();
+  robot->stop();
+  Serial.begin(9600);
+  Serial.println("Robot ready");
+}
+
+void loop() {
+  //robot.checkEdges();
+  ///robot.stop();
+  if(Serial.available()) parseCommand();
+  //robot.approachSpeed();
+=======
   }
 }
 
@@ -31,4 +55,5 @@ void loop() {
   robot.checkEdges();
   if(Serial.available()) parseCommand();
   robot.approachSpeed();
+>>>>>>> 11c6fa61a34fd280f2123ae7e70848f10d4baa1a
 }

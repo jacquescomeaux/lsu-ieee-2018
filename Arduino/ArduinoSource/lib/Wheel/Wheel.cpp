@@ -8,8 +8,8 @@ void Wheel::setSpeed(int speed) {
   this->desired_speed = speed;
 }
 
-void Wheel::adjustSpeed(int speed) {
-  this->desired_speed += speed;
+void Wheel::adjustSpeed(int adjustment) {
+  this->desired_speed += adjustment;
 }
 
 void Wheel::approachSpeed() {
