@@ -1,11 +1,14 @@
 #ifndef SERIALLINK_H
 #define SERIALLINK_H
 
+#include <libserialport.h>
+
 class SerialLink {
   protected:
     SerialLink();
-    const char* CONFIG;
-    const int PORTNUM, BAUD;
+    const char* PORT, CONFIG;
+    const int BAUD;
+    struct sp_port* port;
     int receiveInt() const;
     float receiveFloat() const;
     void transmitInt(int) const;

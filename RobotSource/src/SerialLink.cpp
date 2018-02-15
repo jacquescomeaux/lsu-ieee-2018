@@ -1,18 +1,13 @@
 #include "../include/SerialLink.h"
-#include <libserialport.h>
 
-SerialLink::SerialLink() : PORTNUM(24), BAUD(9600), CONFIG("8N1") {
-  struct sp_port* port;
-  get_port_by_name("/dev/ACM0", &port);
-  sp_open(port, enum sp_mode flags);	
-  sp_set_baudrate(port, 9600);
+SerialLink::SerialLink() : PORTNAME("/dev/ttyACM0"), BAUD(9600), CONFIG("8N1") {
+  get_port_by_name(PORTNAME, &port);
+  sp_open(port, SP_MODE_READ_WRITE);	
+  sp_set_baudrate(port, BAUD);
 }
 
 SerialLink::~SerialLink() {
-  struct sp_port* port;
-  get_port_by_name("/dev/ACM0", &port);
-  sp_close(port, enum sp_mode flags);	
-  sp_set_baudrate(port, 9600);
+  sp_close(port);	
 }
 
 int SerialLink::receiveInt() const {
@@ -45,11 +40,10 @@ void SerialLink::transmitFloat(float n) const {
   SerialLink::transmitBuffer(&n, sizeof(float));
 }
 
-void SerialLink::receiveBuffer(void* buf, int size) const {
-  int bytes_received = 0;
-  while(bytes_received != size) RS232_PollComport(PORTNUM, static_cast<unsigned char*>(buf) + bytes_received, size - bytes_received);
+void SerialLink::receiveBuffer(void* buf, size_t size) const {
+  sp_blocking_read(this->port, buf, size, 0);
 }
 
 void SerialLink::transmitBuffer(void* buf, int size) const {
-  RS232_SendBuf(PORTNUM, static_cast<unsigned char*>(buf), size);
+  sp_nonblocking_write(this->port, buf, size);
 }
