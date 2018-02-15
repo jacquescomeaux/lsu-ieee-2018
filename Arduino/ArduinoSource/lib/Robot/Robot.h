@@ -4,12 +4,13 @@
 #include <Adafruit_MotorShield.h>
 #include "utility/Adafruit_MS_PWMServoDriver.h"
 #include <Direction.h>
+#include <Wheel.h>
 #include <ProximitySensor.h>
 #include <LineSensor.h>
 #include <SortingSystem.h>
 
 
-class Robot : public Drivetrain {
+class Robot {
   private:
     Adafruit_MotorShield AFMS[2];
     Wheel wheels[4];
