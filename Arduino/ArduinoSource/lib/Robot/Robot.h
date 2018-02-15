@@ -6,6 +6,17 @@
 #include <LineSensor.h>
 #include <SortingSystem.h>
 
+enum class DIRECTION {
+  FRONT,
+  BACK,
+  LEFT,
+  RIGHT,
+  FRONT_LEFT,
+  FRONT_RIGHT,
+  BACK_LEFT,
+  BACK_RIGHT
+};
+
 class Robot {
   private:
     Wheel wheels[4];
