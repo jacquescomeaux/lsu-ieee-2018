@@ -83,7 +83,7 @@ void Robot::move(Direction dir) {
   move(dir, default_speed);
 }
 
-void Robot::setWheelSpeeds(Direction dir, int speed) {
+void Robot::move(Direction dir, int speed) {
   this->following_line = false;
   this->setWheelSpeeds(dir, speed);
 }

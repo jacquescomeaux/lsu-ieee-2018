@@ -25,8 +25,8 @@ class Robot {
     Robot();
     void move(Direction);
     void move(Direction, int);
-    void followLine(Direction, int);
     void followLine(Direction);
+    void followLine(Direction, int);
     void stop();
     void checkEdges();
     void approachSpeed();
