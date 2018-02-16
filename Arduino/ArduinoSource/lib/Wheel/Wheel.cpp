@@ -9,19 +9,19 @@ void Wheel::setSpeed(int s) {
 }
 
 void Wheel::adjustSpeed(int adjustment) {
-  this->desired_speed += adjustment;
+  this->correction = adjustment;//adjustment->this->desired_speed += adjustment;
 }
 
 void Wheel::approachSpeed() {
   if(this->speed != this->desired_speed) {
     //Serial.println("WOWOWO");
-    if(speed + correction == 0) direction_set = false;
+    //if(speed + correction == 0) direction_set = false;
     speed += (speed < desired_speed) ? 1 : -1;
-    if(!direction_set) {
-      direction_set = true;
+    //if(!direction_set) {
+      //direction_set = true;
       if(speed + correction > 0) this->motor->run(FORWARD);
       else this->motor->run(BACKWARD);
-    }
+    //}//
     uint8_t motor_speed;
     if(speed + correction > 200 || speed + correction < -200) motor_speed = 200;
     else motor_speed = static_cast<uint8_t>(abs(speed + correction));
