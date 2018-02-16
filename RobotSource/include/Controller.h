@@ -3,7 +3,7 @@
 
 #include "Coord.h"
 #include "Token.h"
-#include "Board.h"
+#include "Robot.h"
 
 const Coord START(-3.5, 0);
 const Coord END(-3.5, 0);
@@ -18,7 +18,11 @@ const int COLLECT_PATH[NUM_RINGS*(NUM_COLORS-1)][2] = {
 };
 
 class Controller {
-
+  private:
+    const Robot* const robot;
+  public:
+    Controller(Robot*);
+    runAlgorithm() const;
 };
 
 #endif

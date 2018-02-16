@@ -1,17 +1,15 @@
 #include "../include/Camera.h"
 
-Camera::Camera() {
-  this->name = "untitled_camera";
-}
+Camera::Camera() : Camera("untitled camera") {}
 
 Camera::Camera(std::string name) {
   this->name = name;
 }
 
-std::string Camera::getName() {
+std::string Camera::getName() const {
   return name;
 }
 
-bool Camera::onLine() {return false;}
+bool Camera::onLine() const {return false;}
 
-bool Camera::getIntersection() {return true;}
+bool Camera::getIntersection() const {return true;}

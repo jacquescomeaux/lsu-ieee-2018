@@ -13,49 +13,44 @@ Board::Board(double l, double w) : length(l), width(w), NUM_HOLES(24), NUM_COLOR
   SQUARES[4] = Coord( 3.5f,  0.0f);     //Magenta
   SQUARES[5] = Coord( 3.5f, -3.5f);     //Yellow
   SQUARES[6] = Coord( 0.0f,  0.0f);     //Gray
+
   //Locations of token depressions
   HOLES[ 0] = Coord(-1.0f,  1.0f);
   HOLES[ 1] = Coord(-1.0f,  0.0f);
   HOLES[ 2] = Coord(-1.0f, -1.0f);
+
   HOLES[ 3] = Coord( 1.0f,  1.0f);
   HOLES[ 4] = Coord( 1.0f,  0.0f);
   HOLES[ 5] = Coord( 1.0f, -1.0f);
+
   HOLES[ 6] = Coord(-2.0f,  2.0f);
-  HOLES[ 7] = Coord(-2.0f,  0.5f);
-  HOLES[ 8] = Coord(-2.0f, -0.0f);
-  HOLES[ 9] = Coord( 2.0f, -3.5f);
-  HOLES[10] = Coord( 2.0f,  3.5f);
-  HOLES[11] = Coord( 2.0f,  0.0f);
-  HOLES[12] = Coord(-1.5f, -3.5f);
+  HOLES[ 7] = Coord(-2.0f,  0.0f);
+  HOLES[ 8] = Coord(-2.0f, -2.0f);
+
+  HOLES[ 9] = Coord( 2.0f,  2.0f);
+  HOLES[10] = Coord( 2.0f,  0.0f);
+  HOLES[11] = Coord( 2.0f, -2.0f);
+
+  HOLES[12] = Coord(-1.5f,  1.5f);
   HOLES[13] = Coord(-1.5f,  0.0f);
-  HOLES[14] = Coord(-1.5f,  3.5f);
-  HOLES[15] = Coord( 1.5f,  0.0f);
-  HOLES[16] = Coord( 1.5f, -3.5f);
-  HOLES[17] = Coord( 1.5f,  3.5f);
-  HOLES[18] = Coord(-2.5f,  0.0f);
-  HOLES[19] = Coord(-2.5f, -3.5f);
-  HOLES[20] = Coord(-2.5f,  0.0f);
-  HOLES[21] = Coord( 2.5f,  3.5f);
+  HOLES[14] = Coord(-1.5f, -1.5f);
+
+  HOLES[15] = Coord( 1.5f,  1.5f);
+  HOLES[16] = Coord( 1.5f,  0.0f);
+  HOLES[17] = Coord( 1.5f, -1.5f);
+
+  HOLES[18] = Coord(-2.5f,  2.5f);
+  HOLES[19] = Coord(-2.5f,  0.0f);
+  HOLES[20] = Coord(-2.5f, -2.5f);
+
+  HOLES[21] = Coord( 2.5f,  2.5f);
   HOLES[22] = Coord( 2.5f,  0.0f);
-  HOLES[23] = Coord( 2.5f, -3.5f);
-  /*const Coord HOLES[NUM_RINGS][NUM_COLORS-1] = {
-    {Coord(-1,1), Coord(-1,0), Coord(-1,-1),
-     Coord(1, 1), Coord(1, 0), Coord(1, -1)
-    },
-    {Coord(-2,2), Coord(-2,0), Coord(-2,-2),
-    Coord(2, 2), Coord(2, 0), Coord(2, -2)
-    },
-    {Coord(-1.5,1.5), Coord(-1.5,0), Coord(-1.5,-1.5),
-     Coord(1.5, 1.5), Coord(1.5, 0), Coord(1.5, -1.5)
-    },
-    {Coord(-2.5,2.5), Coord(-2.5,0), Coord(-2.5,-2.5),
-    Coord(2.5, 2.5), Coord(2.5, 0), Coord(2.5, -2.5)
-    },
-  };*/
+  HOLES[23] = Coord( 2.5f, -2.5f);
 }
 
-Board::Board(double l, double w, const Coord* squares, int s, const Coord* holes, int h) : length(l), width(w) {
-
+Board::Board(double l, double w, const Coord* squares, int s, const Coord* holes, int h) : length(l), width(w), NUM_COLORS(s), NUM_HOLES(s) {
+  for(int i = 0; i < s; i++) SQUARES[i] = squares[i];
+  for(int i = 0; i < h; i++) HOLES[i] = holes[i];
 }
 
 double Board::getLength() const {
