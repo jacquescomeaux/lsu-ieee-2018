@@ -2,6 +2,7 @@
 #define LINESENSOR_H
 
 #include <QTRSensors.h>
+#include <Arduino.h>
 
 class LineSensor {
   private:
@@ -11,6 +12,7 @@ class LineSensor {
     LineSensor(unsigned char);
     void calibrateSensors();
     int getLineError();
+    void printReadings();
 };
 
 #endif
