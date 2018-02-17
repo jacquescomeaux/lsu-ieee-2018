@@ -2,13 +2,14 @@
 #define BOARD_H
 
 #include "Token.h"
+
 #include <vector>
 
 class Board {
   private:
     const float length, width;
     const int NUM_COLORS, NUM_HOLES;
-    Coord SQUARES[NUM_COLORS], HOLES[NUM_HOLES];
+    const std::vector<Coord> SQUARES, HOLES;
     const Coord START, END;
   public:
     std::vector<Token> tokens;

@@ -9,9 +9,14 @@ void Wheel::setSpeed(int s) {
   corrected_speed = s;
 }
 
+int Wheel::getSpeed() {
+  return speed;
+}
+
 void Wheel::adjustSpeed(int adjustment) {
   //this->correction = adjustment;
-  corrected_speed = desired_speed + adjustment;
+  //corrected_speed = desired_speed + adjustment;
+  corrected_speed += adjustment;
   //->this->desired_speed += adjustment;
 }
 
@@ -19,7 +24,7 @@ void Wheel::approachSpeed() {
   if(this->speed != this->corrected_speed) {
     //Serial.println("WOWOWO");
     if(speed == 0) direction_set = false;
-    speed += (speed < corrected_speed) ? 1 : -1;
+    speed += (speed < corrected_speed) ? 2 : -2;
     if(!direction_set) {
       direction_set = true;
       if(speed > 0) this->motor->run(FORWARD);

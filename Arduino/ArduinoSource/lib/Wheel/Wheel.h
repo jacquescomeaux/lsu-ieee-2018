@@ -11,6 +11,7 @@ class Wheel {
   public:
     Wheel(Adafruit_DCMotor*); 
     void setSpeed(int);
+    int getSpeed();
     void adjustSpeed(int);
     void approachSpeed();
     void stop();

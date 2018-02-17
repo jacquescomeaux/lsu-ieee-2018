@@ -2,8 +2,8 @@
 
 Robot::Robot() :
   KP(0.07f),
-  KD(0.2f),
-  default_speed(100),
+  KD(0.0f),
+  default_speed(60),
   motor_shields {
     MotorShield(0x61),
     MotorShield(0x62)
@@ -83,14 +83,15 @@ void Robot::setWheelSpeeds(Direction dir, int speed) {
 }
 
 void Robot::correctErrors() {
+//  if(!following_line) return;
   //Serial.println("CORRECTIGERROS"); 
   int error = line_sensors[0].getLineError();//static_cast<int>(current_direction)].getLineError();  
   //Serial.print("ERROR=");
   //Serial.println(error);
-  //line_sensors[0].printReadings(); 
+  line_sensors[0].printReadings(); 
   int adjustment = this->KP * error + this->KD * (error - last_error);
   this->last_error = error;
-  for(int i = 0; i < 4; i++) wheels[i].adjustSpeed((i<2)?adjustment:-adjustment);
+  //for(int i = 0; i < 4; i++) wheels[i].adjustSpeed((i<2)?adjustment:-adjustment);
 }
 
 void Robot::approachSpeed() {
@@ -120,6 +121,21 @@ void Robot::followLine(Direction dir) {
 void Robot::followLine(Direction dir, int speed) {
   this->following_line = true;
   this->setWheelSpeeds(dir, speed);
+}
+
+void Robot::veerLeft() {
+  for(int i = 0; i < 4; i++) wheels[i].adjustSpeed((i<2)?-5:5);
+}
+
+void Robot::veerRight() {
+  for(int i = 0; i < 4; i++) wheels[i].adjustSpeed(!(i<2)?-5:5);
+}
+
+void Robot::speedUp() {
+  for(Wheel& w : wheels) w.adjustSpeed(5);
+}
+void Robot::slowDown() {
+  for(Wheel& w : wheels) w.adjustSpeed(-5);
 }
 
 void Robot::stop() {

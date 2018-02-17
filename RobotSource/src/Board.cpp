@@ -5,52 +5,59 @@
 
 Board::Board() : Board(8, 8) {}
 
-Board::Board(float l, float w) :length(l), width(w), NUM_HOLES(24), NUM_COLORS(7), START(-3.5, 0), END(-3.5, 0) {
-  SQUARES[0] = Coord(-3.5f,  3.5f);     //Red
-  SQUARES[1] = Coord(-3.5f,  0.0f);     //Green
-  SQUARES[2] = Coord(-3.5f, -3.5f);     //Blue
-  SQUARES[3] = Coord( 3.5f,  3.5f);     //Cyan
-  SQUARES[4] = Coord( 3.5f,  0.0f);     //Magenta
-  SQUARES[5] = Coord( 3.5f, -3.5f);     //Yellow
-  SQUARES[6] = Coord( 0.0f,  0.0f);     //Gray
+Board::Board(float l, float w) :
+  length(l),
+  width(w),
+  NUM_HOLES(24),
+  NUM_COLORS(7),
+  SQUARES {
+    Coord(-3.5f,  3.5f),     //Red
+    Coord(-3.5f,  0.0f),     //Green
+    Coord(-3.5f, -3.5f),     //Blue
+    Coord( 3.5f,  3.5f),     //Cyan
+    Coord( 3.5f,  0.0f),     //Magenta
+    Coord( 3.5f, -3.5f),     //Yellow
+    Coord( 0.0f,  0.0f)      //Gray
+  },
+  HOLES {
+    Coord(-1.0f,  1.0f),
+    Coord(-1.0f,  0.0f),
+    Coord(-1.0f, -1.0f),
+  
+    Coord( 1.0f,  1.0f),
+    Coord( 1.0f,  0.0f),
+    Coord( 1.0f, -1.0f),
+  
+    Coord(-2.0f,  2.0f),
+    Coord(-2.0f,  0.0f),
+    Coord(-2.0f, -2.0f),
+  
+    Coord( 2.0f,  2.0f),
+    Coord( 2.0f,  0.0f),
+    Coord( 2.0f, -2.0f),
+  
+    Coord(-1.5f,  1.5f),
+    Coord(-1.5f,  0.0f),
+    Coord(-1.5f, -1.5f),
+  
+    Coord( 1.5f,  1.5f),
+    Coord( 1.5f,  0.0f),
+    Coord( 1.5f, -1.5f),
+  
+    Coord(-2.5f,  2.5f),
+    Coord(-2.5f,  0.0f),
+    Coord(-2.5f, -2.5f),
+  
+    Coord( 2.5f,  2.5f),
+    Coord( 2.5f,  0.0f),
+    Coord( 2.5f, -2.5f)
+  },
+  START(-3.5, 0),
+  END(-3.5, 0) {}
 
-  //Locations of token depressions
-  HOLES[ 0] = Coord(-1.0f,  1.0f);
-  HOLES[ 1] = Coord(-1.0f,  0.0f);
-  HOLES[ 2] = Coord(-1.0f, -1.0f);
-
-  HOLES[ 3] = Coord( 1.0f,  1.0f);
-  HOLES[ 4] = Coord( 1.0f,  0.0f);
-  HOLES[ 5] = Coord( 1.0f, -1.0f);
-
-  HOLES[ 6] = Coord(-2.0f,  2.0f);
-  HOLES[ 7] = Coord(-2.0f,  0.0f);
-  HOLES[ 8] = Coord(-2.0f, -2.0f);
-
-  HOLES[ 9] = Coord( 2.0f,  2.0f);
-  HOLES[10] = Coord( 2.0f,  0.0f);
-  HOLES[11] = Coord( 2.0f, -2.0f);
-
-  HOLES[12] = Coord(-1.5f,  1.5f);
-  HOLES[13] = Coord(-1.5f,  0.0f);
-  HOLES[14] = Coord(-1.5f, -1.5f);
-
-  HOLES[15] = Coord( 1.5f,  1.5f);
-  HOLES[16] = Coord( 1.5f,  0.0f);
-  HOLES[17] = Coord( 1.5f, -1.5f);
-
-  HOLES[18] = Coord(-2.5f,  2.5f);
-  HOLES[19] = Coord(-2.5f,  0.0f);
-  HOLES[20] = Coord(-2.5f, -2.5f);
-
-  HOLES[21] = Coord( 2.5f,  2.5f);
-  HOLES[22] = Coord( 2.5f,  0.0f);
-  HOLES[23] = Coord( 2.5f, -2.5f);
-}
-
-Board::Board(float l, float w, const Coord* squares, int s, const Coord* holes, int h, Coord start, Coord end) : length(l), width(w), NUM_COLORS(s), NUM_HOLES(s), START(start), END(end) {
-  for(int i = 0; i < s; i++) SQUARES[i] = squares[i];
-  for(int i = 0; i < h; i++) HOLES[i] = holes[i];
+Board::Board(float l, float w, const Coord* squares, int s, const Coord* holes, int h, Coord start, Coord end) : length(l), width(w), NUM_COLORS(s), NUM_HOLES(s), SQUARES(squares, squares + s), HOLES(holes, holes + h), START(start), END(end) {
+  //for(int i = 0; i < s; i++) SQUARES[i] = squares[i];
+  //for(int i = 0; i < h; i++) HOLES[i] = holes[i];
 }
 
 float Board::getLength() const {
