@@ -1,28 +1,21 @@
 #ifndef CONTROLLER_H
 #define CONTROLLER_H
 
-#include "Coord.h"
-#include "Token.h"
-#include "Robot.h"
+#include "Direction.h"
 
-const Coord START(-3.5, 0);
-const Coord END(-3.5, 0);
-const int DROP_PATH[NUM_COLORS] = {5, 4, 3, 0, 1, 2, 6};
-const int COLLECT_PATH[NUM_RINGS*(NUM_COLORS-1)][2] = {
-  {3,2},{1,2},{2,2},{0,2},
-  {0,1},{2,1},{1,1},{3,1},
-  {3,0},{1,0},{2,0},{0,0},
-  {0,3},{2,3},{1,3},{3,3},
-  {3,4},{1,4},{2,4},{0,4},
-  {0,5},{2,5},{1,5},{3,5}
-};
+class Robot;
 
 class Controller {
   private:
-    const Robot* const robot;
+    Robot& robot;
+    static const int NUM_LINES;
+    Direction follow_sequence[NUM_LINES];
+    Direction cover_sequence[NUM_LINES];
+    void coverLine(Direction, int) const;
   public:
-    Controller(Robot*);
-    runAlgorithm() const;
+    Controller(Robot&);
+    Controller(Robot&, Direction*, Direction*, int);
+    void runAlgorithm() const;
 };
 
 #endif

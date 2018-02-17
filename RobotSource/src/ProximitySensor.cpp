@@ -2,4 +2,4 @@
 
 ProximitySensor::ProximitySensor() {}
 
-float ProximitySensor::getDistance() {return 0;}
+float ProximitySensor::getDistance() const {return 0;}

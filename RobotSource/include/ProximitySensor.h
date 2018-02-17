@@ -6,7 +6,7 @@
 class ProximitySensor : private SerialLink {
   public:
     ProximitySensor();
-    float getDistance();
+    float getDistance() const;
 };
 
 #endif

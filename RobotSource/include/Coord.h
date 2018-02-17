@@ -5,9 +5,8 @@ class Coord {
   public:
     float x;
     float y;
-    Coord();
     Coord(float, float);
-    float dist(Coord); //distance between this coord and another coord
+    float dist(Coord) const; //distance between this coord and another coord
 };
 
 #endif

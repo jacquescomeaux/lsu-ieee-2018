@@ -46,5 +46,5 @@ void loop() {
   //robot->checkEdges();
   if(Serial.available()) parseCommand();
   robot->approachSpeed();
-  //delay(100);
+  //delay(10);
 }

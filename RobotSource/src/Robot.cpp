@@ -1,12 +1,7 @@
 #include "../include/Robot.h"
 
-Robot::Robot() {
-}
+Robot::Robot() : control(*this) {}
 
-Coord Robot::getLocation() {
+/*Coord Robot::getLocation() const {
   return location;
-}
-    
-void Robot::setLocation(Coord c) {
-  location = c;
-} 
+}*/

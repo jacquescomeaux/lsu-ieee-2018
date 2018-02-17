@@ -6,16 +6,19 @@
 
 class Board {
   private:
-    double length, width;
+    const float length, width;
     const int NUM_COLORS, NUM_HOLES;
     Coord SQUARES[NUM_COLORS], HOLES[NUM_HOLES];
+    const Coord START, END;
   public:
     std::vector<Token> tokens;
     Board();
-    Board(double, double);
-    Board(double, double, const Coord*, int, const Coord*, int);
-    double getLength() const;
-    double getWidth() const;
+    Board(float, float);
+    Board(float, float, const Coord*, int, const Coord*, int);
+    float getLength() const;
+    float getWidth() const;
+    Coord getStart() const;
+    Coord getEnd() const;
     void checkTokens() const; //Print token locations and check for correct placement
     void clear(); //Remove all tokens from board
 };

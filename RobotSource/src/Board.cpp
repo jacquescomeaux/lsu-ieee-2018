@@ -5,7 +5,7 @@
 
 Board::Board() : Board(8, 8) {}
 
-Board::Board(double l, double w) : length(l), width(w), NUM_HOLES(24), NUM_COLORS(7) {
+Board::Board(float l, float w) :length(l), width(w), NUM_HOLES(24), NUM_COLORS(7), START(-3.5, 0), END(-3.5, 0) {
   SQUARES[0] = Coord(-3.5f,  3.5f);     //Red
   SQUARES[1] = Coord(-3.5f,  0.0f);     //Green
   SQUARES[2] = Coord(-3.5f, -3.5f);     //Blue
@@ -48,24 +48,31 @@ Board::Board(double l, double w) : length(l), width(w), NUM_HOLES(24), NUM_COLOR
   HOLES[23] = Coord( 2.5f, -2.5f);
 }
 
-Board::Board(double l, double w, const Coord* squares, int s, const Coord* holes, int h) : length(l), width(w), NUM_COLORS(s), NUM_HOLES(s) {
+Board::Board(float l, float w, const Coord* squares, int s, const Coord* holes, int h, Coord start, Coord end) : length(l), width(w), NUM_COLORS(s), NUM_HOLES(s), START(start), END(end) {
   for(int i = 0; i < s; i++) SQUARES[i] = squares[i];
   for(int i = 0; i < h; i++) HOLES[i] = holes[i];
 }
 
-double Board::getLength() const {
+float Board::getLength() const {
   return length;
 }
 
-double Board::getWidth() const {
+float Board::getWidth() const {
   return width;
+}
+Coord Board::getStart() const {
+  return START;
+}
+
+Coord Board::getEnd() const {
+  return END;
 }
 
 void Board::checkTokens() const {
   if(tokens.empty()) return;
   for(int i = 0; i < tokens.size(); i++) {
-    double x = tokens[i].getLocation().x;
-    double y = tokens[i].getLocation().y;
+    float x = tokens[i].getLocation().x;
+    float y = tokens[i].getLocation().y;
     Color c = tokens[i].getColor();
     std::string s;
     switch(c) {

@@ -7,7 +7,7 @@
 class RGBSensor : private SerialLink {
   public:
     RGBSensor();
-    Color getColor();
+    Color getColor() const;
 };
 
 #endif

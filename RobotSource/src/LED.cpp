@@ -2,6 +2,8 @@
 
 LED::LED() {}
 
-void LED::setState() {}
+void LED::setState(LED_STATE) {}
 
-bool LED::isOn() {return false;} 
+bool LED::isOn() const {
+  return on;
+} 

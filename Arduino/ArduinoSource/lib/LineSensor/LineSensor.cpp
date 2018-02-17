@@ -16,7 +16,6 @@ void LineSensor::calibrateSensors() {
 
 int LineSensor::getLineError() {
   qtrrc.read(sensorValues);
-  Serial.println("running get line error");
   return qtrrc.readLine(sensorValues) - 1000;
 }
 

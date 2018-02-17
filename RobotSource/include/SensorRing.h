@@ -14,11 +14,11 @@ class SensorRing : private SerialLink {
         float getAdjustment() {return 0;}
         bool onLine() {return true;}
     };
-    SensorStrip line_sensors[8];
+    const SensorStrip line_sensors[8];
   public:
     SensorRing();
-    bool onLine();
-    bool atIntersection();
+    bool onLine() const;
+    bool atIntersection() const;
 };
 
 #endif

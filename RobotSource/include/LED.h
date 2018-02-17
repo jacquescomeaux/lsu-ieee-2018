@@ -8,8 +8,9 @@ class LED : private SerialLink {
     bool on;
   public:
     LED();
-    void setState(/*LEDSTATE*/);
-    bool isOn();
+    enum class LED_STATE {OFF, ON};
+    void setState(LED_STATE);
+    bool isOn() const;
 };
 
 #endif

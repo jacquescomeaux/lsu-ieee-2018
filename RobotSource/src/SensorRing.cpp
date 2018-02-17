@@ -2,10 +2,6 @@
 
 SensorRing::SensorRing() {}
 
-bool SensorRing::onLine() {
-  return true;
-}
+bool SensorRing::onLine() const { return true; }
 
-bool SensorRing::atIntersection() {
-  return true;
-}
+bool SensorRing::atIntersection() const { return true; }

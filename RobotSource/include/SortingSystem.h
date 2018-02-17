@@ -12,16 +12,17 @@
 
 class SortingSystem {
   private:
-    MagnetArm token_arm;
+    const MagnetArm token_arm;
     LED token_light;
-    RGBSensor color_sensor;
+    const RGBSensor color_sensor;
     SortingPlate storage_plate, selector_plate;
-    std::vector<Token> tokens;
+    Token* held_token;
+    std::vector<Token*> token_stacks[7];
   protected:
     SortingSystem();
   public:
     void pickUpToken();
-    Color checkTokenColor();
+    Color checkTokenColor() const;
     void sortToken();
     void dropTokenStack(Color);
 };

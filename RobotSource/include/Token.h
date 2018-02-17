@@ -6,16 +6,17 @@
 
 class Token {
   private:
-    Coord location;
-    Color bottom_color;
+    const Color bottom_color;
+    Coord* location;
+    bool external_location;
   public:
-    Token();
     Token(Color);
-    Token(Coord, Color);
-    bool onBot; //whether or not token is currently on a robot; location is meaningless if true
+    Token(Color, Coord);
+    Token(Color, Coord*);
+    ~Token();
     void setLocation(Coord);
+    void setLocation(Coord*);
     Coord getLocation() const;
-    void setColor(Color);
     Color getColor() const;
 };
 

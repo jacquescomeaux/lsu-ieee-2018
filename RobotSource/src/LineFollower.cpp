@@ -2,4 +2,6 @@
 
 LineFollower::LineFollower() {}
 
-void LineFollower::followUntilIntersection() {}
+void LineFollower::followLine(Direction dir) const {}
+
+void LineFollower::followUntilIntersection(Direction dir) const {}

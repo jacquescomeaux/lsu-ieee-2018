@@ -4,7 +4,7 @@ SortingSystem::SortingSystem() {}
 
 void pickUpToken() {}
 
-Color SortingSystem::checkTokenColor() {return Color::NONE;}
+Color SortingSystem::checkTokenColor() const {return Color::NONE;}
 
 void SortingSystem::sortToken() {}
 

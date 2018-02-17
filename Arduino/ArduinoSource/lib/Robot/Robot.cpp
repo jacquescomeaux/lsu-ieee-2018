@@ -1,9 +1,9 @@
 #include <Robot.h>
 
 Robot::Robot() :
-  KP(0.1f),
-  KD(5.0f),
-  default_speed(70),
+  KP(0.07f),
+  KD(0.2f),
+  default_speed(100),
   motor_shields {
     MotorShield(0x61),
     MotorShield(0x62)
@@ -90,7 +90,7 @@ void Robot::correctErrors() {
   //line_sensors[0].printReadings(); 
   int adjustment = this->KP * error + this->KD * (error - last_error);
   this->last_error = error;
-  for(int i = 0; i < 4; i++) wheels[i].setSpeed();//:adjustSpeed((i<2)?adjustment:-adjustment);
+  for(int i = 0; i < 4; i++) wheels[i].adjustSpeed((i<2)?adjustment:-adjustment);
 }
 
 void Robot::approachSpeed() {
