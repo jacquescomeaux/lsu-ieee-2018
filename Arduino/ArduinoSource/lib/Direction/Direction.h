@@ -15,4 +15,4 @@ enum class Direction {
   COUNTER_CLOCKWISE
 };
 
-#endif
+#endif//DIRECTION_H

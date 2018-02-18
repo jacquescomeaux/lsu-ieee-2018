@@ -14,4 +14,4 @@ class MagnetArm {
     void dropTokens() const;
 };
 
-#endif
+#endif//MAGNETARM_H

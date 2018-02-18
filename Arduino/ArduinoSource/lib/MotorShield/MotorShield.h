@@ -13,4 +13,4 @@ class MotorShield {
     Adafruit_DCMotor* getMotor(uint8_t) const; 
 };
 
-#endif
+#endif//MOTORSHIELD_H

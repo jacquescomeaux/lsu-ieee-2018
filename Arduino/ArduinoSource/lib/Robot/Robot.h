@@ -2,11 +2,13 @@
 #define ROBOT_H
 
 #include <Direction.h>
+
+#include <SortingSystem.h>
+
 #include <MotorShield.h>
 #include <Wheel.h>
 #include <ProximitySensor.h>
 #include <LineSensor.h>
-#include <SortingSystem.h>
 
 class Robot {
   private:
@@ -41,4 +43,4 @@ class SortBot : public Robot, public SortingSystem {
     SortBot();
 };
 
-#endif
+#endif//ROBOT_H

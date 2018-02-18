@@ -21,14 +21,14 @@ Robot::Robot() :
     ProximitySensor()
   },
   line_sensors {
-    LineSensor(30),
-    LineSensor(33),
-    LineSensor(36),
-    LineSensor(39),
-    LineSensor(42),
-    LineSensor(45),
-    LineSensor(48),
-    LineSensor(51)
+    LineSensor(30, 31, 32),
+    LineSensor(33, 34, 35),
+    LineSensor(36, 37, 38),
+    LineSensor(39, 40, 41),
+    LineSensor(42, 43, 44),
+    LineSensor(45, 46, 47),
+    LineSensor(48, 49, 50),
+    LineSensor(51, 52, 53)
   },
   following_line(false),
   current_direction(Direction::FRONT),

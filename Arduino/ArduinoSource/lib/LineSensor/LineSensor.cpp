@@ -1,7 +1,14 @@
 #include <LineSensor.h>
 
-LineSensor::LineSensor(unsigned char pin) :
-  pins {pin, pin + 1, pin + 2},
+#include <Arduino.h>
+
+LineSensor::LineSensor(unsigned char* p) :
+  pins {p[0], p[1], p[2]},
+  qtrrc(pins, 3),
+  sensorValues {0, 0, 0} {} 
+
+LineSensor::LineSensor(unsigned char p1, unsigned char p2, unsigned char p3) :
+  pins {p1, p2, p3},
   qtrrc(pins, 3),
   sensorValues {0, 0, 0} {} 
 

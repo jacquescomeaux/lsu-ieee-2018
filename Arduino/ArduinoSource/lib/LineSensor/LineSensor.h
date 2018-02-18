@@ -2,18 +2,19 @@
 #define LINESENSOR_H
 
 #include <QTRSensors.h>
-#include <Arduino.h>
+//#include <Arduino.h>
 
 class LineSensor {
   private:
-    const unsigned char pins[3];
-    const QTRSensorsRC qtrrc;
+    unsigned char pins[3];
+    QTRSensorsRC qtrrc;
     unsigned int sensorValues[3];
   public:
-    LineSensor(unsigned char);
+    LineSensor(unsigned char*);
+    LineSensor(unsigned char, unsigned char, unsigned char);
     ///void calibrateSensors();
     int getLineError();
     void printReadings() const;
 };
 
-#endif
+#endif//LINESENSOR_H

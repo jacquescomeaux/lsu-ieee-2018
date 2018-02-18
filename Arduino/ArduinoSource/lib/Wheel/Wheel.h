@@ -17,4 +17,4 @@ class Wheel {
     void stop();
 };
 
-#endif
+#endif//WHEEL_H
