@@ -89,7 +89,7 @@ void Robot::correctErrors() {
   //Serial.print("ERROR=");
   //Serial.println(error);
   line_sensors[0].printReadings(); 
-  int adjustment = this->KP * error + this->KD * (error - last_error);
+  int adjustment = KP * error + KD * (error - last_error);
   this->last_error = error;
   //for(int i = 0; i < 4; i++) wheels[i].adjustSpeed((i<2)?adjustment:-adjustment);
 }
@@ -109,8 +109,8 @@ void Robot::move(Direction dir) {
 }
 
 void Robot::move(Direction dir, int speed) {
-  this->following_line = false;
-  this->setWheelSpeeds(dir, speed);
+  following_line = false;
+  setWheelSpeeds(dir, speed);
 }
 
 void Robot::followLine(Direction dir) {
@@ -119,8 +119,8 @@ void Robot::followLine(Direction dir) {
 }
 
 void Robot::followLine(Direction dir, int speed) {
-  this->following_line = true;
-  this->setWheelSpeeds(dir, speed);
+  following_line = true;
+  setWheelSpeeds(dir, speed);
 }
 
 void Robot::veerLeft() {
