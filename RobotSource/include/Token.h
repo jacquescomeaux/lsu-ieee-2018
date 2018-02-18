@@ -1,8 +1,8 @@
 #ifndef TOKEN_H
 #define TOKEN_H
 
-#include "Coord.h"
 #include "Color.h"
+#include "Coord.h"
 
 class Token {
   private:

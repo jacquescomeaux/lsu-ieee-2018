@@ -1,9 +1,11 @@
 #ifndef DRIVETRAIN_H
 #define DRIVETRAIN_H
 
-#include "Wheel.h"
-#include "SerialLink.h"
 #include "Direction.h"
+
+#include "SerialLink.h"
+
+#include "Wheel.h"
 
 class Drivetrain : private SerialLink {
   private:

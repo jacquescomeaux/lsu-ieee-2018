@@ -2,6 +2,7 @@
 #define RGBSENSOR_H
 
 #include "Color.h"
+
 #include "SerialLink.h"
 
 class RGBSensor : private SerialLink {

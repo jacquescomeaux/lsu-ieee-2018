@@ -2,7 +2,6 @@
 #define CONTROLLER_H
 
 #include "Direction.h"
-
 #include <vector> 
 
 class SortBot;

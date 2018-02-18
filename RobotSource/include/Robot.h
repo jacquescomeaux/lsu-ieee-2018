@@ -3,12 +3,14 @@
 
 #include "Coord.h"
 #include "Direction.h"
-#include "Camera.h"
+
 #include "Drivetrain.h"
-#include "SensorRing.h"
-#include "ProximitySensor.h"
 #include "LineFollower.h"
 #include "SortingSystem.h"
+
+#include "Camera.h"
+#include "SensorRing.h"
+#include "ProximitySensor.h"
 #include "Controller.h"
 
 class Robot : public Drivetrain, public LineFollower {

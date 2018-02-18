@@ -1,7 +1,7 @@
 #include "../include/Board.h"
 
-#include <iostream>
 #include <cmath>
+#include <iostream>
 
 Board::Board() : Board(8, 8) {}
 

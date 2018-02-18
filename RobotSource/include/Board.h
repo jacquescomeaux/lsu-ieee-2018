@@ -2,7 +2,6 @@
 #define BOARD_H
 
 #include "Token.h"
-
 #include <vector>
 
 class Board {

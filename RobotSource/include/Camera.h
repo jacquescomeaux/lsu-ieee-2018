@@ -2,7 +2,6 @@
 #define CAMERA_H
 
 #include "Coord.h"
-
 #include <string>
 
 class Camera {

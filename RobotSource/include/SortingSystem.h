@@ -1,14 +1,15 @@
 #ifndef SORTINGSYSTEM_H
 #define SORTINGSYSTEM_H
 
-#include "Token.h"
 #include "Color.h"
+#include "Token.h"
+#include <vector>
+
 #include "MagnetArm.h"
 #include "LED.h"
 #include "RGBSensor.h"
 #include "SortingPlate.h"
 
-#include <vector>
 
 class SortingSystem {
   private:
