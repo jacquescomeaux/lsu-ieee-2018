@@ -9,7 +9,7 @@ void Wheel::setSpeed(int s) {
   corrected_speed = s;
 }
 
-int Wheel::getSpeed() {
+int Wheel::getSpeed() const {
   return speed;
 }
 

@@ -1,19 +1,18 @@
 #ifndef LED_H
 #define LED_H
 
-enum class LED_STATE {
-  OFF,
-  ON
-};
-
 class LED {
   private:
     bool on;
   public:
     LED();
+    enum class LED_STATE {
+      OFF,
+      ON
+    };
     void setState(LED_STATE);
     void toggleState();
-    bool isOn();
+    bool isOn() const;
 };
 
 #endif

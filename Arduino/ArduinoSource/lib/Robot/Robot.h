@@ -10,12 +10,12 @@
 
 class Robot {
   private:
-    const float KP, KD;
+    float KP, KD;
     const int default_speed;
-    MotorShield motor_shields[2]; 
+    const MotorShield motor_shields[2]; 
     Wheel wheels[4];
-    ProximitySensor edge_detectors[4];
-    LineSensor line_sensors[8];
+    const ProximitySensor edge_detectors[4];
+    const LineSensor line_sensors[8];
     bool following_line;
     Direction current_direction;
     int last_error;

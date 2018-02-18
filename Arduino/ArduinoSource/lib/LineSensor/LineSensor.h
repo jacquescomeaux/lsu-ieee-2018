@@ -12,7 +12,7 @@ class LineSensor {
     LineSensor(unsigned char);
     void calibrateSensors();
     int getLineError();
-    void printReadings();
+    void printReadings() const;
 };
 
 #endif

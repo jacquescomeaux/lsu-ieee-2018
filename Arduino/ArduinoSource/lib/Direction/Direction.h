@@ -2,6 +2,7 @@
 #define DIRECTION_H
 
 enum class Direction {
+  NONE,
   FRONT,
   BACK,
   LEFT,

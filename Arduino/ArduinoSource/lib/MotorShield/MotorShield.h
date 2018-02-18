@@ -5,12 +5,12 @@
 
 class MotorShield {
   private:
-    Adafruit_MotorShield AFMS;
+    const Adafruit_MotorShield AFMS;
   public:
     MotorShield();
     MotorShield(uint8_t);
     MotorShield(uint8_t, uint16_t);
-    Adafruit_DCMotor* getMotor(uint8_t); 
+    Adafruit_DCMotor* getMotor(uint8_t) const; 
 };
 
 #endif

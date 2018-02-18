@@ -3,15 +3,15 @@
 
 class MagnetArm {
   private:
-    void goToHeight(float);
-    void magnetize();
-    void demagnetize();
+    void goToHeight(float) const;
+    void magnetize() const;
+    void demagnetize() const;
   public:
     MagnetArm();
-    void reset();
-    void pickUpToken();
-    void storeTokens();
-    void dropTokens();
+    void reset() const;
+    void pickUpToken() const;
+    void storeTokens() const;
+    void dropTokens() const;
 };
 
 #endif

@@ -6,4 +6,6 @@ void LED::setState(LED_STATE state) {}
 
 void LED::toggleState() {}
 
-bool LED::isOn() {return false;} 
+bool LED::isOn() const {
+  return on;
+} 

@@ -5,7 +5,7 @@ class ProximitySensor {
   private:
   public:
     ProximitySensor();
-    bool edgeDetected();
+    bool edgeDetected() const;
 };
 
 #endif
