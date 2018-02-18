@@ -4,6 +4,7 @@
 class SerialLink {
   protected:
     SerialLink();
+    ~SerialLink();
     const char* CONFIG;
     const int PORTNUM, BAUD;
     int receiveInt() const;

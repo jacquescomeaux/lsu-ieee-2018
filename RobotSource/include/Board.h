@@ -15,7 +15,7 @@ class Board {
     std::vector<Token> tokens;
     Board();
     Board(float, float);
-    Board(float, float, const Coord*, int, const Coord*, int);
+    Board(float, float, const Coord*, int, const Coord*, int, Coord, Coord);
     float getLength() const;
     float getWidth() const;
     Coord getStart() const;

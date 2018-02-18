@@ -2,8 +2,7 @@
 #include "../include/Robot.h"
 
 int main() {
-  //Board platform();
-  //SortBot sorty;
-  Robot rob;
+  SortBot sorty;
+  sorty.control.runAlgorithm();
   return 0;
 }

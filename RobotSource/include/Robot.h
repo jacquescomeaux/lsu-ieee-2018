@@ -19,13 +19,15 @@ class Robot : public Drivetrain, public LineFollower {
     const ProximitySensor prox_sensors[4];
   public:
     Robot();
-    const Controller control;
+    bool tokenSeen() const;
+    void center() const;
     //Coord getLocation() const;
 };
 
 class SortBot : public Robot, public SortingSystem {
   public:
     SortBot();
+    const Controller control;
 };
 
 #endif

@@ -99,7 +99,7 @@ void Board::checkTokens() const {
         break;
       default : s = "Error";
     }
-    if((std::abs(x-SQUARES[c].x) < 0.5) && (std::abs(y-SQUARES[c].y) < 0.5)) std::cout << "Correct:   ";
+    if((std::abs(x-SQUARES[static_cast<int>(c)].x) < 0.5) && (std::abs(y-SQUARES[static_cast<int>(c)].y) < 0.5)) std::cout << "Correct:   ";
     else std::cout << "Incorrect: ";
     std::cout << s << " token at location (" << x << ", " << y << ")" << std::endl;
   }

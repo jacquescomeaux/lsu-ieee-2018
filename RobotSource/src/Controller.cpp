@@ -1,7 +1,7 @@
 #include "../include/Controller.h"
 #include "../include/Robot.h"
 
-Controller::Controller(Robot& r) :
+Controller::Controller(SortBot& r) :
   robot(r),
   NUM_LINES(6),
   follow_sequence {
@@ -21,7 +21,7 @@ Controller::Controller(Robot& r) :
     Direction::BACK_RIGHT
   } {}
 
-Controller::Controller(Robot& r, Direction* f_seq, c_seq, int n) :
+Controller::Controller(SortBot& r, Direction* f_seq, Direction* c_seq, int n) :
   robot(r),
   NUM_LINES(n),
   follow_sequence(f_seq, f_seq + n),
@@ -45,6 +45,6 @@ void Controller::runAlgorithm() const {
   for(int i = 0; i < 2; i++) robot.moveUntilLine(Direction::FRONT);
   for(int i = 0; i < NUM_LINES; i++) {
     robot.followUntilIntersection(follow_sequence[i]);
-    coverLine(cover_sequence[i]);
+    coverLine(cover_sequence[i], 4);
   }
 };

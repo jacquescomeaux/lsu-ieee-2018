@@ -5,18 +5,18 @@
 
 #include <vector> 
 
-class Robot;
+class SortBot;
 
 class Controller {
   private:
-    Robot& robot;
+    SortBot& robot;
     const int NUM_LINES;
     const std::vector<Direction> follow_sequence, cover_sequence;
     //void init(Direction*, Direction*, int)
     void coverLine(Direction, int) const;
   public:
-    Controller(Robot&);
-    Controller(Robot&, Direction*, Direction*, int);
+    Controller(SortBot&);
+    Controller(SortBot&, Direction*, Direction*, int);
     void runAlgorithm() const;
 };
 
