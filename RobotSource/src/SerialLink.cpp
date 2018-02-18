@@ -27,6 +27,10 @@ float SerialLink::receiveFloat() const {
   return n.floating;
 }
 
+void SerialLink::transmitChar(char c) const {
+  SerialLink::transmitBuffer(&c, sizeof(char));
+}
+
 void SerialLink::transmitInt(int n) const {
   //union multinum n;
   //n.integer = t;

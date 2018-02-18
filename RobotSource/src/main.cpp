@@ -2,7 +2,7 @@
 #include "../include/Robot.h"
 
 int main() {
-  SortBot sorty;
+  const SortBot sorty;
   sorty.control.runAlgorithm();
   return 0;
 }

@@ -2,8 +2,8 @@
 
 Camera::Camera() : Camera("untitled camera") {}
 
-Camera::Camera(std::string name) {
-  this->name = name;
+Camera::Camera(std::string n) {
+  name = n;
 }
 
 std::string Camera::getName() const {
@@ -12,4 +12,8 @@ std::string Camera::getName() const {
 
 bool Camera::onLine() const {return false;}
 
-bool Camera::getIntersection() const {return true;}
+bool Camera::atIntersection() const {return true;}
+
+bool Camera::tokenSeen() const {return false;}
+
+Coord Camera::determineLocation() const {return Coord(0,0);}

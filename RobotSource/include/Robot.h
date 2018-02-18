@@ -2,6 +2,7 @@
 #define ROBOT_H
 
 #include "Coord.h"
+#include "Direction.h"
 #include "Camera.h"
 #include "Drivetrain.h"
 #include "SensorRing.h"
@@ -19,9 +20,11 @@ class Robot : public Drivetrain, public LineFollower {
     const ProximitySensor prox_sensors[4];
   public:
     Robot();
-    bool tokenSeen() const;
+    Coord getLocation() const;
+    void moveUntilLine(Direction) const;
+    void followUntilIntersection(Direction) const;
     void center() const;
-    //Coord getLocation() const;
+    bool tokenSeen() const;
 };
 
 class SortBot : public Robot, public SortingSystem {

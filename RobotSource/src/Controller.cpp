@@ -25,13 +25,7 @@ Controller::Controller(SortBot& r, Direction* f_seq, Direction* c_seq, int n) :
   robot(r),
   NUM_LINES(n),
   follow_sequence(f_seq, f_seq + n),
-  cover_sequence(c_seq, c_seq + n)
-  {
-  /*for(int i = 0; i < n; i++) {
-    follow_sequence[i] = f_seq[i];
-    cover_sequence[i] = c_seq[i];
-  }*/
-}
+  cover_sequence(c_seq, c_seq + n) {} 
 
 void Controller::coverLine(Direction dir, int num_tokens) const {
   for(int i = 0; i < num_tokens; i++) {
