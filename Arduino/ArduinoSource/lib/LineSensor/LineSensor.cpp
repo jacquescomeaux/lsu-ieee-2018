@@ -1,10 +1,16 @@
 #include <LineSensor.h>
 
-LineSensor::LineSensor(unsigned char pin) : qtrrc(), sensorValues {0,0,0} {
+void LineSensor::init(pin) const {
   unsigned char pins[3] = {pin, pin + 1, pin + 2};
-  qtrrc.init(pins, 3);
+  qtrrc(pins, 3);
 }
 
+LineSensor::LineSensor(unsigned char pin) : init(pin), sensorValues {0,0,0} {
+  //unsigned char pins[3] = {pin, pin + 1, pin + 2};
+  //qtrrc.init(pins, 3);
+}
+
+LineSensor::LineSensor(unsigned char pin) : qtrrc(), sensorValues {0,0,0} {
 /*void LineSensor::calibrateSensors() {
   int i;
   for (i = 0; i < 250; i++)  // the calibration will take a few seconds
