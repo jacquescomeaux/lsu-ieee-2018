@@ -15,7 +15,7 @@ class Robot {
     const MotorShield motor_shields[2]; 
     Wheel wheels[4];
     const ProximitySensor edge_detectors[4];
-    const LineSensor line_sensors[8];
+    LineSensor line_sensors[8];
     bool following_line;
     Direction current_direction;
     int last_error;

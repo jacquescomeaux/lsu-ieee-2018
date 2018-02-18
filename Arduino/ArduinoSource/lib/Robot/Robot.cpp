@@ -90,7 +90,7 @@ void Robot::correctErrors() {
   //Serial.println(error);
   line_sensors[0].printReadings(); 
   int adjustment = KP * error + KD * (error - last_error);
-  this->last_error = error;
+  last_error = error;
   //for(int i = 0; i < 4; i++) wheels[i].adjustSpeed((i<2)?adjustment:-adjustment);
 }
 
@@ -100,7 +100,7 @@ void Robot::approachSpeed() {
 }
 
 void Robot::checkEdges() {
-  for(ProximitySensor& s : edge_detectors) if(s.edgeDetected()) stop();
+  for(const ProximitySensor& s : edge_detectors) if(s.edgeDetected()) stop();
 }
 
 void Robot::move(Direction dir) {
