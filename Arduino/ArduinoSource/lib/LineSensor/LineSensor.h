@@ -2,7 +2,7 @@
 #define LINESENSOR_H
 
 #include <QTRSensors.h>
-//#include <Arduino.h>
+#include <Arduino.h>
 
 class LineSensor {
   private:

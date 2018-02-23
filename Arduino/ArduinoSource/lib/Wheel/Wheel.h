@@ -5,7 +5,7 @@
 
 class Wheel {
   private:
-    const Adafruit_DCMotor* motor;
+    Adafruit_DCMotor* motor;
     int speed, desired_speed, corrected_speed;
     bool direction_set;
   public:

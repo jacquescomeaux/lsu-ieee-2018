@@ -4,7 +4,9 @@ SortingSystem::SortingSystem() {}
 
 void pickUpToken() {}
 
-Color SortingSystem::checkTokenColor() const {return Color::NONE;}
+Color SortingSystem::checkTokenColor() const {
+  return color_sensor.getColor();
+}
 
 void SortingSystem::sortToken() {}
 

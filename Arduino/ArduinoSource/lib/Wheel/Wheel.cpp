@@ -15,8 +15,8 @@ int Wheel::getSpeed() const {
 
 void Wheel::adjustSpeed(int adjustment) {
   //correction = adjustment;
-  //corrected_speed = desired_speed + adjustment;
-  corrected_speed += adjustment;
+  corrected_speed = desired_speed + adjustment;
+  //corrected_speed += adjustment;
   //desired_speed += adjustment;
 }
 

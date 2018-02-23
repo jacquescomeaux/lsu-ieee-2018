@@ -53,6 +53,7 @@ void loop() {
   //robot->checkEdges();
   if(Serial.available()) parseCommand();
   robot->approachSpeed();
-  //if(a++%5)robot->correctErrors();
+  //if(a++%5)
+  //robot->correctErrors();
   //delay(10);
 }

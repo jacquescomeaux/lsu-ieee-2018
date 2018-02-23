@@ -14,7 +14,7 @@ class Robot {
   private:
     float KP, KD;
     const int default_speed;
-    const MotorShield motor_shields[2]; 
+    MotorShield motor_shields[2]; 
     Wheel wheels[4];
     const ProximitySensor edge_detectors[4];
     LineSensor line_sensors[8];
