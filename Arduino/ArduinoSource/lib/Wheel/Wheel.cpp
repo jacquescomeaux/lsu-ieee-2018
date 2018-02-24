@@ -14,24 +14,20 @@ int Wheel::getSpeed() const {
 }
 
 void Wheel::adjustSpeed(int adjustment) {
-  //correction = adjustment;
   corrected_speed = desired_speed + adjustment;
-  //corrected_speed += adjustment;
-  //desired_speed += adjustment;
 }
 
 void Wheel::approachSpeed() {
   if(speed != corrected_speed) {
-    //Serial.println("WOWOWO");
     if(speed == 0) direction_set = false;
-    speed += (speed < corrected_speed) ? 2 : -2;
+    speed += (speed < corrected_speed) ? 1 : -1;
     if(!direction_set) {
       direction_set = true;
       if(speed > 0) motor->run(FORWARD);
       else motor->run(BACKWARD);
     }
     uint8_t motor_speed;
-    if(speed > 200 || speed < -200) motor_speed = 200;
+    if(speed > 255 || speed < -255) motor_speed = 255;
     else motor_speed = static_cast<uint8_t>(abs(speed));
     motor->setSpeed(motor_speed);
   }
