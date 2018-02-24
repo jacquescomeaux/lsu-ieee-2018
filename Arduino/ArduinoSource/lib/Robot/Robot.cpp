@@ -3,7 +3,7 @@
 Robot::Robot() :
   KP(0.07f),
   KD(0.04f),
-  default_speed(65),
+  default_speed(100),
   motor_shields {
     MotorShield(0x61),
     MotorShield(0x62)
@@ -51,7 +51,7 @@ void Robot::setWheelSpeeds(Direction dir, int speed) {
       current_direction = Direction::LEFT;
       break;
     case(Direction::RIGHT):
-      for(int i = 0; i < 4; i++) wheels[i].setSpeed((i%2)?speed:-speed);
+      for(int i = 0; i < 4; i++) wheels[i].setSpeed(!(i%2)?speed:-speed);
       current_direction = Direction::RIGHT;
       break;
     case(Direction::FRONT_LEFT):
@@ -85,10 +85,7 @@ void Robot::setWheelSpeeds(Direction dir, int speed) {
 void Robot::correctErrors() {
   if(!following_line) return;
   int error = line_sensors[static_cast<int>(current_direction)].getLineError();  
-  //Serial.print("ERROR=");
-  //Serial.println(error);
   line_sensors[0].printReadings(); 
-  
   int adjustment = KP * error + KD * (error - last_error);
   last_error = error;
   for(int i = 0; i < 4; i++) wheels[i].adjustSpeed((i<2)?adjustment:-adjustment);
