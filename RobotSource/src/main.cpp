@@ -1,9 +1,9 @@
-//#include "../include/Board.h"
+#include "../include/Board.h"
 #include "../include/Robot.h"
 
 int main() {
-  //Board platform();
-  //SortBot sorty;
-  Robot rob;
+  const Board platform;
+  const SortBot sorty;
+  sorty.control.runAlgorithm();
   return 0;
 }

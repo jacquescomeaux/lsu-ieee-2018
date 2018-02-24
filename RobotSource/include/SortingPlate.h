@@ -9,8 +9,8 @@ class SortingPlate : private SerialLink {
   public:
     SortingPlate();
     void reset();
-    void setPosition(float);
-    float getPosition();
+    void moveToPosition(float);
+    float getPosition() const;
 };
 
 #endif

@@ -2,6 +2,7 @@
 #define SORTINGSYSTEM_H
 
 //#include <Color.h>
+
 #include <MagnetArm.h>
 #include <LED.h>
 //#include <RGBSensor.h>
@@ -9,17 +10,17 @@
 
 class SortingSystem {
   private:
-    MagnetArm token_arm;
+    const MagnetArm token_arm;
     LED token_light;
     //RGBSensor color_sensor;
     //SortingPlate storage_plate, selector_plate;
   protected:
     SortingSystem();
   public:
-    void pickUpToken();
-  //  Color checkTokenColor();
-    void sortToken();
-    //void dropTokenStack(Color);
+    void pickUpToken() const;
+  //  Color checkTokenColor() const;
+    void sortToken() const;
+    //void dropTokenStack(Color) const;
 };
 
-#endif
+#endif//SORTINGSYSTEM_H

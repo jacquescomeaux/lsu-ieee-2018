@@ -1,17 +1,17 @@
 #include "../include/MagnetArm.h"
 
-void MagnetArm::goToHeight(float h) {}
+void MagnetArm::goToHeight(float h) const {}
 
-void MagnetArm::magnetize() {}
+void MagnetArm::magnetize() const {}
 
-void MagnetArm::demagnetize() {}
+void MagnetArm::demagnetize() const {}
 
-void MagnetArm::storeTokens() {}
+void MagnetArm::storeTokens() const {}
 
 MagnetArm::MagnetArm() {}
 
-void MagnetArm::reset() {}
+void MagnetArm::reset() const {}
 
-void MagnetArm::pickUpToken() {}
+void MagnetArm::pickUpToken() const {}
 
-void MagnetArm::dropTokens() {}
+void MagnetArm::dropTokens() const {}

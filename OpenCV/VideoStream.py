@@ -23,7 +23,7 @@ boundaries = [
 
 
 def main(argv):
-	cap = cv2.VideoCapture(2)
+	cap = cv2.VideoCapture(0)
 
 	while True:
 		ret, img = cap.read()
@@ -46,7 +46,7 @@ def main(argv):
 	#cap.release()
 	#cap.open(0)
 	cv2.destroyAllWindows()
-	cv2.VideoCapture(2).release()
+	cv2.VideoCapture(0).release()
 
 if __name__ == '__main__':
 	main(sys.argv)

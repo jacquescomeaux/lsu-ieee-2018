@@ -1,6 +1,7 @@
 #include <Robot.h>
 
 SortBot* robot;
+int a;
 
 void parseCommand() {
   unsigned char command = Serial.read();
@@ -13,6 +14,12 @@ void parseCommand() {
     case 'e': robot->move(Direction::FRONT_RIGHT); break;
     case 'z': robot->move(Direction::BACK_LEFT); break;
     case 'c': robot->move(Direction::BACK_RIGHT); break;
+    case 'j': robot->move(Direction::CLOCKWISE); break;
+    case 'k': robot->move(Direction::COUNTER_CLOCKWISE); break;
+    case 'u': robot->veerLeft(); break;
+    case 'i': robot->veerRight(); break;
+    case '+': robot->speedUp(); break;
+    case '-': robot->slowDown(); break;
     case 'W': robot->followLine(Direction::FRONT); break;
     case 'A': robot->followLine(Direction::LEFT); break;
     case 'X': robot->followLine(Direction::BACK); break;
@@ -21,7 +28,7 @@ void parseCommand() {
     case 'E': robot->followLine(Direction::FRONT_RIGHT); break;
     case 'Z': robot->followLine(Direction::BACK_LEFT); break;
     case 'C': robot->followLine(Direction::BACK_RIGHT); break;
-    case 't': test();
+    case 't': test(); break;
     default: robot->stop();
   }
 }
@@ -32,15 +39,21 @@ void test() {
 }
 
 void setup() {
+  a = 0;
   robot = new SortBot();
   robot->stop();
   Serial.begin(9600);
   Serial.println("Robot ready");
-  delay(5000);
+  delay(500);
+  
+  //while(Serial.available()) Serial.read();
 }
 
 void loop() {
-  robot->checkEdges();
+  //robot->checkEdges();
   if(Serial.available()) parseCommand();
   robot->approachSpeed();
+  //if(a++%5)
+  //robot->correctErrors();
+  //delay(10);
 }

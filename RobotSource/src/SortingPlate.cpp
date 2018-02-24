@@ -4,6 +4,6 @@ SortingPlate::SortingPlate() {}
 
 void SortingPlate::reset() {}
 
-void SortingPlate::setPosition(float p) {}
+void SortingPlate::moveToPosition(float p) {}
 
-float SortingPlate::getPosition() {return 0;}
+float SortingPlate::getPosition() const {return 0;}

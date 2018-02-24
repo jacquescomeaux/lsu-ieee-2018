@@ -1,14 +1,20 @@
 #ifndef DRIVETRAIN_H
 #define DRIVETRAIN_H
 
-#include "Wheel.h"
+#include "Direction.h"
+
 #include "SerialLink.h"
+
+#include "Wheel.h"
 
 class Drivetrain : private SerialLink {
   private:
-    Wheel wheels[4];
+    const Wheel wheels[4];
   protected:
     Drivetrain();
+  public:
+    void move(Direction) const;
+    void stop() const;
 };
 
 #endif

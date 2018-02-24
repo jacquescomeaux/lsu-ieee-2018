@@ -2,4 +2,4 @@
 
 ProximitySensor::ProximitySensor() {}
 
-bool ProximitySensor::edgeDetected() {return false;}
+bool ProximitySensor::edgeDetected() const {return false;}

@@ -4,23 +4,21 @@
 #include <libserialport.h>
 
 class SerialLink {
+  private:
+    static int object_count;
+    static struct sp_port* port;
+    const char* PORTNAME;//, CONFIG;
+    const int BAUD;
   protected:
     SerialLink();
     ~SerialLink();
-    const char* PORTNAME;//, CONFIG;
-    const int BAUD;
-    struct sp_port* port;
     int receiveInt() const;
     float receiveFloat() const;
+    void transmitChar(char) const;
     void transmitInt(int) const;
     void transmitFloat(float) const;
     void receiveBuffer(void*, size_t) const;
     void transmitBuffer(void*, size_t) const;
-    union multinum {
-      float floating;
-      int integer;
-      unsigned char data[4];
-    };
 };
 
 #endif
