@@ -47,35 +47,35 @@ void Robot::setWheelSpeeds(Direction dir, int speed) {
       current_direction = Direction::BACK;
       break;
     case(Direction::LEFT):
-      for(int i = 0; i < 4; i++) wheels[i].setSpeed((1 - (2 * (i % 2))) * speed);
+      for(int i = 0; i < 4; i++) wheels[i].setSpeed((i%2)?speed:-speed);
       current_direction = Direction::LEFT;
       break;
     case(Direction::RIGHT):
-      for(int i = 0; i < 4; i++) wheels[i].setSpeed(((2 * (i % 2)) - 1) * speed);
+      for(int i = 0; i < 4; i++) wheels[i].setSpeed((i%2)?speed:-speed);
       current_direction = Direction::RIGHT;
       break;
     case(Direction::FRONT_LEFT):
-      for(int i = 0; i < 4; i++) wheels[i].setSpeed((1 - (i % 2)) * speed);
+      for(int i = 0; i < 4; i++) wheels[i].setSpeed((i%2)?speed:0);
       current_direction = Direction::FRONT_LEFT;
       break;
     case(Direction::FRONT_RIGHT):
-      for(int i = 0; i < 4; i++) wheels[i].setSpeed((i % 2) * speed);
+      for(int i = 0; i < 4; i++) wheels[i].setSpeed(!(i%2)?speed:0);
       current_direction = Direction::FRONT_RIGHT;
       break;
     case(Direction::BACK_LEFT):
-      for(int i = 0; i < 4; i++) wheels[i].setSpeed(-1 * (i % 2) * speed);
+      for(int i = 0; i < 4; i++) wheels[i].setSpeed((i%2)?0:-speed);
       current_direction = Direction::BACK_LEFT;
       break;
     case(Direction::BACK_RIGHT):
-      for(int i = 0; i < 4; i++) wheels[i].setSpeed(((i % 2) - 1) * speed);
+      for(int i = 0; i < 4; i++) wheels[i].setSpeed(!(i%2)?0:-speed);
       current_direction = Direction::BACK_RIGHT;
       break;
     case(Direction::CLOCKWISE):
-      for(int i = 0; i < 4; i++) wheels[i].setSpeed(((2 * (i / 2)) - 1) * speed);
+      for(int i = 0; i < 4; i++) wheels[i].setSpeed(!(i/2)?speed:-speed);
       current_direction = Direction::CLOCKWISE;
       break;
     case(Direction::COUNTER_CLOCKWISE):
-      for(int i = 0; i < 4; i++) wheels[i].setSpeed((1 - (2 * (i / 2))) * speed);
+      for(int i = 0; i < 4; i++) wheels[i].setSpeed((i/2)?speed:-speed);
       current_direction = Direction::COUNTER_CLOCKWISE;
       break;
     default: stop();
@@ -83,12 +83,12 @@ void Robot::setWheelSpeeds(Direction dir, int speed) {
 }
 
 void Robot::correctErrors() {
-//  if(!following_line) return;
-  //Serial.println("CORRECTIGERROS"); 
-  int error = line_sensors[0].getLineError();//static_cast<int>(current_direction)].getLineError();  
+  if(!following_line) return;
+  int error = line_sensors[static_cast<int>(current_direction)].getLineError();  
   //Serial.print("ERROR=");
   //Serial.println(error);
   line_sensors[0].printReadings(); 
+  
   int adjustment = KP * error + KD * (error - last_error);
   last_error = error;
   for(int i = 0; i < 4; i++) wheels[i].adjustSpeed((i<2)?adjustment:-adjustment);
