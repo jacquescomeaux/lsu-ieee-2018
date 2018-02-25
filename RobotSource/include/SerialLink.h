@@ -21,4 +21,4 @@ class SerialLink {
     void transmitBuffer(void*, size_t) const;
 };
 
-#endif
+#endif//SERIALLINK_H

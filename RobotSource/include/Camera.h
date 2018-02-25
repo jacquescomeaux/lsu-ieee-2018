@@ -17,4 +17,4 @@ class Camera {
     Coord determineLocation() const;
 };
 
-#endif
+#endif//CAMERA_H

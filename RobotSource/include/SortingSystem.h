@@ -28,4 +28,4 @@ class SortingSystem {
     void dropTokenStack(Color);
 };
 
-#endif
+#endif//SORTINGSYSTEM_H

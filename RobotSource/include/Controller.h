@@ -19,4 +19,4 @@ class Controller : private SerialLink {
     void runAlgorithm() const;
 };
 
-#endif
+#endif//CONTROLLER_H

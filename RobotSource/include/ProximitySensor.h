@@ -9,4 +9,4 @@ class ProximitySensor : private SerialLink {
     float getDistance() const;
 };
 
-#endif
+#endif//PROXIMITIYSENSOR_H

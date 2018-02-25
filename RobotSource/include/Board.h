@@ -23,4 +23,4 @@ class Board {
     void clear(); //Remove all tokens from board
 };
 
-#endif
+#endif//BOARD_H

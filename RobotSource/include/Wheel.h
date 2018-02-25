@@ -8,4 +8,4 @@ class Wheel : private SerialLink {
     Wheel();
 };
 
-#endif
+#endif//WHEEL_H

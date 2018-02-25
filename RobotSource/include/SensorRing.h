@@ -21,4 +21,4 @@ class SensorRing : private SerialLink {
     bool atIntersection() const;
 };
 
-#endif
+#endif//SENSORRING_H

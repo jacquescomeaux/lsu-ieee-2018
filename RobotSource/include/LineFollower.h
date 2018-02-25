@@ -14,4 +14,4 @@ class LineFollower : private SerialLink {
     void followUntilIntersection(Direction) const;
 };
 
-#endif
+#endif//LINEFOLLOWER_H

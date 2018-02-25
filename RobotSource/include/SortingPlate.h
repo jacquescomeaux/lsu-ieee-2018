@@ -13,4 +13,4 @@ class SortingPlate : private SerialLink {
     float getPosition() const;
 };
 
-#endif
+#endif//SORTINGPLATE_H
