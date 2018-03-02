@@ -10,11 +10,11 @@ void setup() {
   AFMS[1] = Adafruit_MotorShield(0x62);
   for(int i = 0; i < 4; i++) motors[i] = AFMS[i/2].getMotor((i%2)+1);
   for(auto a : AFMS) a.begin();
-  for(auto m : motors) {
-    m->setSpeed(55);
-    m->run(FORWARD);
+  for(int i = 0; i < 4; i++) {
+    motors[i]->setSpeed(55);
+    motors[i]->run(FORWARD);
     delay(2000);
-    m->run(RELEASE);
+    motors[i]->run(RELEASE);
   }
 }
 

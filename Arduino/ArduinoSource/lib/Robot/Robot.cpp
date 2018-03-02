@@ -1,9 +1,9 @@
 #include <Robot.h>
 
 Robot::Robot() :
-  KP(0.07f),
-  KD(0.04f),
-  default_speed(65),
+  KP(0.03f),
+  KD(0.00f),
+  default_speed(90),
   motor_shields {
     MotorShield(0x61),
     MotorShield(0x62)
@@ -15,22 +15,24 @@ Robot::Robot() :
     Wheel(motor_shields[1].getMotor(2))
   },
   edge_detectors {
-    ProximitySensor(),
-    ProximitySensor(),
-    ProximitySensor(),
-    ProximitySensor()
+    ProximitySensor(5, 6),
+    ProximitySensor(0, 0),
+    ProximitySensor(0, 0),
+    ProximitySensor(0, 0)
   },
   line_sensors {
     LineSensor(30, 31, 32),
     LineSensor(33, 34, 35),
-    LineSensor(36, 37, 38),
-    LineSensor(39, 40, 41),
-    LineSensor(42, 43, 44),
-    LineSensor(45, 46, 47),
-    LineSensor(48, 49, 50),
-    LineSensor(51, 52, 53)
+    //LineSensor(36, 37, 38),
+    //LineSensor(39, 40, 41),
+    //LineSensor(42, 43, 44),
+    //LineSensor(45, 46, 47),
+    //LineSensor(48, 49, 50),
+    //LineSensor(51, 52, 53)
   },
   following_line(false),
+  calibrating(false),
+  reading_sensors(false),
   current_direction(Direction::FRONT),
   last_error(0) {
   stop();
@@ -51,7 +53,7 @@ void Robot::setWheelSpeeds(Direction dir, int speed) {
       current_direction = Direction::LEFT;
       break;
     case(Direction::RIGHT):
-      for(int i = 0; i < 4; i++) wheels[i].setSpeed((i%2)?speed:-speed);
+      for(int i = 0; i < 4; i++) wheels[i].setSpeed(!(i%2)?speed:-speed);
       current_direction = Direction::RIGHT;
       break;
     case(Direction::FRONT_LEFT):
@@ -83,12 +85,7 @@ void Robot::setWheelSpeeds(Direction dir, int speed) {
 }
 
 void Robot::correctErrors() {
-  if(!following_line) return;
   int error = line_sensors[static_cast<int>(current_direction)].getLineError();  
-  //Serial.print("ERROR=");
-  //Serial.println(error);
-  line_sensors[0].printReadings(); 
-  
   int adjustment = KP * error + KD * (error - last_error);
   last_error = error;
   for(int i = 0; i < 4; i++) wheels[i].adjustSpeed((i<2)?adjustment:-adjustment);
@@ -97,10 +94,13 @@ void Robot::correctErrors() {
 void Robot::approachSpeed() {
   for(Wheel& w : wheels) w.approachSpeed();
   if(following_line) correctErrors();
+  if(calibrating) for(LineSensor& l : line_sensors) l.calibrateSensors();
+  if(reading_sensors) line_sensors[static_cast<int>(current_direction)].printReadings(); 
 }
 
 void Robot::checkEdges() {
-  for(const ProximitySensor& s : edge_detectors) if(s.edgeDetected()) stop();
+  //for(const ProximitySensor& s : edge_detectors) if(s.edgeDetected()) stop();
+  if(edge_detectors[0].edgeDetected()) stop();
 }
 
 void Robot::move(Direction dir) {
@@ -141,6 +141,36 @@ void Robot::slowDown() {
 void Robot::stop() {
   following_line = false;
   for(Wheel& w : wheels) w.stop();
+}
+
+void Robot::toggleCalibration() {
+  calibrating = !calibrating;
+  if(calibrating) Serial.println("Begin Calibration");
+  else Serial.println("End Calibration");
+}
+
+void Robot::toggleSensorsOutput() {
+  reading_sensors = !reading_sensors;
+  if(calibrating) Serial.println("Begin Output");
+  else Serial.println("End Output");
+}
+
+void Robot::adjustDefaultSpeed(int adjustment) {
+  default_speed += adjustment;
+  Serial.print("Speed = ");
+  Serial.println(default_speed);
+}
+
+void Robot::adjustKP(float adjustment) {
+  KP += adjustment;
+  Serial.print("KP = ");
+  Serial.println(KP);
+}
+
+void Robot::adjustKD(float adjustment) {
+  KD += adjustment;
+  Serial.print("KD = ");
+  Serial.println(KD);
 }
 
 SortBot::SortBot() {}

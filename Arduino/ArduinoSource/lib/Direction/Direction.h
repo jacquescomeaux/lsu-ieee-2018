@@ -11,7 +11,7 @@ enum class Direction {
   BACK_LEFT,
   BACK_RIGHT,
   CLOCKWISE,
-  COUNTER_CLOCKWISE
+  COUNTER_CLOCKWISE,
   NONE
 };
 
