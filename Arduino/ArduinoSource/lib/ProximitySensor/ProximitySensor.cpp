@@ -1,7 +1,7 @@
 #include "ProximitySensor.h"
 #include <Arduino.h>
 
-ProximitySensor::ProximitySensor(int t, int e) : ProximitySensor(t, e, 500) {}
+ProximitySensor::ProximitySensor(int t, int e) : ProximitySensor(t, e, 600) {}
 
 ProximitySensor::ProximitySensor(int t, int e, float c) : trig_pin(t), echo_pin(e), cutoff(c){
   pinMode(trig_pin, OUTPUT);
@@ -24,5 +24,6 @@ float ProximitySensor::getProximity() {
 
 bool ProximitySensor::edgeDetected() {
   updateProximity();
+  //Serial.println(proximity);
   return proximity > cutoff;
 }

@@ -21,6 +21,7 @@ class Robot {
     bool following_line, calibrating, reading_sensors;
     Direction current_direction;
     int last_error;
+    int last_ran = 0;
     void setWheelSpeeds(Direction, int); 
     void correctErrors();
   public:

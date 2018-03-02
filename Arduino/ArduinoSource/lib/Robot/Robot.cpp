@@ -99,8 +99,12 @@ void Robot::approachSpeed() {
 }
 
 void Robot::checkEdges() {
+  //int time = millis();
+  //if(time - last_ran < 100) return;
+  //last_ran = time;
   //for(const ProximitySensor& s : edge_detectors) if(s.edgeDetected()) stop();
   if(edge_detectors[0].edgeDetected()) stop();
+  //Serial.println("hi");
 }
 
 void Robot::move(Direction dir) {
