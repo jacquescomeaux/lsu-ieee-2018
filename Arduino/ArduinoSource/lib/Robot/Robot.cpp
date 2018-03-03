@@ -33,6 +33,7 @@ Robot::Robot() :
   following_line(false),
   calibrating(false),
   reading_sensors(false),
+  edges(false),
   current_direction(Direction::FRONT),
   last_error(0) {
   stop();
@@ -99,12 +100,13 @@ void Robot::approachSpeed() {
 }
 
 void Robot::checkEdges() {
-  //int time = millis();
-  //if(time - last_ran < 100) return;
-  //last_ran = time;
+  int time = millis();
+  if(time - last_ran < 10) return;
+  last_ran = time;
   //for(const ProximitySensor& s : edge_detectors) if(s.edgeDetected()) stop();
+  
   if(edge_detectors[0].edgeDetected()) stop();
-  //Serial.println("hi");
+  Serial.println(edge_detectors[0].getProximity());
 }
 
 void Robot::move(Direction dir) {
@@ -128,11 +130,11 @@ void Robot::followLine(Direction dir, int speed) {
 }
 
 void Robot::veerLeft() {
-  for(int i = 0; i < 4; i++) wheels[i].adjustSpeed((i<2)?-5:5);
+  for(int i = 0; i < 4; i++) wheels[i].incrementSpeed((i<2)?-10:10);
 }
 
 void Robot::veerRight() {
-  for(int i = 0; i < 4; i++) wheels[i].adjustSpeed(!(i<2)?-5:5);
+  for(int i = 0; i < 4; i++) wheels[i].incrementSpeed(!(i<2)?-10:10);
 }
 
 void Robot::speedUp() {
@@ -157,6 +159,12 @@ void Robot::toggleSensorsOutput() {
   reading_sensors = !reading_sensors;
   if(calibrating) Serial.println("Begin Output");
   else Serial.println("End Output");
+}
+
+void Robot::toggleEdgeOutput() {
+  edges = !edges;
+  if(calibrating) Serial.println("Begin Output edges");
+  else Serial.println("End Output edges");
 }
 
 void Robot::adjustDefaultSpeed(int adjustment) {

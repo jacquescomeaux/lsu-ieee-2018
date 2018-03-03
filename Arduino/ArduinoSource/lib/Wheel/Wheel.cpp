@@ -17,6 +17,10 @@ void Wheel::adjustSpeed(int adjustment) {
   corrected_speed = desired_speed + adjustment;
 }
 
+void Wheel::incrementSpeed(int adjustment) {
+  corrected_speed += adjustment;
+}
+
 void Wheel::approachSpeed() {
   if(speed != corrected_speed) {
     if(speed == 0) direction_set = false;

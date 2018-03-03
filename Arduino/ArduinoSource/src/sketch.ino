@@ -30,6 +30,7 @@ void parseCommand() {
     case 'C': robot->followLine(Direction::BACK_RIGHT); break;
     case 'r': robot->toggleCalibration(); break;
     case 'f': robot->toggleSensorsOutput(); break;
+    case 'v': robot->toggleEdgeOutput(); break;
     case '1': robot->adjustKP(-0.01f); break;
     case '2': robot->adjustKP(0.01f); break;
     case '3': robot->adjustKD(-0.01f); break;
@@ -60,8 +61,35 @@ void setup() {
 void loop() {
   robot->checkEdges();
   if(Serial.available()) parseCommand();
+//  int time = millis();
+  //if(time < 2000) aFunc();
+  //else if(time < 4000) bFunc();
+ // else {
+    //bFunc();
+    //veerLeft();
+   // robot->stop();
+    //test();
+  //}
   robot->approachSpeed();
   //if(a++%5)
   //robot->correctErrors();
   //delay(10);
+
+}
+
+void aFunc() {
+  static int ran = 0;
+  if(ran == 0) robot->move(Direction::BACK);
+  ran++;
+}
+
+void bFunc() {
+  
+  static int ran = 0;
+  //robot->move(Direction::BACK);
+  if(ran == 0) robot->veerLeft();
+  ran++;
+  //delay(2000);
+  //robot->stop();
+  //test();
 }
