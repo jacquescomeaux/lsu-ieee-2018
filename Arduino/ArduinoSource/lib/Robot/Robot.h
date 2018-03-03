@@ -19,7 +19,7 @@ class Robot {
     Wheel wheels[4];
     ProximitySensor edge_detectors[4];
     LineSensor line_sensors[2];
-    bool following_line, calibrating, reading_sensors;
+    bool following_line, calibrating, reading_sensors, edges;
     int last_error;
     int last_ran = 0;
     void setWheelSpeeds(Direction, int); 
@@ -39,7 +39,12 @@ class Robot {
     void approachSpeed();
     void toggleCalibration();
     void toggleSensorsOutput();
+<<<<<<< HEAD
     void adjustSpeed(int);
+=======
+    void toggleEdgeOutput();
+    void adjustDefaultSpeed(int);
+>>>>>>> cf65341e7afa93679c0b37db81ce51b701818e3e
     void adjustKP(float);
     void adjustKD(float);
 };

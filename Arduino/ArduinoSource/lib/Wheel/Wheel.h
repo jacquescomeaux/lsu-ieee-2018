@@ -13,6 +13,7 @@ class Wheel {
     void setSpeed(int);
     int getSpeed() const;
     void adjustSpeed(int);
+    void incrementSpeed(int);
     void approachSpeed();
     void stop();
 };
