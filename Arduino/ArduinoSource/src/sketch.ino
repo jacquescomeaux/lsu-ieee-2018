@@ -1,7 +1,6 @@
 #include <Robot.h>
 
 SortBot* robot;
-int a;
 
 void parseCommand() {
   unsigned char command = Serial.read();
@@ -47,21 +46,15 @@ void test() {
 }
 
 void setup() {
-  a = 0;
   robot = new SortBot();
   robot->stop();
   Serial.begin(9600);
   Serial.println("Robot ready");
   delay(500);
-  
-  //while(Serial.available()) Serial.read();
 }
 
 void loop() {
   robot->checkEdges();
   if(Serial.available()) parseCommand();
   robot->approachSpeed();
-  //if(a++%5)
-  //robot->correctErrors();
-  //delay(10);
 }

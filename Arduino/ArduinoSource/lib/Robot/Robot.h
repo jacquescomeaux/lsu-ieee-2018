@@ -12,14 +12,14 @@
 
 class Robot {
   private:
-    float KP, KD;
-    int default_speed;
+    Fixed KP, KD;
+    Fixed base_speed;
+    Direction current_direction;
     MotorShield motor_shields[2]; 
     Wheel wheels[4];
     ProximitySensor edge_detectors[4];
     LineSensor line_sensors[2];
     bool following_line, calibrating, reading_sensors;
-    Direction current_direction;
     int last_error;
     int last_ran = 0;
     void setWheelSpeeds(Direction, int); 
@@ -39,7 +39,7 @@ class Robot {
     void approachSpeed();
     void toggleCalibration();
     void toggleSensorsOutput();
-    void adjustDefaultSpeed(int);
+    void adjustSpeed(int);
     void adjustKP(float);
     void adjustKD(float);
 };

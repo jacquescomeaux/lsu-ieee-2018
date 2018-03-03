@@ -159,7 +159,7 @@ void Robot::toggleSensorsOutput() {
   else Serial.println("End Output");
 }
 
-void Robot::adjustDefaultSpeed(int adjustment) {
+void Robot::adjustSpeed(int adjustment) {
   default_speed += adjustment;
   Serial.print("Speed = ");
   Serial.println(default_speed);
