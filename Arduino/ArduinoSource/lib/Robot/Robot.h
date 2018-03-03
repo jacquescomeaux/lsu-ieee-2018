@@ -13,14 +13,15 @@
 class Robot {
   private:
     float KP, KD;
-    const int default_speed;
+    int default_speed;
     MotorShield motor_shields[2]; 
     Wheel wheels[4];
-    const ProximitySensor edge_detectors[4];
-    LineSensor line_sensors[8];
-    bool following_line;
+    ProximitySensor edge_detectors[4];
+    LineSensor line_sensors[2];
+    bool following_line, calibrating, reading_sensors;
     Direction current_direction;
     int last_error;
+    int last_ran = 0;
     void setWheelSpeeds(Direction, int); 
     void correctErrors();
   public:
@@ -36,6 +37,11 @@ class Robot {
     void stop();
     void checkEdges();
     void approachSpeed();
+    void toggleCalibration();
+    void toggleSensorsOutput();
+    void adjustDefaultSpeed(int);
+    void adjustKP(float);
+    void adjustKD(float);
 };
 
 class SortBot : public Robot, public SortingSystem {
