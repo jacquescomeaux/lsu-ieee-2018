@@ -16,7 +16,7 @@ class Robot {
   private:
     uint8_t flags;
     const int NUM_TASKS;
-    Fixed KP, KD, base_speed;
+    Fixed KP, KD, base_speed, veer_amount, acceleration;
     MotorShield motor_shields[2]; 
     Wheel wheels[4];
     LineSensor line_sensor;
@@ -24,6 +24,7 @@ class Robot {
     void checkEdges();
     void setWheelSpeeds(const Fixed*); 
     void adjustWheelSpeeds(const Fixed*); 
+    //void observeErrors();
     //void correctErrors();
   public:
     Robot();

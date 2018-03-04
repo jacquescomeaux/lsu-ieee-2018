@@ -6,6 +6,7 @@ Robot::Robot() :
   KD(Fixed(0.00)),
   base_speed(Fixed(90)),
   veer_amount(Fixed(10)),
+  acceration(Fixed(1)),
   motor_shields {
     MotorShield(0x61),
     MotorShield(0x62)
