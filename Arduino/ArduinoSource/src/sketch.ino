@@ -74,17 +74,16 @@ void loop() {
 }
 
 void aFunc() {
-  static int ran = 0;
-  if(ran == 0) robot->move(Direction::BACK);
-  ran++;
+  static bool ran = false;
+  if(!ran) robot->move(Direction::BACK);
+  ran = true;
 }
 
 void bFunc() {
-  
-  static int ran = 0;
+  static bool ran = false;
   //robot->move(Direction::BACK);
-  if(ran == 0) robot->veerLeft();
-  ran++;
+  if(!ran) robot->veerLeft();
+  ran = true;
   //delay(2000);
   //robot->stop();
   //test();
