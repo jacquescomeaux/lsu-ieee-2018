@@ -14,19 +14,18 @@
 class Wheel {
   private:
     Adafruit_DCMotor* motor;
-	Encoder encoder;
-	int speed, desired_speed, corrected_speed;
-    bool direction_set;
-
+    Encoder encoder;
+    Fixed speed, goal_speed;
+    //bool direction_set;
+    const Fixed tolerance, max_speed, min_speed;
 	long position, LastPosition, LastPositionTime, CurrentPositionTime;
-	float ConvertDistance(const int&, bool);
+	float ConvertDistance(int, bool) const;
   public:
     Wheel(Adafruit_DCMotor*, int, int); 
-    void setSpeed(int);
-    int getSpeed() const;
-    void adjustSpeed(int);
-    void incrementSpeed(int);
-    void approachSpeed();
+    void setSpeed(Fixed);
+    Fixed getSpeed() const;
+    void adjustSpeed(Fixed);
+    void approachSpeed(Fixed);
     void stop();
 	
 	int getPosition();

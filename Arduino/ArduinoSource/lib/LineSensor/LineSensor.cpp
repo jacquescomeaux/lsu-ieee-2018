@@ -13,16 +13,10 @@ LineSensor::LineSensor(unsigned char p1, unsigned char p2, unsigned char p3) :
   sensorValues {0, 0, 0} {} 
 
 void LineSensor::calibrateSensors() {
-  //int i;
-  //for (i = 0; i < 250; i++)  // the calibration will take a few seconds
-  //{
-    qtrrc.calibrate();
-    //delay(20);
-  //
+  qtrrc.calibrate();
 }
 
 int LineSensor::getLineError() {
-  //qtrrc.readCalibrated(sensorValues);
   return qtrrc.readLine(sensorValues) - 1000;
 }
 

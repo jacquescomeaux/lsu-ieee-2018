@@ -1,9 +1,12 @@
 #include <Robot.h>
 
 Robot::Robot() :
-  KP(0.03f),
-  KD(0.00f),
-  default_speed(90),
+  NUM_TASKS(4),
+  KP(Fixed(0.03)),
+  KD(Fixed(0.00)),
+  base_speed(Fixed(90)),
+  veer_amount(Fixed(10)),
+  acceration(Fixed(1)),
   motor_shields {
     MotorShield(0x61),
     MotorShield(0x62)
@@ -20,103 +23,77 @@ Robot::Robot() :
     ProximitySensor(0, 0),
     ProximitySensor(0, 0)
   },
-  line_sensors {
-    LineSensor(30, 31, 32),
-    LineSensor(33, 34, 35),
-    //LineSensor(36, 37, 38),
-    //LineSensor(39, 40, 41),
-    //LineSensor(42, 43, 44),
-    //LineSensor(45, 46, 47),
-    //LineSensor(48, 49, 50),
-    //LineSensor(51, 52, 53)
-  },
-  following_line(false),
-  calibrating(false),
-  reading_sensors(false),
-  edges(false),
-  current_direction(Direction::FRONT),
-  last_error(0) {
+  line_sensor(30, 32),
+  flags(Flag::NONE),
+  KP_ptr(&KP), 
+  KD_ptr(&KD),
+  base_speed_ptr(&base_speed) {
   stop();
 } 
 
-void Robot::setWheelSpeeds(Direction dir, int speed) {
-  switch(dir) {
-    case(Direction::FRONT):
-      for(Wheel& w : wheels) w.setSpeed(speed); 
-      current_direction = Direction::FRONT;
-      break;
-    case(Direction::BACK):
-      for(Wheel& w : wheels) w.setSpeed(-speed);
-      current_direction = Direction::BACK;
-      break;
-    case(Direction::LEFT):
-      for(int i = 0; i < 4; i++) wheels[i].setSpeed((i%2)?speed:-speed);
-      current_direction = Direction::LEFT;
-      break;
-    case(Direction::RIGHT):
-      for(int i = 0; i < 4; i++) wheels[i].setSpeed(!(i%2)?speed:-speed);
-      current_direction = Direction::RIGHT;
-      break;
-    case(Direction::FRONT_LEFT):
-      for(int i = 0; i < 4; i++) wheels[i].setSpeed((i%2)?speed:0);
-      current_direction = Direction::FRONT_LEFT;
-      break;
-    case(Direction::FRONT_RIGHT):
-      for(int i = 0; i < 4; i++) wheels[i].setSpeed(!(i%2)?speed:0);
-      current_direction = Direction::FRONT_RIGHT;
-      break;
-    case(Direction::BACK_LEFT):
-      for(int i = 0; i < 4; i++) wheels[i].setSpeed((i%2)?0:-speed);
-      current_direction = Direction::BACK_LEFT;
-      break;
-    case(Direction::BACK_RIGHT):
-      for(int i = 0; i < 4; i++) wheels[i].setSpeed(!(i%2)?0:-speed);
-      current_direction = Direction::BACK_RIGHT;
-      break;
-    case(Direction::CLOCKWISE):
-      for(int i = 0; i < 4; i++) wheels[i].setSpeed(!(i/2)?speed:-speed);
-      current_direction = Direction::CLOCKWISE;
-      break;
-    case(Direction::COUNTER_CLOCKWISE):
-      for(int i = 0; i < 4; i++) wheels[i].setSpeed((i/2)?speed:-speed);
-      current_direction = Direction::COUNTER_CLOCKWISE;
-      break;
-    default: stop();
-  }
+void Robot::checkEdges() {
+  //for(const ProximitySensor& s : edge_detectors) if(s.edgeDetected()) stop();
+  if(edge_detectors[0].edgeDetected()) stop();
+  //Serial.println(edge_detectors[0].getProximity());
 }
 
-void Robot::correctErrors() {
+void Robot::setWheelSpeeds(const Fixed* speeds) {
+  for(int i = 0; i < 4; i++) wheels[i].setSpeed(speeds[i]);
+}
+
+void Robot::adjustWheelSpeeds(const Fixed* speeds) {
+  for(int i = 0; i < 4; i++) wheels[i].adjustSpeed(speeds[i]);
+}
+
+/*void Robot::correctErrors() {
   int error = line_sensors[static_cast<int>(current_direction)].getLineError();  
   int adjustment = KP * error + KD * (error - last_error);
   last_error = error;
   for(int i = 0; i < 4; i++) wheels[i].adjustSpeed((i<2)?adjustment:-adjustment);
+}*/
+
+void Robot::stop() {
+  for(Wheel& w : wheels) w.stop();
+  flags &= ~flag::FOLLOWING_LINE;
 }
 
-void Robot::approachSpeed() {
-  for(Wheel& w : wheels) w.approachSpeed();
-  if(following_line) correctErrors();
-  if(calibrating) for(LineSensor& l : line_sensors) l.calibrateSensors();
-  if(reading_sensors) line_sensors[static_cast<int>(current_direction)].printReadings(); 
-}
-
-void Robot::checkEdges() {
+void Robot::update() {
+  int dt[NUM_TASKS];
   int time = millis();
-  if(time - last_ran < 10) return;
-  last_ran = time;
-  //for(const ProximitySensor& s : edge_detectors) if(s.edgeDetected()) stop();
-  
-  if(edge_detectors[0].edgeDetected()) stop();
-  Serial.println(edge_detectors[0].getProximity());
+  static int last_time[NUM_TASKS] = {0, 0, 0, 0};
+  for(int i = 0; i < NUM_TASKS; i++)  dt[i] = time - last_time[i];
+  if((dt[0] > 10) ? last_time[0] = time : false) for(Wheel& w : wheels) w.approachSpeed();
+  if((dt[1] > 100) ? last_time[1] = time : false) if(flags & Flag::FOLLOWING_LINE) ;//correctErrors();
+  if((dt[2] > 100) ? last_time[2] = time : false) if(flags & Flag::CALIBRATING_LINE) ;//for(LineSensor& l : line_sensors) l.calibrateSensors();
+  if((dt[3] > 100) ? last_time[3] = time : false) if(flags & Flag::PRINTING_LINE) ;//line_sensors[static_cast<int>(current_direction)].printReadings(); 
+  if((dt[4] > 100) ? last_time[4] = time : false) checkEdges();
 }
 
 void Robot::move(Direction dir) {
-  //Serial.println("call to move");//
-  move(dir, default_speed);
+  move(dir, base_speed);
 }
 
-void Robot::move(Direction dir, int speed) {
-  following_line = false;
-  setWheelSpeeds(dir, speed);
+void Robot::move(Direction dir, Fixed speed) {
+  switch(dir) {
+    case(Direction::NONE): stop(); break;
+    case(Direction::FRONT): move(Fixed(0), speed, Fixed(0)); break;
+    case(Direction::BACK): move(Fixed(0), Fixed(0) - speed, Fixed(0)); break;
+    case(Direction::LEFT): move(Fixed(0), speed, Fixed(0)); break;
+    case(Direction::RIGHT): move(Fixed(0), Fixed(0) - speed, Fixed(0)); break;
+    case(Direction::FRONT_LEFT): move(Fixed(0) - speed/2, speed/2, Fixed(0)); break;
+    case(Direction::FRONT_RIGHT): move(speed/2, speed/2, Fixed(0)); break;
+    case(Direction::BACK_LEFT): move(Fixed(0) - speed/2, Fixed(0) - speed/2, Fixed(0)); break;
+    case(Direction::BACK_RIGHT): move(speed/2, Fixed(0) - speed/2, Fixed(0)); break;
+    case(Direction::CLOCKWISE): move(Fixed(0), Fixed(0), speed); break;
+    case(Direction::COUNTER_CLOCKWISE): move(Fixed(0), Fixed(0), Fixed(0) - speed); break;
+    default: stop();
+  }
+}
+
+void Robot::move(Fixed x, Fixed y, Fixed rot) {
+  flags &= ~flag::FOLLOWING_LINE;
+  const Fixed speeds[4] = {y + x - rot, y - x - rot, y + x + rot, y - x + rot};
+  setWheelSpeeds(speeds);
 }
 
 void Robot::moveSetDistance(Direction dir, int distance) { //Not finished, needs completing
@@ -125,7 +102,7 @@ void Robot::moveSetDistance(Direction dir, int distance) { //Not finished, needs
 	long startPosition = Wheel.getPosition;
 }
 
-void Robot::followLine(Direction dir) {
+/*void Robot::followLine(Direction dir) {
   //Serial.println("call to follow");//
   followLine(dir, default_speed);
 }
@@ -133,62 +110,56 @@ void Robot::followLine(Direction dir) {
 void Robot::followLine(Direction dir, int speed) {
   following_line = true;
   setWheelSpeeds(dir, speed);
+}*/
+
+void Robot::veer(Direction dir) {
+  veer(dir, veer_amount);
 }
 
-void Robot::veerLeft() {
-  for(int i = 0; i < 4; i++) wheels[i].incrementSpeed((i<2)?-10:10);
+void Robot::veer(Direction dir, Fixed amount) {
+  switch(dir) {
+    case(Direction::NONE): break;
+    case(Direction::FRONT): veer(Fixed(0), amount, Fixed(0)); break;
+    case(Direction::BACK): veer(Fixed(0), Fixed(0) - amount, Fixed(0)); break;
+    case(Direction::LEFT): veer(Fixed(0), amount, Fixed(0)); break;
+    case(Direction::RIGHT): veer(Fixed(0), Fixed(0) - amount, Fixed(0)); break;
+    case(Direction::FRONT_LEFT): veer(Fixed(0) - amount/2, amount/2, Fixed(0)); break;
+    case(Direction::FRONT_RIGHT): veer(amount/2, amount/2, Fixed(0)); break;
+    case(Direction::BACK_LEFT): veer(Fixed(0) - amount/2, Fixed(0) - amount/2, Fixed(0)); break;
+    case(Direction::BACK_RIGHT): veer(amount/2, Fixed(0) - amount/2, Fixed(0)); break;
+    case(Direction::CLOCKWISE): veer(Fixed(0), Fixed(0), amount); break;
+    case(Direction::COUNTER_CLOCKWISE): veer(Fixed(0), Fixed(0), Fixed(0) - amount); break;
+    default: 
+  }
 }
 
-void Robot::veerRight() {
-  for(int i = 0; i < 4; i++) wheels[i].incrementSpeed(!(i<2)?-10:10);
+void Robot::veer(Fixed x, Fixed y, Fixed rot) {
+  flags &= ~flag::FOLLOWING_LINE;
+  const Fixed amounts[4] = {y + x - rot, y - x - rot, y + x + rot, y - x + rot};
+  adjustWheelSpeeds(adjustments);
 }
 
-void Robot::speedUp() {
-  for(Wheel& w : wheels) w.adjustSpeed(5);
-}
-void Robot::slowDown() {
-  for(Wheel& w : wheels) w.adjustSpeed(-5);
+
+void Robot::toggle(Flag setting) {
+  toggleMultiple(setting);
+  //if(calibrating) Serial.println("Begin Calibration");
+  //else Serial.println("End Calibration");
+  //if(calibrating) Serial.println("Begin Calibration");
+  //else Serial.println("End Calibration");
+  //if(edges) Serial.println("Begin Output edges");
+  //else Serial.println("End Output edges");
 }
 
-void Robot::stop() {
-  following_line = false;
-  for(Wheel& w : wheels) w.stop();
+void Robot::toggleMultiple(uint8_t settings) {
+  settings &= ~Flags::NONE;
+  settings &= ~Flags::FOLLOWING_LINE;
+  flags ^= settings; 
 }
 
-void Robot::toggleCalibration() {
-  calibrating = !calibrating;
-  if(calibrating) Serial.println("Begin Calibration");
-  else Serial.println("End Calibration");
-}
-
-void Robot::toggleSensorsOutput() {
-  reading_sensors = !reading_sensors;
-  if(calibrating) Serial.println("Begin Output");
-  else Serial.println("End Output");
-}
-
-void Robot::toggleEdgeOutput() {
-  edges = !edges;
-  if(calibrating) Serial.println("Begin Output edges");
-  else Serial.println("End Output edges");
-}
-
-void Robot::adjustDefaultSpeed(int adjustment) {
-  default_speed += adjustment;
-  Serial.print("Speed = ");
-  Serial.println(default_speed);
-}
-
-void Robot::adjustKP(float adjustment) {
-  KP += adjustment;
-  Serial.print("KP = ");
-  Serial.println(KP);
-}
-
-void Robot::adjustKD(float adjustment) {
-  KD += adjustment;
-  Serial.print("KD = ");
-  Serial.println(KD);
+void Robot::adjustParameter(Fixed* const param, Fixed adjustment) {
+  *param += adjustment;
+  //Serial.print("Speed = ");
+  //Serial.println(default_speed);
 }
 
 SortBot::SortBot() {}
