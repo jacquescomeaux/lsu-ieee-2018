@@ -28,6 +28,7 @@ class Robot {
     Robot();
     void move(Direction);
     void move(Direction, int);
+	void moveSetDistance(Direction, int)
     void followLine(Direction);
     void followLine(Direction, int);
     void veerLeft();

@@ -9,10 +9,10 @@ Robot::Robot() :
     MotorShield(0x62)
   },
   wheels {
-    Wheel(motor_shields[0].getMotor(1)),
-    Wheel(motor_shields[0].getMotor(2)),
-    Wheel(motor_shields[1].getMotor(1)),
-    Wheel(motor_shields[1].getMotor(2))
+    Wheel(motor_shields[0].getMotor(1), 2, 4), //Interrupt Pins: 2, 3, 18, 19, 20, 21
+    Wheel(motor_shields[0].getMotor(2), 3, 5),
+    Wheel(motor_shields[1].getMotor(1), 18, 22),
+    Wheel(motor_shields[1].getMotor(2), 19, 23)
   },
   edge_detectors {
     ProximitySensor(5, 6),
@@ -117,6 +117,12 @@ void Robot::move(Direction dir) {
 void Robot::move(Direction dir, int speed) {
   following_line = false;
   setWheelSpeeds(dir, speed);
+}
+
+void Robot::moveSetDistance(Direction dir, int distance) { //Not finished, needs completing
+	long stepstotravel = distance * 287; //286.7 steps per inch
+	
+	long startPosition = Wheel.getPosition;
 }
 
 void Robot::followLine(Direction dir) {
