@@ -20,8 +20,8 @@ class Robot {
     Fixed KP, KD, base_speed, veer_amount, acceleration;
     MotorShield motor_shields[2]; 
     Wheel wheels[4];
-	long currentWheelPosition[4];
-	long targetWheelPosition[4];
+	int currentWheelPosition[4];
+	int targetWheelPosition[4];
     //LineSensor line_sensor;
     //ProximitySensor edge_detectors[4];
     void checkEdges();

@@ -101,7 +101,7 @@ void Robot::move(Fixed x, Fixed y, Fixed rot) {
 }
 
 void Robot::moveSetDistance(Direction dir, int distance) { 
-	long stepsToTravel = distance * 287; //286.7 steps per inch
+	int stepsToTravel = distance * 287; //286.7 steps per inch
 	
 	for(int i = 0; i < 4; i++) {
 		currentWheelPosition[i] = wheels[i].getPosition();
