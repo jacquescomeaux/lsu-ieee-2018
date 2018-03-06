@@ -1,6 +1,13 @@
 #include <Robot.h>
+#include <Arduino.h>
+//#include <StandardCplusplus.h>
 
 SortBot* robot;
+
+void test() {
+  Serial.println("still alive");
+  while(true);
+}
 
 void parseCommand() {
   unsigned char command = Serial.read();
@@ -15,11 +22,11 @@ void parseCommand() {
     case 'c': robot->move(Direction::BACK_RIGHT); break;
     case 'k': robot->move(Direction::CLOCKWISE); break;
     case 'j': robot->move(Direction::COUNTER_CLOCKWISE); break;
-    case 'u': robot->veerLeft(); break;
-    case 'i': robot->veerRight(); break;
-    case '+': robot->speedUp(); break;
-    case '-': robot->slowDown(); break;
-    case 'W': robot->followLine(Direction::FRONT); break;
+    case 'u': robot->veer(Direction::LEFT); break;
+    case 'i': robot->veer(Direction::RIGHT); break;
+    case '+': robot->veer(Direction::FRONT); break;
+    case '-': robot->veer(Direction::BACK); break;
+    /*case 'W': robot->followLine(Direction::FRONT); break;
     case 'A': robot->followLine(Direction::LEFT); break;
     case 'X': robot->followLine(Direction::BACK); break;
     case 'D': robot->followLine(Direction::RIGHT); break;
@@ -36,15 +43,11 @@ void parseCommand() {
     case '4': robot->adjustKD(0.01f); break;
     case '9': robot->adjustDefaultSpeed(-10); break;
     case '0': robot->adjustDefaultSpeed(10); break;
-    case 't': test(); break;
+    */case 't': test(); break;
     default: robot->stop();
   }
 }
 
-void test() {
-  Serial.println("still alive");
-  while(true);
-}
 
 void setup() {
   robot = new SortBot();
@@ -55,7 +58,7 @@ void setup() {
 }
 
 void loop() {
-  robot->checkEdges();
+  //robot->checkEdges();
   if(Serial.available()) parseCommand();
 //  int time = millis();
   //if(time < 2000) aFunc();
@@ -66,13 +69,15 @@ void loop() {
    // robot->stop();
     //test();
   //}
-  robot->approachSpeed();
+  //robot->approachSpeed();
+  robot->update();
   //if(a++%5)
   //robot->correctErrors();
   //delay(10);
 
 }
 
+/*
 void aFunc() {
   static bool ran = false;
   if(!ran) robot->move(Direction::BACK);
@@ -87,4 +92,4 @@ void bFunc() {
   //delay(2000);
   //robot->stop();
   //test();
-}
+}*/

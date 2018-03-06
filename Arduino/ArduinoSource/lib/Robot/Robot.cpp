@@ -1,12 +1,14 @@
 #include <Robot.h>
+//#include <vector>
 
 Robot::Robot() :
-  NUM_TASKS(4),
+  flags(Flag::NONE),
+  NUM_TASKS(5),
   KP(Fixed(0.03)),
   KD(Fixed(0.00)),
   base_speed(Fixed(90)),
   veer_amount(Fixed(10)),
-  acceration(Fixed(1)),
+  acceleration(Fixed(1)),
   motor_shields {
     MotorShield(0x61),
     MotorShield(0x62)
@@ -17,14 +19,13 @@ Robot::Robot() :
     Wheel(motor_shields[1].getMotor(1), 18, 22),
     Wheel(motor_shields[1].getMotor(2), 19, 23)
   },
-  edge_detectors {
+  /*edge_detectors {
     ProximitySensor(5, 6),
     ProximitySensor(0, 0),
     ProximitySensor(0, 0),
     ProximitySensor(0, 0)
-  },
-  line_sensor(30, 32),
-  flags(Flag::NONE),
+  },*/
+  //line_sensor(30, 32),
   KP_ptr(&KP), 
   KD_ptr(&KD),
   base_speed_ptr(&base_speed) {
@@ -33,7 +34,7 @@ Robot::Robot() :
 
 void Robot::checkEdges() {
   //for(const ProximitySensor& s : edge_detectors) if(s.edgeDetected()) stop();
-  if(edge_detectors[0].edgeDetected()) stop();
+//  if(edge_detectors[0].edgeDetected()) stop();
   //Serial.println(edge_detectors[0].getProximity());
 }
 
@@ -54,19 +55,20 @@ void Robot::adjustWheelSpeeds(const Fixed* speeds) {
 
 void Robot::stop() {
   for(Wheel& w : wheels) w.stop();
-  flags &= ~flag::FOLLOWING_LINE;
+  flags &= ~Flag::FOLLOWING_LINE;
 }
 
 void Robot::update() {
   int dt[NUM_TASKS];
   int time = millis();
-  static int last_time[NUM_TASKS] = {0, 0, 0, 0};
+  //static std::vector<int> last_time = {0, 0, 0, 0, 0};
+  static int last_time[5] =  {0, 0, 0, 0, 0};
   for(int i = 0; i < NUM_TASKS; i++)  dt[i] = time - last_time[i];
-  if((dt[0] > 10) ? last_time[0] = time : false) for(Wheel& w : wheels) w.approachSpeed();
-  if((dt[1] > 100) ? last_time[1] = time : false) if(flags & Flag::FOLLOWING_LINE) ;//correctErrors();
-  if((dt[2] > 100) ? last_time[2] = time : false) if(flags & Flag::CALIBRATING_LINE) ;//for(LineSensor& l : line_sensors) l.calibrateSensors();
-  if((dt[3] > 100) ? last_time[3] = time : false) if(flags & Flag::PRINTING_LINE) ;//line_sensors[static_cast<int>(current_direction)].printReadings(); 
-  if((dt[4] > 100) ? last_time[4] = time : false) checkEdges();
+  if((dt[0] > 10) ? (last_time[0] = time) : false) for(Wheel& w : wheels) w.approachSpeed(acceleration);
+  if((dt[1] > 100) ? (last_time[1] = time) : false) if((flags & Flag::FOLLOWING_LINE) != Flag::NONE) ;//correctErrors();
+  if((dt[2] > 100) ? (last_time[2] = time) : false) if((flags & Flag::CALIBRATING_LINE) != Flag::NONE) ;//for(LineSensor& l : line_sensors) l.calibrateSensors();
+  if((dt[3] > 100) ? (last_time[3] = time) : false) if((flags & Flag::PRINTING_LINE) != Flag::NONE) ;//line_sensors[static_cast<int>(current_direction)].printReadings(); 
+  if((dt[4] > 100) ? (last_time[4] = time) : false) checkEdges();
 }
 
 void Robot::move(Direction dir) {
@@ -91,7 +93,7 @@ void Robot::move(Direction dir, Fixed speed) {
 }
 
 void Robot::move(Fixed x, Fixed y, Fixed rot) {
-  flags &= ~flag::FOLLOWING_LINE;
+  flags &= ~Flag::FOLLOWING_LINE;
   const Fixed speeds[4] = {y + x - rot, y - x - rot, y + x + rot, y - x + rot};
   setWheelSpeeds(speeds);
 }
@@ -99,7 +101,7 @@ void Robot::move(Fixed x, Fixed y, Fixed rot) {
 void Robot::moveSetDistance(Direction dir, int distance) { //Not finished, needs completing
 	long stepstotravel = distance * 287; //286.7 steps per inch
 	
-	long startPosition = Wheel.getPosition;
+	//long startPosition = Wheel.getPosition();
 }
 
 /*void Robot::followLine(Direction dir) {
@@ -129,18 +131,18 @@ void Robot::veer(Direction dir, Fixed amount) {
     case(Direction::BACK_RIGHT): veer(amount/2, Fixed(0) - amount/2, Fixed(0)); break;
     case(Direction::CLOCKWISE): veer(Fixed(0), Fixed(0), amount); break;
     case(Direction::COUNTER_CLOCKWISE): veer(Fixed(0), Fixed(0), Fixed(0) - amount); break;
-    default: 
+    default: break; 
   }
 }
 
 void Robot::veer(Fixed x, Fixed y, Fixed rot) {
-  flags &= ~flag::FOLLOWING_LINE;
-  const Fixed amounts[4] = {y + x - rot, y - x - rot, y + x + rot, y - x + rot};
+  flags &= ~Flag::FOLLOWING_LINE;
+  const Fixed adjustments[4] = {y + x - rot, y - x - rot, y + x + rot, y - x + rot};
   adjustWheelSpeeds(adjustments);
 }
 
 
-void Robot::toggle(Flag setting) {
+/*void Robot::toggle(Flag setting) {
   toggleMultiple(setting);
   //if(calibrating) Serial.println("Begin Calibration");
   //else Serial.println("End Calibration");
@@ -148,11 +150,11 @@ void Robot::toggle(Flag setting) {
   //else Serial.println("End Calibration");
   //if(edges) Serial.println("Begin Output edges");
   //else Serial.println("End Output edges");
-}
+}*/
 
-void Robot::toggleMultiple(uint8_t settings) {
-  settings &= ~Flags::NONE;
-  settings &= ~Flags::FOLLOWING_LINE;
+void Robot::toggleMultiple(Flag settings) {
+  settings &= ~Flag::NONE;
+  settings &= ~Flag::FOLLOWING_LINE;
   flags ^= settings; 
 }
 
