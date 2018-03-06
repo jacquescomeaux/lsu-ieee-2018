@@ -2,6 +2,8 @@
 #define ROBOT_H
 
 #include <Direction.h>
+#include <Fixed.h>
+#include <Flag.h>
 
 #include <SortingSystem.h>
 
@@ -12,37 +14,35 @@
 
 class Robot {
   private:
-    float KP, KD;
-    int default_speed;
+    uint8_t flags;
+    const int NUM_TASKS;
+    Fixed KP, KD, base_speed, veer_amount, acceleration;
     MotorShield motor_shields[2]; 
     Wheel wheels[4];
+    LineSensor line_sensor;
     ProximitySensor edge_detectors[4];
-    LineSensor line_sensors[2];
-    bool following_line, calibrating, reading_sensors, edges;
-    Direction current_direction;
-    int last_error;
-    int last_ran = 0;
-    void setWheelSpeeds(Direction, int); 
-    void correctErrors();
+    void checkEdges();
+    void setWheelSpeeds(const Fixed*); 
+    void adjustWheelSpeeds(const Fixed*); 
+    //void observeErrors();
+    //void correctErrors();
   public:
     Robot();
-    void move(Direction);
-    void move(Direction, int);
-    void followLine(Direction);
-    void followLine(Direction, int);
-    void veerLeft();
-    void veerRight();
-    void speedUp();
-    void slowDown();
     void stop();
-    void checkEdges();
-    void approachSpeed();
-    void toggleCalibration();
-    void toggleSensorsOutput();
-    void toggleEdgeOutput();
-    void adjustDefaultSpeed(int);
-    void adjustKP(float);
-    void adjustKD(float);
+    void update();
+    void move(Direction);
+    void move(Direction, Fixed speed);
+    void move(Fixed x, Fixed y, Fixed rot);
+    void veer(Direction);
+    void veer(Direction, Fixed amount);
+    void veer(Fixed x, Fixed y, Fixed rot);
+    void moveSetDistance(Direction, int)
+    //void followLine(Direction);
+    //void followLine(Direction, int);
+    void toggle(uint8_t);
+    void toggleMultiple(Flag);
+    void adjustParameter(const Fixed* const);
+    const Fixed* const KP_ptr, KD_ptr, base_speed_ptr;
 };
 
 class SortBot : public Robot, public SortingSystem {

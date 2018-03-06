@@ -1,7 +1,6 @@
 #include <Robot.h>
 
 SortBot* robot;
-int a;
 
 void parseCommand() {
   unsigned char command = Serial.read();
@@ -48,14 +47,11 @@ void test() {
 }
 
 void setup() {
-  a = 0;
   robot = new SortBot();
   robot->stop();
   Serial.begin(9600);
   Serial.println("Robot ready");
   delay(500);
-  
-  //while(Serial.available()) Serial.read();
 }
 
 void loop() {
@@ -78,17 +74,16 @@ void loop() {
 }
 
 void aFunc() {
-  static int ran = 0;
-  if(ran == 0) robot->move(Direction::BACK);
-  ran++;
+  static bool ran = false;
+  if(!ran) robot->move(Direction::BACK);
+  ran = true;
 }
 
 void bFunc() {
-  
-  static int ran = 0;
+  static bool ran = false;
   //robot->move(Direction::BACK);
-  if(ran == 0) robot->veerLeft();
-  ran++;
+  if(!ran) robot->veerLeft();
+  ran = true;
   //delay(2000);
   //robot->stop();
   //test();
