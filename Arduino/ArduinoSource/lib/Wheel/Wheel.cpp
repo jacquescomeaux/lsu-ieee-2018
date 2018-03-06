@@ -21,7 +21,7 @@ void Wheel::approachSpeed(Fixed amount) {
   if(abs(goal_speed - speed) < tolerance) return;
   //needs damping factor
   speed += (speed < goal_speed) ? amount : Fixed(0) - amount;
-  if(speed > 0) motor->run(FORWARD);
+  if(speed > Fixed(0)) motor->run(FORWARD);
   else motor->run(BACKWARD);
   uint8_t motor_speed;
   if(abs(speed) > max_speed) motor_speed = max_speed;
