@@ -8,7 +8,7 @@ Robot::Robot() :
   KD(Fixed(0.00)),
   base_speed(Fixed(90)),
   veer_amount(Fixed(10)),
-  acceleration(Fixed(1)),
+  acceleration(Fixed(3)),
   motor_shields {
     MotorShield(0x61),
     MotorShield(0x62)
@@ -65,7 +65,7 @@ void Robot::update() {
   //static std::vector<int> last_time = {0, 0, 0, 0, 0};
   static int last_time[5] =  {0, 0, 0, 0, 0};
   for(int i = 0; i < NUM_TASKS; i++)  dt[i] = time - last_time[i];
-  if((dt[0] > 1000) ? (last_time[0] = time) : false) for(Wheel& w : wheels) w.approachSpeed(acceleration);
+  if((dt[0] > 100) ? (last_time[0] = time) : false) for(Wheel& w : wheels) w.approachSpeed(acceleration);
   if((dt[1] > 100) ? (last_time[1] = time) : false) if((flags & Flag::FOLLOWING_LINE) != Flag::NONE) ;//correctErrors();
   if((dt[2] > 100) ? (last_time[2] = time) : false) if((flags & Flag::CALIBRATING_LINE) != Flag::NONE) ;//for(LineSensor& l : line_sensors) l.calibrateSensors();
   if((dt[3] > 100) ? (last_time[3] = time) : false) if((flags & Flag::PRINTING_LINE) != Flag::NONE) ;//line_sensors[static_cast<int>(current_direction)].printReadings(); 
