@@ -3,7 +3,7 @@
 
 Robot::Robot() :
   flags(Flag::NONE),
-  NUM_TASKS(5),
+  NUM_TASKS(6),
   KP(Fixed(0.03)),
   KD(Fixed(0.00)),
   base_speed(Fixed(90)),
@@ -70,6 +70,7 @@ void Robot::update() {
   if((dt[2] > 100) ? (last_time[2] = time) : false) if((flags & Flag::CALIBRATING_LINE) != Flag::NONE) ;//for(LineSensor& l : line_sensors) l.calibrateSensors();
   if((dt[3] > 100) ? (last_time[3] = time) : false) if((flags & Flag::PRINTING_LINE) != Flag::NONE) ;//line_sensors[static_cast<int>(current_direction)].printReadings(); 
   if((dt[4] > 100) ? (last_time[4] = time) : false) checkEdges();
+  if((dt[5] > 100) ? (last_time[5] = time) : false) checkDestination(); //check if robot has reached destination
 }
 
 void Robot::move(Direction dir) {
@@ -99,7 +100,7 @@ void Robot::move(Fixed x, Fixed y, Fixed rot) {
   setWheelSpeeds(speeds);
 }
 
-void Robot::moveSetDistance(Direction dir, int distance) { //Not finished, needs completing
+void Robot::moveSetDistance(Direction dir, int distance) { 
 	long stepsToTravel = distance * 287; //286.7 steps per inch
 	
 	for(int i = 0; i < 4; i++) {
@@ -112,7 +113,7 @@ void Robot::moveSetDistance(Direction dir, int distance) { //Not finished, needs
 }
 
 void Robot::checkDestination() {
-	int wheelDestinationReached = 0; //counter to see if all wheels have reached destination..testing needed
+	//int wheelDestinationReached = 0; //counter to see if all wheels have reached destination..testing needed
 	for(int i = 0; i < 4; i++) {
 		currentWheelPosition[i] = wheels[i].getPosition();
 		
@@ -124,13 +125,9 @@ void Robot::checkDestination() {
 		Serial.println(" steps remaining.");
 		
 		if (currentWheelPosition[i] >= targetWheelPosition[i]) {
-			wheels[i].stop();
-			wheelDestinationReached++;
+			flags &= ~Flag::TRAVEL_TO_DST; //end moveSetDistance
+			(stop); //stop all wheels once 1 wheel has gone desired distance
 		}
-	}
-	if (wheelDestinationReached == 4) {
-	flags &= ~Flag::TRAVEL_TO_DST; //end move set distance..set flag to 0
-	stop(); //unnecessary, all wheels should already be stopped;
 	}
 }
 
