@@ -1,8 +1,17 @@
 #include <Wheel.h>
 
-Wheel::Wheel(Adafruit_DCMotor* m, int enc_pin_1, int enc_pin_2) : motor(m), encoder(enc_pin_1, enc_pin_2), speed(0), goal_speed(0), tolerance(0.1), max_speed(255), max_speed_uint8(255), ECV(0.000348755845), msToS(0.001) {
-  motor->run(RELEASE);
-  resetPosition();
+Wheel::Wheel(Adafruit_DCMotor* m, int enc_pin_1, int enc_pin_2) :
+  motor(m),
+  encoder(enc_pin_1, enc_pin_2),
+  speed(0),
+  goal_speed(0),
+  tolerance(0.1),
+  max_speed(255),
+  ECV(0.000348755845),
+  msToS(0.001),
+  max_speed_uint8(255) {
+    motor->run(RELEASE);
+    resetPosition();
 }
 
 void Wheel::setSpeed(Fixed s) {
@@ -78,6 +87,7 @@ Fixed Wheel::getEncoderSpeed() {
 	Fixed dist = convertDistance(PositionElapsed, true); //get distance traveled in feet
 	
 	Fixed speed = dist / TimeElapsed;
+        return speed;
 }
 
 

@@ -18,7 +18,7 @@ Robot::Robot() :
     Wheel(motor_shields[0].getMotor(2), 3, 5),
     Wheel(motor_shields[1].getMotor(1), 18, 22),
     Wheel(motor_shields[1].getMotor(2), 19, 23)
-  },
+  }
   /*edge_detectors {
     ProximitySensor(5, 6),
     ProximitySensor(0, 0),
@@ -26,8 +26,6 @@ Robot::Robot() :
     ProximitySensor(0, 0)
   },*/
   //line_sensor(30, 32),
-  KP_ptr(&KP), 
-  KD_ptr(&KD)//,
   {//base_speed_ptr(&base_speed) {
   stop();
 } 
@@ -81,12 +79,12 @@ void Robot::move(Direction dir, Fixed speed) {
     case(Direction::NONE): stop(); break;
     case(Direction::FRONT): move(Fixed(0), speed, Fixed(0)); break;
     case(Direction::BACK): move(Fixed(0), Fixed(0) - speed, Fixed(0)); break;
-    case(Direction::LEFT): move(Fixed(0), speed, Fixed(0)); break;
-    case(Direction::RIGHT): move(Fixed(0), Fixed(0) - speed, Fixed(0)); break;
-    case(Direction::FRONT_LEFT): move(Fixed(0) - speed/2, speed/2, Fixed(0)); break;
-    case(Direction::FRONT_RIGHT): move(speed/2, speed/2, Fixed(0)); break;
-    case(Direction::BACK_LEFT): move(Fixed(0) - speed/2, Fixed(0) - speed/2, Fixed(0)); break;
-    case(Direction::BACK_RIGHT): move(speed/2, Fixed(0) - speed/2, Fixed(0)); break;
+    case(Direction::LEFT): move(Fixed(0) - speed, Fixed(0), Fixed(0)); break;
+    case(Direction::RIGHT): move(speed, Fixed(0), Fixed(0)); break;
+    case(Direction::FRONT_LEFT): move(Fixed(0) - speed/Fixed(2), speed/Fixed(2), Fixed(0)); break;
+    case(Direction::FRONT_RIGHT): move(speed/Fixed(2), speed/Fixed(2), Fixed(0)); break;
+    case(Direction::BACK_LEFT): move(Fixed(0) - speed/Fixed(2), Fixed(0) - speed/Fixed(2), Fixed(0)); break;
+    case(Direction::BACK_RIGHT): move(speed/Fixed(2), Fixed(0) - speed/Fixed(2), Fixed(0)); break;
     case(Direction::CLOCKWISE): move(Fixed(0), Fixed(0), speed); break;
     case(Direction::COUNTER_CLOCKWISE): move(Fixed(0), Fixed(0), Fixed(0) - speed); break;
     default: stop();
@@ -188,10 +186,22 @@ void Robot::toggleMultiple(Flag settings) {
   flags ^= settings; 
 }
 
-void Robot::adjustParameter(Fixed* const param, Fixed adjustment) {
-  *param += adjustment;
-  //Serial.print("Speed = ");
-  //Serial.println(default_speed);
+void Robot::adjustKD(Fixed adjustment) {
+  KD += adjustment;
+  Serial.print("KD = ");
+  Serial.println(KD.getInt());
+}
+
+void Robot::adjustKP(Fixed adjustment) {
+  KP += adjustment;
+  Serial.print("KP = ");
+  Serial.println(KP.getInt());
+}
+
+void Robot::adjustBaseSpeed(Fixed adjustment) {
+  base_speed += adjustment;
+  Serial.print("Speed = ");
+  Serial.println(base_speed.getInt());
 }
 
 SortBot::SortBot() {}

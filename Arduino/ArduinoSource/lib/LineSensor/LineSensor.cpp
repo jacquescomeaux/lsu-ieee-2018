@@ -20,7 +20,7 @@ int LineSensor::getLineError() {
   return qtrrc.readLine(sensorValues) - 1000;
 }
 
-void LineSensor::printReadings() const {
+void LineSensor::printReadings() {
   qtrrc.readCalibrated(sensorValues);
   Serial.print("left=");
   Serial.println(sensorValues[0]);

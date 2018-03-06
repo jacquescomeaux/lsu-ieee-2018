@@ -14,7 +14,7 @@ class LineSensor {
     LineSensor(unsigned char, unsigned char, unsigned char);
     void calibrateSensors();
     int getLineError();
-    void printReadings() const;
+    void printReadings();
 };
 
 #endif//LINESENSOR_H

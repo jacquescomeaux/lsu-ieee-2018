@@ -46,8 +46,9 @@ class Robot {
     //void followLine(Direction, int);
     //void toggle(Flag);
     void toggleMultiple(Flag);
-    void adjustParameter(Fixed* const, Fixed);
-    Fixed* KP_ptr, KD_ptr;//, base_speed_ptr;
+    void adjustKD(Fixed);
+    void adjustKP(Fixed);
+    void adjustBaseSpeed(Fixed);
 };
 
 class SortBot : public Robot, public SortingSystem {
