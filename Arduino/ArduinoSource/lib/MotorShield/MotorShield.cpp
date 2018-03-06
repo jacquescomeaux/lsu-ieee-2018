@@ -12,6 +12,6 @@ MotorShield::MotorShield(uint8_t addr, uint16_t freq) : AFMS(addr) {
   AFMS.begin(freq);
 }
 
-Adafruit_DCMotor* MotorShield::getMotor(uint8_t n)  const {
+Adafruit_DCMotor* MotorShield::getMotor(uint8_t n){//  const {
   return AFMS.getMotor(n);
 }

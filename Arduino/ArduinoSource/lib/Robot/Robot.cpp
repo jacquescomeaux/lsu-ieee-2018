@@ -27,8 +27,8 @@ Robot::Robot() :
   },*/
   //line_sensor(30, 32),
   KP_ptr(&KP), 
-  KD_ptr(&KD),
-  base_speed_ptr(&base_speed) {
+  KD_ptr(&KD)//,
+  {//base_speed_ptr(&base_speed) {
   stop();
 } 
 
@@ -39,6 +39,7 @@ void Robot::checkEdges() {
 }
 
 void Robot::setWheelSpeeds(const Fixed* speeds) {
+  for(int i = 0; i < 4; i++) Serial.println(speeds[i].getInt());//wheels[i].setSpeed(speeds[i]);
   for(int i = 0; i < 4; i++) wheels[i].setSpeed(speeds[i]);
 }
 
@@ -64,7 +65,7 @@ void Robot::update() {
   //static std::vector<int> last_time = {0, 0, 0, 0, 0};
   static int last_time[5] =  {0, 0, 0, 0, 0};
   for(int i = 0; i < NUM_TASKS; i++)  dt[i] = time - last_time[i];
-  if((dt[0] > 10) ? (last_time[0] = time) : false) for(Wheel& w : wheels) w.approachSpeed(acceleration);
+  if((dt[0] > 1000) ? (last_time[0] = time) : false) for(Wheel& w : wheels) w.approachSpeed(acceleration);
   if((dt[1] > 100) ? (last_time[1] = time) : false) if((flags & Flag::FOLLOWING_LINE) != Flag::NONE) ;//correctErrors();
   if((dt[2] > 100) ? (last_time[2] = time) : false) if((flags & Flag::CALIBRATING_LINE) != Flag::NONE) ;//for(LineSensor& l : line_sensors) l.calibrateSensors();
   if((dt[3] > 100) ? (last_time[3] = time) : false) if((flags & Flag::PRINTING_LINE) != Flag::NONE) ;//line_sensors[static_cast<int>(current_direction)].printReadings(); 
@@ -99,9 +100,38 @@ void Robot::move(Fixed x, Fixed y, Fixed rot) {
 }
 
 void Robot::moveSetDistance(Direction dir, int distance) { //Not finished, needs completing
-	long stepstotravel = distance * 287; //286.7 steps per inch
+	long stepsToTravel = distance * 287; //286.7 steps per inch
 	
-	//long startPosition = Wheel.getPosition();
+	for(int i = 0; i < 4; i++) {
+		currentWheelPosition[i] = wheels[i].getPosition();
+		targetWheelPosition[i] = currentWheelPosition[i] + stepsToTravel;
+	}
+	
+	flags |= Flag::TRAVEL_TO_DST;
+	move(dir, base_speed);//need to fix speed argument
+}
+
+void Robot::checkDestination() {
+	int wheelDestinationReached = 0; //counter to see if all wheels have reached destination..testing needed
+	for(int i = 0; i < 4; i++) {
+		currentWheelPosition[i] = wheels[i].getPosition();
+		
+		//Debug Serial Printing
+		Serial.print("Wheel ");
+		Serial.print(i);
+		Serial.print(" has ");
+		Serial.print(targetWheelPosition[i] - currentWheelPosition[i]);
+		Serial.println(" steps remaining.");
+		
+		if (currentWheelPosition[i] >= targetWheelPosition[i]) {
+			wheels[i].stop();
+			wheelDestinationReached++;
+		}
+	}
+	if (wheelDestinationReached == 4) {
+	flags &= ~Flag::TRAVEL_TO_DST; //end move set distance..set flag to 0
+	stop(); //unnecessary, all wheels should already be stopped;
+	}
 }
 
 /*void Robot::followLine(Direction dir) {

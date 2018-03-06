@@ -11,7 +11,8 @@ enum class Flag : uint8_t {
   FOLLOWING_LINE = 0x01 << 0,
   CALIBRATING_LINE = 0x01 << 1,
   PRINTING_LINE = 0x01 << 2,
-  PRINTING_EDGE = 0x01 << 3
+  PRINTING_EDGE = 0x01 << 3,
+  TRAVEL_TO_DST = 0x01 << 4
 };
 
 inline Flag operator~(Flag a) {return static_cast<Flag>(~ static_cast<uint8_t>(a));}
