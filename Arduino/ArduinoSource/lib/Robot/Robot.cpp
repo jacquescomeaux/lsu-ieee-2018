@@ -18,7 +18,7 @@ Robot::Robot() :
     Wheel(motor_shields[1].getMotor(2), 19, 23)
   },
   edge_detectors {
-    ProximitySensor(5, 6),
+    ProximitySensor(50, 6),
     ProximitySensor(0, 0),
     ProximitySensor(0, 0),
     ProximitySensor(0, 0)
@@ -67,13 +67,14 @@ void Robot::update() {
   if((dt[2] > 100) ? last_time[2] = time : false) if(flags & Flag::CALIBRATING_LINE) ;//for(LineSensor& l : line_sensors) l.calibrateSensors();
   if((dt[3] > 100) ? last_time[3] = time : false) if(flags & Flag::PRINTING_LINE) ;//line_sensors[static_cast<int>(current_direction)].printReadings(); 
   if((dt[4] > 100) ? last_time[4] = time : false) checkEdges();
+  if((dt[5] > 100) ? last_time[5] = time : false) checkDestination();
 }
 
-void Robot::move(Direction dir) {
+/* void Robot::move(Direction dir) {
   move(dir, base_speed);
-}
+} */
 
-void Robot::move(Direction dir, Fixed speed) {
+void Robot::move(Direction dir, Fixed speed = base_speed) {
   switch(dir) {
     case(Direction::NONE): stop(); break;
     case(Direction::FRONT): move(Fixed(0), speed, Fixed(0)); break;
@@ -96,10 +97,39 @@ void Robot::move(Fixed x, Fixed y, Fixed rot) {
   setWheelSpeeds(speeds);
 }
 
-void Robot::moveSetDistance(Direction dir, int distance) { //Not finished, needs completing
-	long stepstotravel = distance * 287; //286.7 steps per inch
+void Robot::moveSetDistance(Direction dir, int distance, Fixed speed = base_speed) { //Not finished, needs completing
+	long stepsToTravel = distance * 287; //286.7 steps per inch
 	
-	long startPosition = Wheel.getPosition;
+	for(int i = 0; i < 4; i++) {
+		currentWheelPosition[i] = wheels[i].getPosition();
+		targetWheelPosition[i] = currentWheelPosition[i] + stepsToTravel;
+	}
+	
+	flags |= flag::TRAVEL_TO_DST;
+	move(dir, speed);
+}
+
+void Robot::checkDestination() {
+	int wheelDestinationReached = 0; //counter to see if all wheels have reached destination..testing needed
+	for(int i = 0; i < 4; i++) {
+		currentWheelPosition[i] = wheels[i].getPosition();
+		
+		//Debug Serial Printing
+		Serial.print("Wheel ");
+		Serial.print(i);
+		Serial.print(" has ");
+		Serial.print(targetWheelPosition[i] - currentWheelPosition[i]);
+		Serial.println(" steps remaining.");
+		
+		if (currentWheelPosition[i] >= targetWheelPosition[i]) {
+			wheels[i].stop();
+			wheelDestinationReached++;
+		}
+	}
+	if (wheelDestinationReached == 4) {
+	flags &= ~flag::TRAVEL_TO_DST; //end move set distance..set flag to 0
+	stop(); //unnecessary, all wheels should already be stopped;
+	}
 }
 
 /*void Robot::followLine(Direction dir) {

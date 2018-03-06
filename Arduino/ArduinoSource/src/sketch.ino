@@ -1,5 +1,7 @@
 #include <Robot.h>
 
+#define moveSetDstAmt 4 //how far the robot moves via moveSetDistance (in inches)
+
 SortBot* robot;
 
 void parseCommand() {
@@ -37,6 +39,8 @@ void parseCommand() {
     case '9': robot->adjustDefaultSpeed(-10); break;
     case '0': robot->adjustDefaultSpeed(10); break;
     case 't': test(); break;
+	case 'g': robot->moveSetDistance(Direction::FRONT, moveSetDstAmt);
+	case 'b': robot->moveSetDistance(Direction::BACK, moveSetDstAmt);
     default: robot->stop();
   }
 }

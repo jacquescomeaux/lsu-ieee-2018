@@ -19,11 +19,14 @@ class Robot {
     Fixed KP, KD, base_speed, veer_amount, acceleration;
     MotorShield motor_shields[2]; 
     Wheel wheels[4];
+	long currentWheelPosition[4];
+	long targetWheelPosition[4];
     LineSensor line_sensor;
     ProximitySensor edge_detectors[4];
     void checkEdges();
-    void setWheelSpeeds(const Fixed*); 
-    void adjustWheelSpeeds(const Fixed*); 
+    void setWheelSpeeds(const Fixed*);
+    void adjustWheelSpeeds(const Fixed*);
+	void checkDestination();	
     //void observeErrors();
     //void correctErrors();
   public:
@@ -36,7 +39,7 @@ class Robot {
     void veer(Direction);
     void veer(Direction, Fixed amount);
     void veer(Fixed x, Fixed y, Fixed rot);
-    void moveSetDistance(Direction, int)
+    void moveSetDistance(Direction, int, Fixed);
     //void followLine(Direction);
     //void followLine(Direction, int);
     void toggle(uint8_t);
