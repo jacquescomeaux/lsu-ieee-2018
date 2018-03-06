@@ -1,6 +1,6 @@
 #include <Wheel.h>
 
-Wheel::Wheel(Adafruit_DCMotor* m, int enc_pin_1, int enc_pin_2) : motor(m), encoder(enc_pin_1, enc_pin_2), speed(0), goal_speed(0), direction_set(false), tolerance(0.1) {
+Wheel::Wheel(Adafruit_DCMotor* m, int enc_pin_1, int enc_pin_2) : motor(m), encoder(enc_pin_1, enc_pin_2), speed(0), goal_speed(0), direction_set(false), tolerance(0.1), ECV(0.000348755845) {
   motor->run(RELEASE);
   resetPosition();
 }
@@ -60,7 +60,7 @@ float Wheel::getDistance() {
 }
 
 float Wheel::convertDistance(int pos, bool feet = false) const { //converts encoder reading into inches/feet (inches by default)
-	float dist = pos * ECV;
+	Fixed dist = pos * ECV;
 
 	if (feet) {
 		dist = dist * 12;
@@ -72,10 +72,12 @@ float Wheel::convertDistance(int pos, bool feet = false) const { //converts enco
 float Wheel::getEncoderSpeed() {
 	int CurrentPosition = getPosition();
 	int PositionElapsed = CurrentPosition - LastPosition;
-	float TimeElapsed = CurrentPositionTime - LastPositionTime;
-	TimeElapsed = TimeElapsed / 1000; //convert to seconds
+	Fixed TimeElapsed = CurrentPositionTime - LastPositionTime;
+	TimeElapsed = TimeElapsed * 0.001; //convert to seconds
 
-	float dist = convertDistance(PositionElapsed, true); //get distance traveled in feet
+	Fixed dist = convertDistance(PositionElapsed, true); //get distance traveled in feet
+	
+	Fixed speed = dist / TimeElapsed;
 }
 
 
