@@ -2,7 +2,6 @@
 #define WHEEL_H
 
 #define ENCODER_USE_INTERRUPTS
-#define ENCODER_OPTIMIZE_INTERRUPTS
 //#define CPM		36032 //encoder ticks per revolution, multiplied by 10
 //#define PiR2	12.56637 //wheel circumference
 //#define ECV 0.00348755845 //Encoder Conversion Factor. Inches traveled per pulse

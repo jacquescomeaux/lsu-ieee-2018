@@ -1,7 +1,6 @@
 #include <Wire.h>
 #include <Adafruit_MotorShield.h>
 #include "utility/Adafruit_MS_PWMServoDriver.h"
-#define ENCODER_OPTIMIZE_INTERRUPTS
 #include <Encoder.h>
 
 
