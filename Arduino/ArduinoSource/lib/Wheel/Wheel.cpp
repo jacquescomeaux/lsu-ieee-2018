@@ -87,7 +87,11 @@ Fixed Wheel::getEncoderSpeed() {
 	Fixed dist = convertDistance(PositionElapsed, true); //get distance traveled in feet
 	
 	Fixed speed = dist / TimeElapsed;
-        return speed;
-}
 
+
+
+
+	return speed;
+
+}
 
