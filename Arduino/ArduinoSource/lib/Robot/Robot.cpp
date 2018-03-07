@@ -124,7 +124,7 @@ void Robot::checkDestination() {
 		
 		if (currentWheelPosition[i] >= targetWheelPosition[i]) {
 			flags &= ~Flag::TRAVEL_TO_DST; //end moveSetDistance
-			(stop); //stop all wheels once 1 wheel has gone desired distance
+			stop(); //stop all wheels once 1 wheel has gone desired distance
 		}
 	}
 }
