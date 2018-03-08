@@ -61,7 +61,7 @@ void Robot::update() {
   int dt[NUM_TASKS];
   int time = millis();
   //static std::vector<int> last_time = {0, 0, 0, 0, 0};
-  static int last_time[5] =  {0, 0, 0, 0, 0};
+  static int last_time[6] =  {0, 0, 0, 0, 0, 0};
   for(int i = 0; i < NUM_TASKS; i++)  dt[i] = time - last_time[i];
   if((dt[0] > 100) ? (last_time[0] = time) : false) for(Wheel& w : wheels) w.approachSpeed(acceleration);
   if((dt[1] > 100) ? (last_time[1] = time) : false) if((flags & Flag::FOLLOWING_LINE) != Flag::NONE) ;//correctErrors();
@@ -112,7 +112,7 @@ void Robot::moveSetDistance(Direction dir, int distance) {
 
 void Robot::checkDestination() {
 	//int wheelDestinationReached = 0; //counter to see if all wheels have reached destination..testing needed
-	for(int i = 0; i < 4; i++) {
+	/*for(int i = 0; i < 4; i++) {
 		currentWheelPosition[i] = wheels[i].getPosition();
 		
 		//Debug Serial Printing
@@ -125,8 +125,8 @@ void Robot::checkDestination() {
 		if (currentWheelPosition[i] >= targetWheelPosition[i]) {
 			flags &= ~Flag::TRAVEL_TO_DST; //end moveSetDistance
 			stop(); //stop all wheels once 1 wheel has gone desired distance
-		}
-	}
+		} 
+	}*/
 }
 
 /*void Robot::followLine(Direction dir) {

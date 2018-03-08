@@ -10,10 +10,10 @@ while True:
 
         cv2.imshow("picam", img)
 
-	waitKey();
+#	waitKey();
 
         if cv2.waitKey(1) == 27:
                 break
 
-webcam.release()
-
+picam.release()
+cv2.releaseAllWindows()
