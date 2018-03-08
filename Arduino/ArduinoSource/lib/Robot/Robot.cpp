@@ -68,7 +68,7 @@ void Robot::update() {
   if((dt[2] > 100) ? (last_time[2] = time) : false) if((flags & Flag::CALIBRATING_LINE) != Flag::NONE) ;//for(LineSensor& l : line_sensors) l.calibrateSensors();
   if((dt[3] > 100) ? (last_time[3] = time) : false) if((flags & Flag::PRINTING_LINE) != Flag::NONE) ;//line_sensors[static_cast<int>(current_direction)].printReadings(); 
   if((dt[4] > 100) ? (last_time[4] = time) : false) checkEdges();
-  if((dt[5] > 100) ? (last_time[5] = time) : false) checkDestination(); //check if robot has reached destination
+  if((dt[5] > 100) ? (last_time[5] = time) : false) if((flags & Flag::TRAVEL_TO_DST) != Flag::NONE)checkDestination(); //check if robot has reached destination
 }
 
 void Robot::move(Direction dir) {
