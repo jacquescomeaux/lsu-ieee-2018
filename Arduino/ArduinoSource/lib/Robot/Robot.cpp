@@ -68,7 +68,7 @@ void Robot::update() {
   if((dt[2] > 100) ? (last_time[2] = time) : false) if((flags & Flag::CALIBRATING_LINE) != Flag::NONE) ;//for(LineSensor& l : line_sensors) l.calibrateSensors();
   if((dt[3] > 100) ? (last_time[3] = time) : false) if((flags & Flag::PRINTING_LINE) != Flag::NONE) ;//line_sensors[static_cast<int>(current_direction)].printReadings(); 
   if((dt[4] > 100) ? (last_time[4] = time) : false) checkEdges();
-  if((dt[5] > 100) ? (last_time[5] = time) : false) checkDestination(); //check if robot has reached destination
+  if((dt[5] > 100) ? (last_time[5] = time) : false) if((flags & Flag::TRAVEL_TO_DST) != Flag::NONE) checkDestination(); //check if robot has reached destination
 }
 
 void Robot::move(Direction dir) {
@@ -98,35 +98,35 @@ void Robot::move(Fixed x, Fixed y, Fixed rot) {
   setWheelSpeeds(speeds);
 }
 
-void Robot::moveSetDistance(Direction dir, int distance) { 
+void Robot::moveSetDistance(Direction dir, int distance) {
 	int stepsToTravel = distance * 287; //286.7 steps per inch
-	
+
 	for(int i = 0; i < 4; i++) {
 		currentWheelPosition[i] = wheels[i].getPosition();
 		targetWheelPosition[i] = currentWheelPosition[i] + stepsToTravel;
 	}
-	
-	flags |= Flag::TRAVEL_TO_DST;
+
+	flags |= Flag::TRAVEL_TO_DST; //enable flag
 	move(dir, base_speed);//need to fix speed argument
 }
 
 void Robot::checkDestination() {
 	//int wheelDestinationReached = 0; //counter to see if all wheels have reached destination..testing needed
-	/*for(int i = 0; i < 4; i++) {
+	for(int i = 0; i < 4; i++) {
 		currentWheelPosition[i] = wheels[i].getPosition();
-		
-		//Debug Serial Printing
+
+	/*	//Debug Serial Printing
 		Serial.print("Wheel ");
 		Serial.print(i);
 		Serial.print(" has ");
 		Serial.print(targetWheelPosition[i] - currentWheelPosition[i]);
-		Serial.println(" steps remaining.");
-		
+		Serial.println(" steps remaining.");*/
+
 		if (currentWheelPosition[i] >= targetWheelPosition[i]) {
 			flags &= ~Flag::TRAVEL_TO_DST; //end moveSetDistance
 			stop(); //stop all wheels once 1 wheel has gone desired distance
-		} 
-	}*/
+		}
+	}
 }
 
 /*void Robot::followLine(Direction dir) {
@@ -156,7 +156,7 @@ void Robot::veer(Direction dir, Fixed amount) {
     case(Direction::BACK_RIGHT): veer(amount/2, Fixed(0) - amount/2, Fixed(0)); break;
     case(Direction::CLOCKWISE): veer(Fixed(0), Fixed(0), amount); break;
     case(Direction::COUNTER_CLOCKWISE): veer(Fixed(0), Fixed(0), Fixed(0) - amount); break;
-    default: break; 
+    default: break;
   }
 }
 
@@ -180,7 +180,7 @@ void Robot::veer(Fixed x, Fixed y, Fixed rot) {
 void Robot::toggleMultiple(Flag settings) {
   settings &= ~Flag::NONE;
   settings &= ~Flag::FOLLOWING_LINE;
-  flags ^= settings; 
+  flags ^= settings;
 }
 
 void Robot::adjustKD(Fixed adjustment) {
