@@ -46,8 +46,8 @@ void parseCommand() {
     case '9': robot->adjustDefaultSpeed(-10); break;
     case '0': robot->adjustDefaultSpeed(10); break;
     */case 't': test(); break;
-	case 'g': robot->moveSetDistance(Direction::FRONT, moveSetDstAmt);
-	case 'b': robot->moveSetDistance(Direction::BACK, moveSetDstAmt);
+	case 'g': robot->moveSetDistance(Direction::FRONT, moveSetDstAmt); break;
+	case 'b': robot->moveSetDistance(Direction::BACK, moveSetDstAmt); break;
     default: robot->stop();
   }
 }
