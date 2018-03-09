@@ -27,7 +27,7 @@ endif
 set shortmess=aoO
 badd +1 Session.vim
 badd +1 src/sketch.ino
-badd +1 lib/Robot/Robot.h
+badd +21 lib/Robot/Robot.h
 badd +1 lib/Direction/Direction.h
 badd +1 lib/LED/LED.h
 badd +1 lib/LineSensor/LineSensor.h
@@ -46,7 +46,8 @@ badd +1 lib/ProximitySensor/ProximitySensor.cpp
 badd +1 lib/SortingSystem/SortingSystem.cpp
 badd +1 lib/Fixed/Fixed.cpp
 badd +1 lib/Fixed/Fixed.h
-badd +0 lib/Flags/Flags.h
+badd +1 lib/Flags/Flags.h
+badd +1 lib/Flag/Flag.h
 argglobal
 silent! argdel *
 $argadd src/sketch.ino
@@ -168,7 +169,7 @@ if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
 49
-normal! 03|
+normal! 0
 tabedit lib/Direction/Direction.h
 set splitbelow splitright
 set nosplitbelow
@@ -1735,16 +1736,10 @@ exe 'vert 1resize ' . ((&columns * 79 + 79) / 158)
 exe 'vert 2resize ' . ((&columns * 78 + 79) / 158)
 tabedit lib/Robot/Robot.cpp
 set splitbelow splitright
-wincmd _ | wincmd |
-vsplit
-1wincmd h
-wincmd w
 set nosplitbelow
 set nosplitright
 wincmd t
 set winminheight=1 winheight=1 winminwidth=1 winwidth=1
-exe 'vert 1resize ' . ((&columns * 79 + 79) / 158)
-exe 'vert 2resize ' . ((&columns * 78 + 79) / 158)
 argglobal
 setlocal autoindent
 setlocal backupcopy=
@@ -1851,15 +1846,19 @@ setlocal nowinfixwidth
 setlocal wrap
 setlocal wrapmargin=0
 silent! normal! zE
-let s:l = 105 - ((7 * winheight(0) + 19) / 38)
+let s:l = 24 - ((23 * winheight(0) + 19) / 39)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-105
-normal! 019|
-wincmd w
+24
+normal! 0
+tabedit lib/Robot/Robot.h
+set splitbelow splitright
+set nosplitbelow
+set nosplitright
+wincmd t
+set winminheight=1 winheight=1 winminwidth=1 winwidth=1
 argglobal
-edit lib/Robot/Robot.h
 setlocal autoindent
 setlocal backupcopy=
 setlocal nobinary
@@ -1965,15 +1964,12 @@ setlocal nowinfixwidth
 setlocal wrap
 setlocal wrapmargin=0
 silent! normal! zE
-let s:l = 1 - ((0 * winheight(0) + 19) / 38)
+let s:l = 1 - ((0 * winheight(0) + 19) / 39)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
 1
-normal! 015|
-wincmd w
-exe 'vert 1resize ' . ((&columns * 79 + 79) / 158)
-exe 'vert 2resize ' . ((&columns * 78 + 79) / 158)
+normal! 0
 tabedit lib/SortingSystem/SortingSystem.cpp
 set splitbelow splitright
 wincmd _ | wincmd |
@@ -2097,7 +2093,7 @@ if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
 1
-normal! 0
+normal! 08|
 wincmd w
 argglobal
 edit lib/SortingSystem/SortingSystem.h
@@ -2697,7 +2693,7 @@ normal! 0
 wincmd w
 exe 'vert 1resize ' . ((&columns * 79 + 79) / 158)
 exe 'vert 2resize ' . ((&columns * 78 + 79) / 158)
-tabedit lib/Flags/Flags.h
+tabedit lib/Flag/Flag.h
 set splitbelow splitright
 set nosplitbelow
 set nosplitright
@@ -2809,13 +2805,13 @@ setlocal nowinfixwidth
 setlocal wrap
 setlocal wrapmargin=0
 silent! normal! zE
-let s:l = 1 - ((0 * winheight(0) + 19) / 39)
+let s:l = 9 - ((6 * winheight(0) + 19) / 39)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-1
-normal! 0
-tabnext 13
+9
+normal! 020|
+tabnext 10
 set stal=1
 if exists('s:wipebuf')
   silent exe 'bwipe ' . s:wipebuf

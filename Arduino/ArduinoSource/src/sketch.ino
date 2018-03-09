@@ -2,6 +2,8 @@
 #include <Arduino.h>
 //#include <StandardCplusplus.h>
 
+#include <Fixed.h>
+
 #define moveSetDstAmt 4 //how far the robot moves via moveSetDistance (in inches)
 
 SortBot* robot;
@@ -28,6 +30,7 @@ void parseCommand() {
     case 'i': robot->veer(Direction::RIGHT); break;
     case '+': robot->veer(Direction::FRONT); break;
     case '-': robot->veer(Direction::BACK); break;
+    case 'f': robot->toggle(FOLLOWING_LINE);
     /*case 'W': robot->followLine(Direction::FRONT); break;
     case 'A': robot->followLine(Direction::LEFT); break;
     case 'X': robot->followLine(Direction::BACK); break;
@@ -39,19 +42,23 @@ void parseCommand() {
     case 'r': robot->toggleCalibration(); break;
     case 'f': robot->toggleSensorsOutput(); break;
     case 'v': robot->toggleEdgeOutput(); break;
-    case '1': robot->adjustKP(-0.01f); break;
-    case '2': robot->adjustKP(0.01f); break;
-    case '3': robot->adjustKD(-0.01f); break;
-    case '4': robot->adjustKD(0.01f); break;
-    case '9': robot->adjustDefaultSpeed(-10); break;
-    case '0': robot->adjustDefaultSpeed(10); break;
-    */case 't': test(); break;
-	case 'g': robot->moveSetDistance(Direction::FRONT, moveSetDstAmt); break;
-	case 'b': robot->moveSetDistance(Direction::BACK, moveSetDstAmt); break;
+    */
+    case 'r': robot->toggle(Flag::CALIBRATING_LINE); break;
+    case 'f': robot->toggle(Flag::FOLLOWING_LINE); break;
+    case '1': robot->adjustXP(Fixed(-0.01)); break;
+    case '2': robot->adjustXP(Fixed(0.01)); break;
+    case '3': robot->adjustYP(Fixed(-0.01)); break;
+    case '4': robot->adjustYP(Fixed(0.01)); break;
+    case '5': robot->adjustRotP(Fixed(-0.01)); break;
+    case '6': robot->adjustRotP(Fixed(0.01)); break;
+    case '9': robot->adjustBaseSpeed(Fixed(-10)); break;
+    case '0': robot->adjustBaseSpeed(Fixed(10)); break;
+    case 't': test(); break;
+    case 'g': robot->travel(Direction::FRONT, Fixed(moveSetDstAmt)); break;
+    case 'b': robot->travel(Direction::BACK, Fixed(moveSetDstAmt)); break;
     default: robot->stop();
   }
 }
-
 
 void setup() {
   robot = new SortBot();

@@ -6,7 +6,7 @@
 
 //#define CPM		36032 //encoder ticks per revolution, multiplied by 10
 //#define PiR2	12.56637 //wheel circumference
-//#define ECV 0.00348755845 //Encoder Conversion Factor. Inches traveled per pulse
+
 //Interrupt Pins Available: 2, 3, 18, 19, 20, 21
 
 #include <Adafruit_MotorShield.h>
@@ -19,25 +19,27 @@ class Wheel {
     Encoder encoder;
     Fixed speed, goal_speed;
     //bool direction_set;
-    const Fixed tolerance, max_speed, ECV, msToS;
+    const Fixed tolerance, max_speed, ECV, MS_TO_S;
     const uint8_t max_speed_uint8;
-	int position, LastPosition, LastPositionTime, CurrentPositionTime;
-	Fixed convertDistance(int, bool) const;
+    Fixed current_pos, last_pos, current_time, last_time;
+    Fixed convertDistance(Fixed, bool) const;
   public:
     Wheel(Adafruit_DCMotor*, int, int); 
+    
+    //goal speed
     void setSpeed(Fixed);
-    Fixed getSpeed() const;
     void adjustSpeed(Fixed);
+    Fixed getSpeed() const;
+
+    //motor interaction
     void approachSpeed(Fixed);
     void stop();
-	
-	int getPosition();
-	void resetPosition();
-	Fixed getDistance();
-
-	Fixed getEncoderSpeed();
-
-
+    
+    //encoder
+    Fixed getPosition();
+    void resetPosition();
+    Fixed getDistance();
+    Fixed updateEncoderSpeed();
 
 };
 
