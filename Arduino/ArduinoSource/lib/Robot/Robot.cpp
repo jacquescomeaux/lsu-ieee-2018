@@ -125,24 +125,31 @@ void Robot::move(Fixed x, Fixed y, Fixed rot) {
   setWheelSpeeds(speeds);
 }
 
-/*<<<<<<< HEAD
-void Robot::moveSetDistance(Direction dir, int distance) {
-	int stepsToTravel = distance * 287; //286.7 steps per inch
+void Robot::travel(Direction dir, Fixed distance) {
+	Fixed stepsToTravel = distance * 287; //286.7 steps per inch
 
 	for(int i = 0; i < 4; i++) {
 		currentWheelPosition[i] = wheels[i].getPosition();
-		xtargetWheelPosition[i] = currentWheelPosition[i] + stepsToTravel;
+		targetWheelPosition[i] = currentWheelPosition[i] + stepsToTravel;
 	}
 
 	flags = flags| Flag::TRAVEL_TO_DST; //enable flag
 	Serial.println("Setting Flag TRAVEL_TO_DST");
-	move(dir, base_speed);//need to fix speed argument
+	move(dir, base_speed);
 }
 
 void Robot::checkDestination() {
-	//int wheelDestinationReached = 0; //counter to see if all wheels have reached destination..testing needed
 	for(int i = 0; i < 4; i++) {
 		currentWheelPosition[i] = wheels[i].getPosition();
+		Fixed speed = wheels[i].getSpeed();
+		bool forward; //check if wheel is moving in positive/negative direction
+		
+		if (speed > 0) {
+			forward = true;
+		}
+		else {
+			forward = false;
+		}
 
 		//Debug Serial Printing
 		Serial.print("Wheel ");
@@ -157,16 +164,22 @@ void Robot::checkDestination() {
 		Serial.println(targetWheelPosition[i]);
 		Serial.print("abs(targetWheelPosition[i]): ");
 		Serial.println(abs(targetWheelPosition[i]));
-
-		if (abs(currentWheelPosition[i]) >= abs(targetWheelPosition[i])) { //+300 just for testing
-			flags = flags & ~Flag::TRAVEL_TO_DST; //end moveSetDistance
-			Serial.println("Destination Reached, disabling TRAVEL_TO_DST");
-			stop(); //stop all wheels once 1 wheel has gone desired distance
+		
+		if (forward == true) {
+			if (currentWheelPosition[i] >= targetWheelPosition[i]) {
+				flags = flags & ~Flag::TRAVEL_TO_DST; //end moveSetDistance
+				stop(); //stop all wheels once 1 wheel has gone desired distance
+			}
+		}
+		else if (currentWheelPosition[i] <= targetWheelPosition[i]) {
+			flags = flags & ~Flag::TRAVEL_TO_DST;
+			stop();
 		}
 	}
-=======
-*///Not finished, needs completing
-void Robot::travel(Direction dit, Fixed dist) {
+}
+
+/*
+void Robot::travel(Direction dir, Fixed dist) {
   travel(dir, base_speed, dist)
 }
 
@@ -178,7 +191,7 @@ void Robot::travel(Direction dir, Fixed speed, Fixed distance) {
   }
   flags |= Flag::TRAVEL_TO_DST;
   move(dir, base_speed);//need to fix speed argument
-}
+} */
 
 void Robot::checkDestination() {
   //counter to see if all wheels have reached destination..testing needed
@@ -202,7 +215,6 @@ void Robot::checkDestination() {
     flags &= ~Flag::TRAVEL_TO_DST; //end move set distance..set flag to 0
     stop(); //unnecessary, all wheels should already be stopped;
   }
-//>>>>>>> LINE FOLLOWING 2.0 among other changes
 }
 
 /*void Robot::followLine(Direction dir) {
