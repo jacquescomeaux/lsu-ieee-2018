@@ -193,30 +193,6 @@ void Robot::travel(Direction dir, Fixed speed, Fixed distance) {
   move(dir, base_speed);//need to fix speed argument
 } */
 
-void Robot::checkDestination() {
-  //counter to see if all wheels have reached destination..testing needed
-  int wheel_destination_reached = 0;
-  for(int i = 0; i < 4; i++) {
-    current_wheel_position[i] = wheels[i].getPosition();
-    
-    //Debug Serial Printing
-    Serial.print("Wheel ");
-    Serial.print(i);
-    Serial.print(" has ");
-    Serial.print(targetWheelPosition[i] - currentWheelPosition[i]);
-    Serial.println(" steps remaining.");
-    
-    if(current_wheel_position[i] >= target_wheel_position[i]) {
-      wheels[i].stop();
-      wheel_destination_reached++;
-    }
-  }
-  if (wheel_destination_reached == 4) {
-    flags &= ~Flag::TRAVEL_TO_DST; //end move set distance..set flag to 0
-    stop(); //unnecessary, all wheels should already be stopped;
-  }
-}
-
 /*void Robot::followLine(Direction dir) {
   //Serial.println("call to follow");//
   followLine(dir, default_speed);
