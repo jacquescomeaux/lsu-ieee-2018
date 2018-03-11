@@ -17,19 +17,19 @@ void setup() {
   encoders[3] = new Encoder(19, 23);
   
   Serial.begin(9600);
+  for(Adafruit_MotorShield& a : AFMS) a.begin();
   for(int i = 0; i < 4; i++) motors[i] = AFMS[i/2].getMotor((i%2)+1);
-  for(auto a : AFMS) a.begin();
   for(int i = 0; i < 4; i++) {
-	Serial.print("Motor ");
-	Serial.print(i);
-	Serial.println(":");
-	Serial.print("Start Position: ");
-	Serial.println(encoders[i]->read());
+    Serial.print("Motor ");
+    Serial.print(i);
+    Serial.println(":");
+    Serial.print("Start Position: ");
+    Serial.println(encoders[i]->read());
     motors[i]->setSpeed(55);
     motors[i]->run(FORWARD);
     delay(2000);
-	Serial.print("End Position: ");
-	Serial.println(encoders[i]->read());
+    Serial.print("End Position: ");
+    Serial.println(encoders[i]->read());
     motors[i]->run(RELEASE);
   }
 }

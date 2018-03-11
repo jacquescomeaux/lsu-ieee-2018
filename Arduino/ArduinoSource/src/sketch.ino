@@ -55,6 +55,7 @@ void parseCommand() {
     case 't': test(); break;
     case 'g': robot->travel(Direction::FRONT, Fixed(moveSetDstAmt)); break;
     case 'b': robot->travel(Direction::BACK, Fixed(moveSetDstAmt)); break;
+    case 'p': robot->pickUpToken(); break;
     default: robot->stop();
   }
 }
@@ -70,36 +71,5 @@ void setup() {
 void loop() {
   //robot->checkEdges();
   if(Serial.available()) parseCommand();
-//  int time = millis();
-  //if(time < 2000) aFunc();
-  //else if(time < 4000) bFunc();
- // else {
-    //bFunc();
-    //veerLeft();
-   // robot->stop();
-    //test();
-  //}
-  //robot->approachSpeed();
   robot->update();
-  //if(a++%5)
-  //robot->correctErrors();
-  //delay(10);
-
 }
-
-/*
-void aFunc() {
-  static bool ran = false;
-  if(!ran) robot->move(Direction::BACK);
-  ran = true;
-}
-
-void bFunc() {
-  static bool ran = false;
-  //robot->move(Direction::BACK);
-  if(!ran) robot->veerLeft();
-  ran = true;
-  //delay(2000);
-  //robot->stop();
-  //test();
-}*/

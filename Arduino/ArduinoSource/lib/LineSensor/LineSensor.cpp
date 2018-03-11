@@ -2,25 +2,14 @@
 
 #include <Arduino.h>
 
-/*LineSensor::LineSensor(unsigned char* p) :
-  pins {p[0], p[1], p[2]},
-  qtrrc(pins, 3),
-  sensorValues {0, 0, 0} {} 
-
-LineSensor::LineSensor(unsigned char p1, unsigned char p2, unsigned char p3) :
-  pins {p1, p2, p3},
-  qtrrc(pins, 3),
-  sensorValues {0, 0, 0} {} 
-*/
-
 LineSensor::LineSensor(unsigned char pin_start) :
   NUM_PINS(32),
   OFFSET_TO_RAD(3.141592653589793 / 16),
   pins {
+    22, 23, 24, 25, 26, 27, 28, 29,
     30, 31, 32, 33, 34, 35, 36, 37,
     38, 39, 40, 41, 42, 43, 44, 45,
-    46, 47, 48, 49, 50, 51, 52, 53,
-    54, 55, 56, 57, 58, 59, 60, 61
+    46, 47, 48, 49, 50, 51, 52, 53
   },
   qtrrc(pins, NUM_PINS) {
     for(int i = 0; i < 32; i++) {
