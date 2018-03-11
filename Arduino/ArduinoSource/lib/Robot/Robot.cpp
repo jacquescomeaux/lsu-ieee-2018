@@ -54,12 +54,8 @@ void Robot::correctWheelSpeeds(const Fixed* speeds) {
 }
 
 void Robot::correctErrors() {
-  //int error = line_sensors[static_cast<int>(current_direction)].getLineError();  
   Fixed xerr, yerr, roterr;
   line_sensor.getLineErrors(&xerr, &yerr, &roterr, current_direction);
-  //int adjustment = KP * error + KD * (error - last_error);
-  //last_error = error;
-  //for(int i = 0; i < 4; i++) wheels[i].adjustSpeed((i<2)?adjustment:-adjustment);
   veer(XP*xerr, YP*yerr, RotP*roterr);
 }
 
@@ -178,7 +174,7 @@ void Robot::travel(Direction dir, Fixed speed, Fixed distance) {
     target_wheel_pos[i] = current_wheel_pos[i] + steps_to_travel;
   }
   flags |= Flag::TRAVEL_TO_DST;
-  move(dir, base_speed);//need to fix speed argument
+  move(dir, speed);
 }
 
 void Robot::checkDestination() {
@@ -194,27 +190,17 @@ void Robot::checkDestination() {
     Serial.print((target_wheel_pos[i] - current_wheel_pos[i]).getInt());
     Serial.println(" steps remaining.");
     
-    if(current_wheel_pos[i] >= target_wheel_pos[i]) {
+    if(current_wheel_pos[i] -  >= target_wheel_pos[i]) {
       wheels[i].stop();
       wheel_destination_reached++;
     }
   }
-  if (wheel_destination_reached == 4) {
+  if (wheel_destination_reached > 1) {
     flags &= ~Flag::TRAVEL_TO_DST; //end move set distance..set flag to 0
     stop(); //unnecessary, all wheels should already be stopped;
   }
 //>>>>>>> LINE FOLLOWING 2.0 among other changes
 }
-
-/*void Robot::followLine(Direction dir) {
-  //Serial.println("call to follow");//
-  followLine(dir, default_speed);
-}
-
-void Robot::followLine(Direction dir, int speed) {
-  following_line = true;
-  setWheelSpeeds(dir, speed);
-}*/
 
 void Robot::veer(Direction dir) {
   veer(dir, veer_amount);

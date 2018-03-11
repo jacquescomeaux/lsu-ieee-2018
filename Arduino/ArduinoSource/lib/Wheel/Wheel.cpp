@@ -33,9 +33,8 @@ void Wheel::correctSpeed(Fixed c) {
 }
 
 void Wheel::approachSpeed(Fixed amount) {
-  if((goal_speed - speed).mag() < tolerance) return;
-  //needs damping factor
-  speed += (speed < goal_speed) ? amount : Fixed(0) - amount;
+  if((goal_speed + correction - speed).mag() < amount) speed = goal_speed + correction;
+  else speed += (speed < goal_speed) ? amount : Fixed(0) - amount;
   if(speed > Fixed(0)) motor->run(FORWARD);
   else motor->run(BACKWARD);
   uint8_t motor_speed;
