@@ -4,7 +4,7 @@
 Robot::Robot() :
   flags(Flag::NONE),
   NUM_TASKS(6),
-  last_ran {0},
+  //last_ran {0},
   XP(Fixed(0.03)),
   YP(Fixed(0.03)),
   RotP(Fixed(0.03)),
@@ -29,7 +29,8 @@ Robot::Robot() :
     ProximitySensor(0, 0),
     ProximitySensor(0, 0)
   },*/
-  line_sensor(30, 32) {
+  line_sensor(30) {
+    last_ran.resize(NUM_TASKS, 0);
     stop();
 } 
 
@@ -72,28 +73,28 @@ void Robot::update() {
   int time = millis();
   for(int i = 0; i < NUM_TASKS; i++)  dt[i] = time - last_ran[i];
   
-  if((dt[0] > 100) ? (last_time[0] = time) : false) {
+  if((dt[0] > 100) ? (last_ran[0] = time) : false) {
     for(Wheel& w : wheels) w.approachSpeed(acceleration);
   }
 
-  if((dt[1] > 100) ? (last_time[1] = time) : false) {
+  if((dt[1] > 100) ? (last_ran[1] = time) : false) {
     if((flags & Flag::FOLLOWING_LINE) != Flag::NONE) correctErrors();
   }
   
-  if((dt[2] > 100) ? (last_time[2] = time) : false) {
+  if((dt[2] > 100) ? (last_ran[2] = time) : false) {
     if((flags & Flag::CALIBRATING_LINE) != Flag::NONE) ;//for(LineSensor& l : line_sensors) l.calibrateSensors();
   }
   
-  if((dt[3] > 100) ? (last_time[3] = time) : false) {
+  if((dt[3] > 100) ? (last_ran[3] = time) : false) {
     if((flags & Flag::PRINTING_LINE) != Flag::NONE) ;//line_sensors[static_cast<int>(current_direction)].printReadings(); 
   }
   
-  if((dt[4] > 100) ? (last_time[4] = time) : false) {
+  if((dt[4] > 100) ? (last_ran[4] = time) : false) {
     checkEdges();
   }
   
-  if((dt[5] > 100) ? (last_time[5] = time) : false) {
-    if((flags & Flag:TRAVEL_TO_DST) != Flag:NONE) checkDestination();
+  if((dt[5] > 100) ? (last_ran[5] = time) : false) {
+    if((flags & Flag::TRAVEL_TO_DST) != Flag::NONE) checkDestination();
   }
 }
 
@@ -166,15 +167,15 @@ void Robot::checkDestination() {
 	}
 =======
 *///Not finished, needs completing
-void Robot::travel(Direction dit, Fixed dist) {
-  travel(dir, base_speed, dist)
+void Robot::travel(Direction dir, Fixed dist) {
+  travel(dir, base_speed, dist);
 }
 
 void Robot::travel(Direction dir, Fixed speed, Fixed distance) {
-  long stepsToTravel = distance * 287; //286.7 steps per inch
+  Fixed steps_to_Travel = distance * 287; //286.7 steps per inch
   for(int i = 0; i < 4; i++) {
-    currentWheelPosition[i] = wheels[i].getPosition();
-    targetWheelPosition[i] = currentWheelPosition[i] + stepsToTravel;
+    current_wheel_position[i] = wheels[i].getPosition();
+    target_wheel_pos[i] = current_wheel_pos[i] + steps_to_travel;
   }
   flags |= Flag::TRAVEL_TO_DST;
   move(dir, base_speed);//need to fix speed argument
@@ -184,16 +185,16 @@ void Robot::checkDestination() {
   //counter to see if all wheels have reached destination..testing needed
   int wheel_destination_reached = 0;
   for(int i = 0; i < 4; i++) {
-    current_wheel_position[i] = wheels[i].getPosition();
+    current_wheel_pos[i] = wheels[i].getPosition();
     
     //Debug Serial Printing
     Serial.print("Wheel ");
     Serial.print(i);
     Serial.print(" has ");
-    Serial.print(targetWheelPosition[i] - currentWheelPosition[i]);
+    Serial.print(target_wheel_pos[i] - current_wheel_pos[i]);
     Serial.println(" steps remaining.");
     
-    if(current_wheel_position[i] >= target_wheel_position[i]) {
+    if(current_wheel_pos[i] >= target_wheel_pos[i]) {
       wheels[i].stop();
       wheel_destination_reached++;
     }

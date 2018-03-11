@@ -4,14 +4,19 @@
 #include <QTRSensors.h>
 //#include <Arduino.h>
 #include <Fixed.h>
+#include <Direction.h>
+#include <ArduinoSTL.h>
+#include <vector>
+
 
 class LineSensor {
   private:
     const int NUM_PINS;
-    unsigned char pins[NUM_PINS];
+    const Fixed OFFSET_TO_RAD;
+    unsigned char pins[32];
     QTRSensorsRC qtrrc;
-    unsigned int sensor_values[NUM_PINS];
-    Fixed SINES[NUM_PINS], COSINES[NUM_PINS];
+    unsigned int sensor_values[32];
+    Fixed SINES[32], COSINES[32];
     Fixed getLinePosition(int offset, int range);
   public:
     LineSensor(unsigned char);

@@ -30,7 +30,6 @@ void parseCommand() {
     case 'i': robot->veer(Direction::RIGHT); break;
     case '+': robot->veer(Direction::FRONT); break;
     case '-': robot->veer(Direction::BACK); break;
-    case 'f': robot->toggle(FOLLOWING_LINE);
     /*case 'W': robot->followLine(Direction::FRONT); break;
     case 'A': robot->followLine(Direction::LEFT); break;
     case 'X': robot->followLine(Direction::BACK); break;

@@ -17,14 +17,14 @@ class Robot {
     //uint8_t flags;
     Flag flags;
     const int NUM_TASKS;
-    const int last_ran[NUM_TASKS];
+    std::vector<int> last_ran;///[NUM_TASKS];
     const Fixed SQRT_HALF, ZERO;
     Fixed XP, YP, RotP, base_speed, veer_amount, acceleration;
+    Direction current_direction;
     MotorShield motor_shields[2]; 
     Wheel wheels[4];
     Fixed current_wheel_pos[4], target_wheel_pos[4];
-    Direction current_direction;
-    //LineSensor line_sensor;
+    LineSensor line_sensor;
     //ProximitySensor edge_detectors[4];
     void checkEdges();
     void setWheelSpeeds(const Fixed*);
@@ -50,7 +50,7 @@ class Robot {
    
     //move a set amount
     void travel(Direction, Fixed dist);
-    void travel(Direction, Fixed speed, Fixed dist)
+    void travel(Direction, Fixed speed, Fixed dist);
     void travel(Fixed x, Fixed y, Fixed rot, Fixed dist);
    
     //follow a line

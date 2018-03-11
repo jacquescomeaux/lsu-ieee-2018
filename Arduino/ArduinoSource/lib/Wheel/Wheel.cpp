@@ -52,7 +52,7 @@ Fixed Wheel::getPosition() {
   //lastPosition = position;
   //position = encoder.read();
   //return position;
-  return Fixed(encoder.read());
+  return Fixed(static_cast<int>(encoder.read()));
 }
 
 void Wheel::resetPosition() {
@@ -78,7 +78,7 @@ Fixed Wheel::convertDistance(Fixed pos, bool feet = false) const {
 
 Fixed Wheel::updateEncoderSpeed() {
   Fixed current_pos = getPosition();
-  Fixed current_time = millis();
+  Fixed current_time = static_cast<int>(millis());
   Fixed dist = convertDistance(current_pos - last_pos, true);
   Fixed time = MS_TO_S * (current_time - last_time);
   Fixed speed = dist / time;
