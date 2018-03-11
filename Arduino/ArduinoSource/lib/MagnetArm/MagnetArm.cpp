@@ -6,7 +6,7 @@ void MagnetArm::magnetize() const {}
 
 void MagnetArm::demagnetize() const {}
 
-void MagnetArm::storeTokens() const {}
+void MagnetArm::storeToken() const {}
 
 MagnetArm::MagnetArm() {}
 

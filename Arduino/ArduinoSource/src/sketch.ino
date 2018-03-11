@@ -55,6 +55,7 @@ void parseCommand() {
     case 't': test(); break;
     case 'g': robot->travel(Direction::FRONT, Fixed(moveSetDstAmt)); break;
     case 'b': robot->travel(Direction::BACK, Fixed(moveSetDstAmt)); break;
+    case 'p': robot->pickUpToken(); break;
     default: robot->stop();
   }
 }
