@@ -28,6 +28,10 @@ void Wheel::adjustSpeed(Fixed adjustment) {
   goal_speed += adjustment;
 }
 
+void Wheel::correctSpeed(Fixed c) {
+  correction = c;
+}
+
 void Wheel::approachSpeed(Fixed amount) {
   if((goal_speed - speed).mag() < tolerance) return;
   //needs damping factor

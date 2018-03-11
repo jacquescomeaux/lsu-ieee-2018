@@ -17,7 +17,7 @@ class Wheel {
   private:
     Adafruit_DCMotor* motor;
     Encoder encoder;
-    Fixed speed, goal_speed;
+    Fixed speed, goal_speed, correction;
     //bool direction_set;
     const Fixed tolerance, max_speed, ECV, MS_TO_S;
     const uint8_t max_speed_uint8;
@@ -29,6 +29,7 @@ class Wheel {
     //goal speed
     void setSpeed(Fixed);
     void adjustSpeed(Fixed);
+    void correctSpeed(Fixed);
     Fixed getSpeed() const;
 
     //motor interaction

@@ -106,16 +106,16 @@ void Robot::move(Direction dir, Fixed speed) {
   current_direction = dir;
   switch(dir) {
     case(Direction::NONE): stop(); break;
-    case(Direction::FRONT): move(ZERO, amount, ZERO); break;
-    case(Direction::BACK): move(ZERO, ZERO - amount, ZERO); break;
-    case(Direction::LEFT): move(ZERO - amount, ZERO, ZERO); break;
-    case(Direction::RIGHT): move(amount, ZERO, ZERO); break;
-    case(Direction::FRONT_LEFT): move(ZERO - amount * SQRT_HALF, amount * SQRT_HALF, ZERO); break;
-    case(Direction::FRONT_RIGHT): move(amount * SQRT_HALF, amount * SQRT_HALF, ZERO); break;
-    case(Direction::BACK_LEFT): move(ZERO - amount * SQRT_HALF, ZERO - amount * SQRT_HALF, ZERO); break;
-    case(Direction::BACK_RIGHT): move(amount * SQRT_HALF, ZERO - amount * SQRT_HALF, ZERO); break;
-    case(Direction::CLOCKWISE): move(ZERO, ZERO, amount); break;
-    case(Direction::COUNTER_CLOCKWISE): move(ZERO, ZERO, ZERO - amount); break;
+    case(Direction::FRONT): move(ZERO, speed, ZERO); break;
+    case(Direction::BACK): move(ZERO, ZERO - speed, ZERO); break;
+    case(Direction::LEFT): move(ZERO - speed, ZERO, ZERO); break;
+    case(Direction::RIGHT): move(speed, ZERO, ZERO); break;
+    case(Direction::FRONT_LEFT): move(ZERO - speed * SQRT_HALF, speed * SQRT_HALF, ZERO); break;
+    case(Direction::FRONT_RIGHT): move(speed * SQRT_HALF, speed * SQRT_HALF, ZERO); break;
+    case(Direction::BACK_LEFT): move(ZERO - speed * SQRT_HALF, ZERO - speed * SQRT_HALF, ZERO); break;
+    case(Direction::BACK_RIGHT): move(speed * SQRT_HALF, ZERO - speed * SQRT_HALF, ZERO); break;
+    case(Direction::CLOCKWISE): move(ZERO, ZERO, speed); break;
+    case(Direction::COUNTER_CLOCKWISE): move(ZERO, ZERO, ZERO - speed); break;
     default: break; 
   }
 }
@@ -172,9 +172,9 @@ void Robot::travel(Direction dir, Fixed dist) {
 }
 
 void Robot::travel(Direction dir, Fixed speed, Fixed distance) {
-  Fixed steps_to_Travel = distance * 287; //286.7 steps per inch
+  Fixed steps_to_travel = distance * 287; //286.7 steps per inch
   for(int i = 0; i < 4; i++) {
-    current_wheel_position[i] = wheels[i].getPosition();
+    current_wheel_pos[i] = wheels[i].getPosition();
     target_wheel_pos[i] = current_wheel_pos[i] + steps_to_travel;
   }
   flags |= Flag::TRAVEL_TO_DST;
@@ -191,7 +191,7 @@ void Robot::checkDestination() {
     Serial.print("Wheel ");
     Serial.print(i);
     Serial.print(" has ");
-    Serial.print(target_wheel_pos[i] - current_wheel_pos[i]);
+    Serial.print((target_wheel_pos[i] - current_wheel_pos[i]).getInt());
     Serial.println(" steps remaining.");
     
     if(current_wheel_pos[i] >= target_wheel_pos[i]) {
