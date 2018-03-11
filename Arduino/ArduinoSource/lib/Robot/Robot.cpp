@@ -122,84 +122,58 @@ void Robot::move(Fixed x, Fixed y, Fixed rot) {
   setWheelSpeeds(speeds);
 }
 
-/*<<<<<<< HEAD
-void Robot::moveSetDistance(Direction dir, int distance) {
-	int stepsToTravel = distance * 287; //286.7 steps per inch
-
-	for(int i = 0; i < 4; i++) {
-		currentWheelPosition[i] = wheels[i].getPosition();
-		xtargetWheelPosition[i] = currentWheelPosition[i] + stepsToTravel;
-	}
-
-	flags = flags| Flag::TRAVEL_TO_DST; //enable flag
-	Serial.println("Setting Flag TRAVEL_TO_DST");
-	move(dir, base_speed);//need to fix speed argument
-}
-
-void Robot::checkDestination() {
-	//int wheelDestinationReached = 0; //counter to see if all wheels have reached destination..testing needed
-	for(int i = 0; i < 4; i++) {
-		currentWheelPosition[i] = wheels[i].getPosition();
-
-		//Debug Serial Printing
-		Serial.print("Wheel ");
-		Serial.print(i);
-		Serial.print(" has ");
-		Serial.print(targetWheelPosition[i] - currentWheelPosition[i]);
-		Serial.println(" steps remaining.");
-
-		Serial.print("currentWheelPosition: ");
-		Serial.println(currentWheelPosition[i]);
-		Serial.print("targetWheelPosition: ");
-		Serial.println(targetWheelPosition[i]);
-		Serial.print("abs(targetWheelPosition[i]): ");
-		Serial.println(abs(targetWheelPosition[i]));
-
-		if (abs(currentWheelPosition[i]) >= abs(targetWheelPosition[i])) { //+300 just for testing
-			flags = flags & ~Flag::TRAVEL_TO_DST; //end moveSetDistance
-			Serial.println("Destination Reached, disabling TRAVEL_TO_DST");
-			stop(); //stop all wheels once 1 wheel has gone desired distance
-		}
-	}
-=======
-*///Not finished, needs completing
 void Robot::travel(Direction dir, Fixed dist) {
-  travel(dir, base_speed, dist);
+  travel(dir, base_speed, dist)
 }
 
 void Robot::travel(Direction dir, Fixed speed, Fixed distance) {
-  Fixed steps_to_travel = distance * 287; //286.7 steps per inch
+  Fixed stepsToTravel = distance * 287; //286.7 steps per inch
   for(int i = 0; i < 4; i++) {
-    current_wheel_pos[i] = wheels[i].getPosition();
-    target_wheel_pos[i] = current_wheel_pos[i] + steps_to_travel;
+    currentWheelPosition[i] = wheels[i].getPosition();
+    targetWheelPosition[i] = currentWheelPosition[i] + stepsToTravel;
   }
-  flags |= Flag::TRAVEL_TO_DST;
+  flags |= Flag::TRAVEL_TO_DST; //enable flag
+  Serial.println("Setting Flag TRAVEL_TO_DST");
   move(dir, speed);
 }
 
 void Robot::checkDestination() {
-  //counter to see if all wheels have reached destination..testing needed
-  int wheel_destination_reached = 0;
   for(int i = 0; i < 4; i++) {
-    current_wheel_pos[i] = wheels[i].getPosition();
+    currentWheelPosition[i] = wheels[i].getPosition();
+    Fixed speed = wheels[i].getSpeed();
+    bool forward; //check if wheel is moving in positive/negative direction
+    if(speed > 0) {
+      forward = true;
+    }
+    else {
+      forward = false;
+    }
     
     //Debug Serial Printing
     Serial.print("Wheel ");
     Serial.print(i);
     Serial.print(" has ");
-    Serial.print((target_wheel_pos[i] - current_wheel_pos[i]).getInt());
+    Serial.print(targetWheelPosition[i] - currentWheelPosition[i]);
     Serial.println(" steps remaining.");
-    
-    if(current_wheel_pos[i] -  >= target_wheel_pos[i]) {
-      wheels[i].stop();
-      wheel_destination_reached++;
+
+    Serial.print("currentWheelPosition: ");
+    Serial.println(currentWheelPosition[i]);
+    Serial.print("targetWheelPosition: ");
+    Serial.println(targetWheelPosition[i]);
+    Serial.print("abs(targetWheelPosition[i]): ");
+    Serial.println(abs(targetWheelPosition[i]));
+
+    if(forward == true) {
+      if (currentWheelPosition[i] >= targetWheelPosition[i]) {
+        flags &= ~Flag::TRAVEL_TO_DST; //end moveSetDistance
+	stop(); //stop all wheels once 1 wheel has gone desired distance
+      }
+    }
+    else if (currentWheelPosition[i] <= targetWheelPosition[i]) {
+      flags &= ~Flag::TRAVEL_TO_DST;
+      stop();
     }
   }
-  if (wheel_destination_reached > 1) {
-    flags &= ~Flag::TRAVEL_TO_DST; //end move set distance..set flag to 0
-    stop(); //unnecessary, all wheels should already be stopped;
-  }
-//>>>>>>> LINE FOLLOWING 2.0 among other changes
 }
 
 void Robot::veer(Direction dir) {
@@ -228,16 +202,6 @@ void Robot::veer(Fixed x, Fixed y, Fixed rot) {
   correctWheelSpeeds(adjustments);
   //adjustWheelSpeeds(adjustments);
 }
-
-/*void Robot::toggle(Flag setting) {
-  toggleMultiple(setting);
-  //if(calibrating) Serial.println("Begin Calibration");
-  //else Serial.println("End Calibration");
-  //if(calibrating) Serial.println("Begin Calibration");
-  //else Serial.println("End Calibration");
-  //if(edges) Serial.println("Begin Output edges");
-  //else Serial.println("End Output edges");
-}*/
 
 void Robot::toggle(Flag settings) {
   settings &= ~Flag::NONE;
@@ -270,4 +234,3 @@ void Robot::adjustBaseSpeed(Fixed adjustment) {
 }
 
 SortBot::SortBot() {}
-
