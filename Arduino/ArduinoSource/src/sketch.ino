@@ -26,22 +26,6 @@ void parseCommand() {
     case 'c': robot->move(Direction::BACK_RIGHT); break;
     case 'k': robot->move(Direction::CLOCKWISE); break;
     case 'j': robot->move(Direction::COUNTER_CLOCKWISE); break;
-    case 'u': robot->veer(Direction::LEFT); break;
-    case 'i': robot->veer(Direction::RIGHT); break;
-    case '+': robot->veer(Direction::FRONT); break;
-    case '-': robot->veer(Direction::BACK); break;
-    /*case 'W': robot->followLine(Direction::FRONT); break;
-    case 'A': robot->followLine(Direction::LEFT); break;
-    case 'X': robot->followLine(Direction::BACK); break;
-    case 'D': robot->followLine(Direction::RIGHT); break;
-    case 'Q': robot->followLine(Direction::FRONT_LEFT); break;
-    case 'E': robot->followLine(Direction::FRONT_RIGHT); break;
-    case 'Z': robot->followLine(Direction::BACK_LEFT); break;
-    case 'C': robot->followLine(Direction::BACK_RIGHT); break;
-    case 'r': robot->toggleCalibration(); break;
-    case 'f': robot->toggleSensorsOutput(); break;
-    case 'v': robot->toggleEdgeOutput(); break;
-    */
     case 'r': robot->toggle(Flag::CALIBRATING_LINE); break;
     case 'f': robot->toggle(Flag::FOLLOWING_LINE); break;
     case '1': robot->adjustXP(Fixed(-0.1)); break;
