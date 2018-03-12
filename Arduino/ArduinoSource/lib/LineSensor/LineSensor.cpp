@@ -22,7 +22,8 @@ LineSensor::LineSensor(unsigned char pin_start) :
     46, 47, 48, 49, 50, 51, 52, 53,
     54, 55, 56, 57, 58, 59, 60, 61
   },
-  qtrrc(pins, NUM_PINS) {
+  qtrrc1(pins, NUM_PINS/2),
+  qtrrc2(pins + NUM_PINS/2, NUM_PINS/2) {
     for(int i = 0; i < 32; i++) {
       SINES[i] = Fixed(sin(i * OFFSET_TO_RAD.getDouble()));
       COSINES[i] = Fixed(cos(i * OFFSET_TO_RAD.getDouble()));
@@ -30,11 +31,17 @@ LineSensor::LineSensor(unsigned char pin_start) :
 }
 
 void LineSensor::calibrateSensors() {
-  qtrrc.calibrate();
+  qtrrc1.calibrate();
+  qtrrc2.calibrate();
 }
 
 Fixed LineSensor::getLinePosition(int offset, int range) {
-  qtrrc.readCalibrated(sensor_values);
+  qtrrc1.readCalibrated(sensor_values);
+  qtrrc2.readCalibrated(sensor_values + sizeof(unsigned int)*NUM_PINS/2);
+  sensor_values[10] = 0;
+  sensor_values[6] = 0;
+  sensor_values[14] = 0;
+  sensor_values[18] = 0;
   Fixed weighted = 0;
   Fixed total = 0;
   for(int i = offset - range; i <= offset + range; i++) {

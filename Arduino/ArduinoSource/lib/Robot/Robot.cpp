@@ -117,7 +117,7 @@ void Robot::move(Direction dir, Fixed speed) {
 }
 
 void Robot::move(Fixed x, Fixed y, Fixed rot) {
-  flags &= ~Flag::FOLLOWING_LINE;
+  //flags &= ~Flag::FOLLOWING_LINE;
   const Fixed speeds[4] = {y + x - rot, y - x - rot, y + x + rot, y - x + rot};
   setWheelSpeeds(speeds);
 }
@@ -197,7 +197,7 @@ void Robot::veer(Direction dir, Fixed amount) {
 }
 
 void Robot::veer(Fixed x, Fixed y, Fixed rot) {
-  flags &= ~Flag::FOLLOWING_LINE;
+  //flags &= ~Flag::FOLLOWING_LINE;
   const Fixed adjustments[4] = {y + x - rot, y - x - rot, y + x + rot, y - x + rot};
   correctWheelSpeeds(adjustments);
   //adjustWheelSpeeds(adjustments);
@@ -207,6 +207,9 @@ void Robot::toggle(Flag settings) {
   settings &= ~Flag::NONE;
   settings &= ~Flag::FOLLOWING_LINE;
   flags ^= settings;
+  Serial.println("toggel");
+  if((flags & Flag::CALIBRATING_LINE) != Flag::NONE) Serial.println("CalibratingLine"); 
+  if((flags & Flag::FOLLOWING_LINE) != Flag::NONE) Serial.println("FollowingLine"); 
 }
 
 void Robot::adjustXP(Fixed adjustment) {

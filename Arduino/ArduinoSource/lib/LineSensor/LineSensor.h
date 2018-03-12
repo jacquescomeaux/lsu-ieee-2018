@@ -14,7 +14,7 @@ class LineSensor {
     const int NUM_PINS;
     const Fixed OFFSET_TO_RAD;
     unsigned char pins[32];
-    QTRSensorsRC qtrrc;
+    QTRSensorsRC qtrrc1, qtrrc2;
     unsigned int sensor_values[32];
     Fixed SINES[32], COSINES[32];
     Fixed getLinePosition(int offset, int range);
