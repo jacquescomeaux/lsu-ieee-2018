@@ -7,7 +7,7 @@
 #include <MagnetArm.h>
 #include <LED.h>
 //#include <RGBSensor.h>
-//#include <SortingPlate.h>
+#include <SortingPlate.h>
 
 #include <ArduinoSTL>
 #include <queue>
