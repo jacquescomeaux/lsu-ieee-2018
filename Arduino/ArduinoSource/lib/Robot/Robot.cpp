@@ -123,14 +123,14 @@ void Robot::move(Fixed x, Fixed y, Fixed rot) {
 }
 
 void Robot::travel(Direction dir, Fixed dist) {
-  travel(dir, base_speed, dist)
+  travel(dir, base_speed, dist);
 }
 
 void Robot::travel(Direction dir, Fixed speed, Fixed distance) {
   Fixed stepsToTravel = distance * 287; //286.7 steps per inch
   for(int i = 0; i < 4; i++) {
-    currentWheelPosition[i] = wheels[i].getPosition();
-    targetWheelPosition[i] = currentWheelPosition[i] + stepsToTravel;
+    current_wheel_pos[i] = wheels[i].getPosition();
+    target_wheel_pos[i] = current_wheel_pos[i] + stepsToTravel;
   }
   flags |= Flag::TRAVEL_TO_DST; //enable flag
   Serial.println("Setting Flag TRAVEL_TO_DST");
@@ -139,7 +139,7 @@ void Robot::travel(Direction dir, Fixed speed, Fixed distance) {
 
 void Robot::checkDestination() {
   for(int i = 0; i < 4; i++) {
-    currentWheelPosition[i] = wheels[i].getPosition();
+    current_wheel_pos[i] = wheels[i].getPosition();
     Fixed speed = wheels[i].getSpeed();
     bool forward; //check if wheel is moving in positive/negative direction
     if(speed > 0) {
@@ -153,23 +153,23 @@ void Robot::checkDestination() {
     Serial.print("Wheel ");
     Serial.print(i);
     Serial.print(" has ");
-    Serial.print(targetWheelPosition[i] - currentWheelPosition[i]);
+    Serial.print((target_wheel_pos[i] - current_wheel_pos[i]).getInt());
     Serial.println(" steps remaining.");
 
-    Serial.print("currentWheelPosition: ");
-    Serial.println(currentWheelPosition[i]);
-    Serial.print("targetWheelPosition: ");
-    Serial.println(targetWheelPosition[i]);
-    Serial.print("abs(targetWheelPosition[i]): ");
-    Serial.println(abs(targetWheelPosition[i]));
+    Serial.print("current_wheel_pos: ");
+    Serial.println(current_wheel_pos[i].getInt());
+    Serial.print("target_wheel_pos: ");
+    Serial.println(target_wheel_pos[i].getInt());
+    Serial.print("abs(target_wheel_pos[i]): ");
+    Serial.println(abs(target_wheel_pos[i].getInt()));
 
     if(forward == true) {
-      if (currentWheelPosition[i] >= targetWheelPosition[i]) {
+      if (current_wheel_pos[i] >= target_wheel_pos[i]) {
         flags &= ~Flag::TRAVEL_TO_DST; //end moveSetDistance
 	stop(); //stop all wheels once 1 wheel has gone desired distance
       }
     }
-    else if (currentWheelPosition[i] <= targetWheelPosition[i]) {
+    else if (current_wheel_pos[i] <= target_wheel_pos[i]) {
       flags &= ~Flag::TRAVEL_TO_DST;
       stop();
     }
