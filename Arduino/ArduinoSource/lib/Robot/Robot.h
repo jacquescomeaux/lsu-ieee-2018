@@ -63,6 +63,8 @@ class Robot {
 };
 
 class SortBot : public Robot, public SortingSystem {
+  private:
+    MotorShield motor_shields[2];
   public:
     SortBot();
 };

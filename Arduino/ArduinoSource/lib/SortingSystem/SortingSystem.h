@@ -3,6 +3,7 @@
 
 #include <Color.h>
 
+#include <Adafruit_MotorShield.h>
 #include <MagnetArm.h>
 #include <LED.h>
 //#include <RGBSensor.h>
@@ -22,7 +23,7 @@ class SortingSystem {
     //RGBSensor color_sensor;
     SortingPlate storage_plate, selector_plate;
   protected:
-    SortingSystem();
+    SortingSystem(Adafruit_StepperMotor*, Adafruit_StepperMotor*);
   public:
     void pickUpToken();
     //Color checkTokenColor() const;

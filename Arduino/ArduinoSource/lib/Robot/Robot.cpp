@@ -1,5 +1,4 @@
 #include <Robot.h>
-//#include <vector>
 
 Robot::Robot() :
   flags(Flag::NONE),
@@ -230,4 +229,10 @@ void Robot::adjustBaseSpeed(Fixed adjustment) {
   Serial.println(base_speed.getInt());
 }
 
-SortBot::SortBot() {}
+SortBot::SortBot() :
+  motor_shields {
+    MotorShield(0x61),
+    MotorShield(0x62)
+  },
+  //needs real pin numbers
+  SortingSystem(motor_shields[0].getStepperMotor(200, 1), motor_shields[0].getStepperMotor(200, 2)) {}
