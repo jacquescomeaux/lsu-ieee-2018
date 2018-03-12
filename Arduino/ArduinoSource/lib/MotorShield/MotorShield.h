@@ -11,6 +11,7 @@ class MotorShield {
     MotorShield(uint8_t);
     MotorShield(uint8_t, uint16_t);
     Adafruit_DCMotor* getMotor(uint8_t); //const; 
+    Adafruit_StepperMotor* getStepper(uint16_t, uint8_t); //const; 
 };
 
 #endif//MOTORSHIELD_H

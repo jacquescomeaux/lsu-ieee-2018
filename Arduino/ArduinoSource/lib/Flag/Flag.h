@@ -10,6 +10,8 @@ enum class Flag : uint8_t {
   TRAVEL_TO_DST    = 0x01 << 4
 };
 
+inline bool operator==(Flag a, Flag b) {return static_cast<uint8_t>(a) == static_cast<uint8_t>(b);}
+inline bool operator!=(Flag a, Flag b) {return static_cast<uint8_t>(a) != static_cast<uint8_t>(b);}
 inline Flag operator~(Flag a) {return static_cast<Flag>(~ static_cast<uint8_t>(a));}
 inline Flag operator|(Flag a, Flag b) {return static_cast<Flag>(static_cast<uint8_t>(a) | static_cast<uint8_t>(b));}
 inline Flag operator&(Flag a, Flag b) {return static_cast<Flag>(static_cast<uint8_t>(a) & static_cast<uint8_t>(b));}

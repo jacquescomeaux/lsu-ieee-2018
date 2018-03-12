@@ -4,10 +4,10 @@
 Robot::Robot() :
   flags(Flag::NONE),
   NUM_TASKS(6),
-  //last_ran {0},
-  XP(Fixed(0.03)),
-  YP(Fixed(0.03)),
-  RotP(Fixed(0.03)),
+  last_ran {0},
+  XP(Fixed(2.03)),
+  YP(Fixed(2.03)),
+  RotP(Fixed(2.03)),
   base_speed(Fixed(90)),
   veer_amount(Fixed(10)),
   acceleration(Fixed(3)),
@@ -29,19 +29,18 @@ Robot::Robot() :
     ProximitySensor(0, 0),
     ProximitySensor(0, 0)
   },*/
-  line_sensor(30) {
-    last_ran.resize(NUM_TASKS, 0);
+  line_sensor() {
     stop();
 } 
 
 void Robot::checkEdges() {
   //for(const ProximitySensor& s : edge_detectors) if(s.edgeDetected()) stop();
-//  if(edge_detectors[0].edgeDetected()) stop();
+  //if(edge_detectors[0].edgeDetected()) stop();
   //Serial.println(edge_detectors[0].getProximity());
 }
 
 void Robot::setWheelSpeeds(const Fixed* speeds) {
-  for(int i = 0; i < 4; i++) Serial.println(speeds[i].getInt());
+  //for(int i = 0; i < 4; i++) Serial.println(speeds[i].getInt());
   for(int i = 0; i < 4; i++) wheels[i].setSpeed(speeds[i]);
 }
 
@@ -61,7 +60,6 @@ void Robot::correctErrors() {
 
 void Robot::stop() {
   for(Wheel& w : wheels) w.stop();
-  flags &= ~Flag::FOLLOWING_LINE;
 }
 
 void Robot::update() {
@@ -78,10 +76,10 @@ void Robot::update() {
   }
   
   if((dt[2] > 100) ? (last_ran[2] = time) : false) {
-    if((flags & Flag::CALIBRATING_LINE) != Flag::NONE) ;//for(LineSensor& l : line_sensors) l.calibrateSensors();
+    if((flags & Flag::CALIBRATING_LINE) != Flag::NONE) line_sensor.calibrateSensors();
   }
   
-  if((dt[3] > 100) ? (last_ran[3] = time) : false) {
+  if((dt[3] > 1000) ? (last_ran[3] = time) : false) {
     if((flags & Flag::PRINTING_LINE) != Flag::NONE) ;//line_sensors[static_cast<int>(current_direction)].printReadings(); 
   }
   
@@ -117,7 +115,6 @@ void Robot::move(Direction dir, Fixed speed) {
 }
 
 void Robot::move(Fixed x, Fixed y, Fixed rot) {
-  //flags &= ~Flag::FOLLOWING_LINE;
   const Fixed speeds[4] = {y + x - rot, y - x - rot, y + x + rot, y - x + rot};
   setWheelSpeeds(speeds);
 }
@@ -197,7 +194,6 @@ void Robot::veer(Direction dir, Fixed amount) {
 }
 
 void Robot::veer(Fixed x, Fixed y, Fixed rot) {
-  //flags &= ~Flag::FOLLOWING_LINE;
   const Fixed adjustments[4] = {y + x - rot, y - x - rot, y + x + rot, y - x + rot};
   correctWheelSpeeds(adjustments);
   //adjustWheelSpeeds(adjustments);
@@ -205,9 +201,7 @@ void Robot::veer(Fixed x, Fixed y, Fixed rot) {
 
 void Robot::toggle(Flag settings) {
   settings &= ~Flag::NONE;
-  settings &= ~Flag::FOLLOWING_LINE;
   flags ^= settings;
-  Serial.println("toggel");
   if((flags & Flag::CALIBRATING_LINE) != Flag::NONE) Serial.println("CalibratingLine"); 
   if((flags & Flag::FOLLOWING_LINE) != Flag::NONE) Serial.println("FollowingLine"); 
 }
@@ -215,7 +209,7 @@ void Robot::toggle(Flag settings) {
 void Robot::adjustXP(Fixed adjustment) {
   XP += adjustment;
   Serial.print("XP = ");
-  Serial.println(XP.getInt());
+  Serial.println(XP.getDouble());
 }
 
 void Robot::adjustYP(Fixed adjustment) {

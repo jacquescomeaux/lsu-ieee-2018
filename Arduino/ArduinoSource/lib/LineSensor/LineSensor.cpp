@@ -2,18 +2,7 @@
 
 #include <Arduino.h>
 
-/*LineSensor::LineSensor(unsigned char* p) :
-  pins {p[0], p[1], p[2]},
-  qtrrc(pins, 3),
-  sensorValues {0, 0, 0} {} 
-
-LineSensor::LineSensor(unsigned char p1, unsigned char p2, unsigned char p3) :
-  pins {p1, p2, p3},
-  qtrrc(pins, 3),
-  sensorValues {0, 0, 0} {} 
-*/
-
-LineSensor::LineSensor(unsigned char pin_start) :
+LineSensor::LineSensor() :
   NUM_PINS(32),
   OFFSET_TO_RAD(3.141592653589793 / 16),
   pins {
@@ -44,9 +33,10 @@ Fixed LineSensor::getLinePosition(int offset, int range) {
   sensor_values[18] = 0;
   Fixed weighted = 0;
   Fixed total = 0;
-  for(int i = offset - range; i <= offset + range; i++) {
-    weighted += 1000 * i * sensor_values[i % 32];
-    total += sensor_values[i % 32];
+  //for(int i = offset - range; i <= offset + range; i++) {
+  for(int i = 0 - range; i <= range; i++) { 
+    weighted += 1000 * i * sensor_values[i + offset % 32];
+    total += sensor_values[i + offset % 32];
   }
   return weighted / total;
 }

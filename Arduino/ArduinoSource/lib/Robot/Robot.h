@@ -14,10 +14,9 @@
 
 class Robot {
   private:
-    //uint8_t flags;
     Flag flags;
     const int NUM_TASKS;
-    std::vector<int> last_ran;///[NUM_TASKS];
+    int last_ran[6];
     const Fixed SQRT_HALF, ZERO;
     Fixed XP, YP, RotP, base_speed, veer_amount, acceleration;
     Direction current_direction;
@@ -31,11 +30,13 @@ class Robot {
     void adjustWheelSpeeds(const Fixed*);
     void correctWheelSpeeds(const Fixed*);
     void checkDestination();	
-    //void observeErrors();
     void correctErrors();
   public:
     Robot();
+    //stop immediately
     void stop();
+
+    //to be called in a loop
     void update();
     
     //move indefinitely
@@ -52,13 +53,8 @@ class Robot {
     void travel(Direction, Fixed dist);
     void travel(Direction, Fixed speed, Fixed dist);
     void travel(Fixed x, Fixed y, Fixed rot, Fixed dist);
-   
-    //follow a line
-    //void follow(Direction);
-    //void follow(Direction, Fixed speed);
-    //void follow(Fixed x, Fixed y, Fixed rot);
-    //void moveSetDistance(Direction, int, Fixed);
-    
+  
+    //change robot state
     void toggle(Flag);
     void adjustXP(Fixed);
     void adjustYP(Fixed);
