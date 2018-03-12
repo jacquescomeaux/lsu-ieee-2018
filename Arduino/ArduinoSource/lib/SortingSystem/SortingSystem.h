@@ -17,7 +17,7 @@ class SortingSystem {
     const int COLOR_POSITIONS[NUM_COLORS];
     std::queue<Color> task_buffer;
     int state;
-    const MagnetArm token_arm;
+    MagnetArm token_arm;
     LED token_light;
     //RGBSensor color_sensor;
     SortingPlate storage_plate, selector_plate;

@@ -18,8 +18,8 @@ Robot::Robot() :
   },
   wheels {
     //Interrupt Pins: 2, 3, 18, 19, 20, 21
-    Wheel(motor_shields[0].getMotor(1), 2, 4),
-    Wheel(motor_shields[0].getMotor(2), 3, 5),
+    Wheel(motor_shields[0].getMotor(1),  2,  4),
+    Wheel(motor_shields[0].getMotor(2),  3,  5),
     Wheel(motor_shields[1].getMotor(1), 18, 22),
     Wheel(motor_shields[1].getMotor(2), 19, 23)
   },
