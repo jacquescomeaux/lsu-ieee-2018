@@ -2,7 +2,7 @@
 
 const int NUM_SENSORS = 32;
 const unsigned char PIN_START = 22;
-QTRSensorsRC qtrrc1, qtrrc2;
+QTRSensorsRC* qtrrc1, qtrrc2;
 unsigned int values1[NUM_SENSORS/2];
 unsigned int values2[NUM_SENSORS/2];
 unsigned char pins1[NUM_SENSORS/2];
@@ -11,14 +11,14 @@ unsigned char pins2[NUM_SENSORS/2];
 void setup() {
   for(unsigned char i = 0; i < NUM_SENSORS/2; i++) pins1[i] = static_cast<unsigned char>(PIN_START + i);
   for(unsigned char i = 0; i < NUM_SENSORS/2; i++) pins2[i] = static_cast<unsigned char>(PIN_START + NUM_SENSORS/2 + i);
-  qtrrc1 = QTRSensorsRC(pins1, NUM_SENSORS/2);
-  qtrrc2 = QTRSensorsRC(pins2, NUM_SENSORS/2);
+  qtrrc1 = new QTRSensorsRC(pins1, NUM_SENSORS/2);
+  qtrrc2 = new QTRSensorsRC(pins2, NUM_SENSORS/2);
  Serial.begin(9600);
 }
 
 void loop() {
-  qtrrc1.read(values1);
-  qtrrc2.read(values2);
+  qtrrc1->read(values1);
+  qtrrc2->read(values2);
   for(int i = 0; i < 4; i++) {
     for(int j = 0; j < 8; j++) {
       int k = i*8+j;
