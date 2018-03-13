@@ -1,14 +1,9 @@
 #ifndef FIXED_H
 #define FIXED_H
 
-//#include <StandardCplusplus/stdint.h>///cstdint>
-//#include <StandardCplusplus/cstddef>///cstdint>
-//#include <StandardCplusplus.h>
 #include <ArduinoSTL.h>
-//#include <iostream>
 #include <stdint.h>
 #include <cstddef>
-//#include <StandardCplusplus/cstddef>
 
 class Fixed {
   private:
@@ -18,21 +13,22 @@ class Fixed {
   public:
     Fixed();
     Fixed(int);
+    Fixed(int32_t);
     Fixed(double);
-    Fixed& operator=(int);
+    Fixed& operator=(int32_t);
     Fixed& operator=(double);
     Fixed& operator+=(const Fixed&);
-    Fixed& operator+=(int);
+    Fixed& operator+=(int32_t);
     Fixed& operator-=(const Fixed&);
-    Fixed& operator-=(int);
+    Fixed& operator-=(int32_t);
     Fixed& operator*=(const Fixed&);
-    Fixed& operator*=(int);
+    Fixed& operator*=(int32_t);
     Fixed& operator/=(const Fixed&);
-    Fixed& operator/=(int);
+    Fixed& operator/=(int32_t);
     Fixed mag() const;
     int64_t getInternal() const;
     double getDouble() const;
-    int getInt() const;
+    int32_t getInt() const;
 };
 
 inline bool operator==(const Fixed&, const Fixed&);
@@ -42,17 +38,17 @@ inline bool operator> (const Fixed&, const Fixed&);
 inline bool operator<=(const Fixed&, const Fixed&);
 inline bool operator>=(const Fixed&, const Fixed&);
 inline Fixed operator+(Fixed, const Fixed&);
-inline Fixed operator+(Fixed, int);
-inline Fixed operator+(int, Fixed);
+inline Fixed operator+(Fixed, int32_t);
+inline Fixed operator+(int32_t, Fixed);
 inline Fixed operator-(Fixed, const Fixed&);
-inline Fixed operator-(Fixed, int);
-inline Fixed operator-(int, Fixed);
+inline Fixed operator-(Fixed, int32_t);
+inline Fixed operator-(int32_t, Fixed);
 inline Fixed operator*(Fixed, Fixed);
-inline Fixed operator*(Fixed, int);
-inline Fixed operator*(int, Fixed);
+inline Fixed operator*(Fixed, int32_t);
+inline Fixed operator*(int32_t, Fixed);
 inline Fixed operator/(Fixed, const Fixed&);
-inline Fixed operator/(Fixed, int);
-inline Fixed operator/(int, Fixed);
+inline Fixed operator/(Fixed, int32_t);
+inline Fixed operator/(int32_t, Fixed);
 
 inline bool operator==(const Fixed& lhs, const Fixed& rhs) {
   return lhs.getInternal() == rhs.getInternal();
@@ -83,12 +79,12 @@ inline Fixed operator+(Fixed lhs, const Fixed& rhs) {
   return lhs;
 }
 
-inline Fixed operator+(Fixed lhs, int rhs) {
+inline Fixed operator+(Fixed lhs, int32_t rhs) {
   lhs += rhs;
   return lhs;
 }
 
-inline Fixed operator+(int lhs, Fixed rhs) {
+inline Fixed operator+(int32_t lhs, Fixed rhs) {
   rhs += lhs;
   return rhs;
 }
@@ -98,12 +94,12 @@ inline Fixed operator-(Fixed lhs, const Fixed& rhs) {
   return lhs;
 }
 
-inline Fixed operator-(Fixed lhs, int rhs) {
+inline Fixed operator-(Fixed lhs, int32_t rhs) {
   lhs -= rhs;
   return lhs;
 }
 
-inline Fixed operator-(int lhs, Fixed rhs) {
+inline Fixed operator-(int32_t lhs, Fixed rhs) {
   rhs -= lhs;
   return rhs;
 }
@@ -113,12 +109,12 @@ inline Fixed operator*(Fixed lhs, Fixed rhs) {
   return lhs;
 }
 
-inline Fixed operator*(Fixed lhs, int rhs) {
+inline Fixed operator*(Fixed lhs, int32_t rhs) {
   lhs *= rhs;
   return lhs;
 }
 
-inline Fixed operator*(int lhs, Fixed rhs) {
+inline Fixed operator*(int32_t lhs, Fixed rhs) {
   rhs *= lhs;
   return rhs;
 }
@@ -128,12 +124,12 @@ inline Fixed operator/(Fixed lhs, const Fixed& rhs) {
   return lhs;
 }
 
-inline Fixed operator/(Fixed lhs, int rhs) {
+inline Fixed operator/(Fixed lhs, int32_t rhs) {
   lhs /= rhs;
   return lhs;
 }
 
-inline Fixed operator/(int lhs, Fixed rhs) {
+inline Fixed operator/(int32_t lhs, Fixed rhs) {
   Fixed result = lhs;
   result /= rhs;
   return result;

@@ -27,12 +27,12 @@ void parseCommand() {
     case 'j': robot->move(Direction::COUNTER_CLOCKWISE); break;
     case 'r': robot->toggle(Flag::CALIBRATING_LINE); break;
     case 'f': robot->toggle(Flag::FOLLOWING_LINE); break;
-    case '1': robot->adjustXP(Fixed(-0.1)); break;
-    case '2': robot->adjustXP(Fixed(0.1)); break;
-    case '3': robot->adjustYP(Fixed(-0.1)); break;
-    case '4': robot->adjustYP(Fixed(0.1)); break;
-    case '5': robot->adjustRotP(Fixed(-0.1)); break;
-    case '6': robot->adjustRotP(Fixed(0.1)); break;
+    case '1': robot->adjustXP(Fixed(-0.01)); break;
+    case '2': robot->adjustXP(Fixed(0.01)); break;
+    case '3': robot->adjustYP(Fixed(-0.01)); break;
+    case '4': robot->adjustYP(Fixed(0.01)); break;
+    case '5': robot->adjustRotP(Fixed(-0.01)); break;
+    case '6': robot->adjustRotP(Fixed(0.01)); break;
     case '9': robot->adjustBaseSpeed(Fixed(-10)); break;
     case '0': robot->adjustBaseSpeed(Fixed(10)); break;
     case 't': test(); break;

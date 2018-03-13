@@ -8,9 +8,9 @@ Robot::Robot() :
   flags(Flag::NONE),
   NUM_TASKS(6),
   last_ran {0},
-  XP(Fixed(2.3)),
-  YP(Fixed(2.3)),
-  RotP(Fixed(2.03)),
+  XP(Fixed(0.02)),
+  YP(Fixed(0.02)),
+  RotP(Fixed(0.02)),
   base_speed(Fixed(90)),
   veer_amount(Fixed(10)),
   acceleration(Fixed(10)),
@@ -74,11 +74,11 @@ void Robot::update() {
     for(Wheel& w : wheels) w.approachSpeed(acceleration);
   }
 
-  if((dt[1] > 100) ? (last_ran[1] = time) : false) {
+  if((dt[1] > 0) ? (last_ran[1] = time) : false) {
     if((flags & Flag::FOLLOWING_LINE) != Flag::NONE) correctErrors();
   }
   
-  if((dt[2] > 100) ? (last_ran[2] = time) : false) {
+  if((dt[2] > 10) ? (last_ran[2] = time) : false) {
     if((flags & Flag::CALIBRATING_LINE) != Flag::NONE) line_sensor.calibrateSensors();
   }
   
@@ -218,13 +218,13 @@ void Robot::adjustXP(Fixed adjustment) {
 void Robot::adjustYP(Fixed adjustment) {
   YP += adjustment;
   Serial.print("YP = ");
-  Serial.println(YP.getInt());
+  Serial.println(YP.getDouble());
 }
 
 void Robot::adjustRotP(Fixed adjustment) {
   RotP += adjustment;
   Serial.print("RotP = ");
-  Serial.println(RotP.getInt());
+  Serial.println(RotP.getDouble());
 }
 
 void Robot::adjustBaseSpeed(Fixed adjustment) {
