@@ -8,12 +8,12 @@ Robot::Robot() :
   flags(Flag::NONE),
   NUM_TASKS(6),
   last_ran {0},
-  XP(Fixed(2.03)),
-  YP(Fixed(2.03)),
+  XP(Fixed(2.3)),
+  YP(Fixed(2.3)),
   RotP(Fixed(2.03)),
   base_speed(Fixed(90)),
   veer_amount(Fixed(10)),
-  acceleration(Fixed(3)),
+  acceleration(Fixed(10)),
   current_direction(Direction::NONE),
   wheels {
     //Interrupt Pins: 2, 3, 18, 19, 20, 21
@@ -54,7 +54,11 @@ void Robot::correctWheelSpeeds(const Fixed* speeds) {
 void Robot::correctErrors() {
   Fixed xerr, yerr, roterr;
   line_sensor.getLineErrors(&xerr, &yerr, &roterr, current_direction);
-  veer(XP*xerr, YP*yerr, RotP*roterr);
+ /* Serial.println(xerr.getDouble());
+  Serial.println(yerr.getDouble());
+  Serial.println(roterr.getDouble());
+  Serial.println(" ");
+  */veer(XP*xerr, YP*yerr, RotP*roterr);
 }
 
 void Robot::stop() {
