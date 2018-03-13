@@ -6,13 +6,13 @@
 
 class MagnetArm {
   private:
-    Adafruit_MotorShield* motor;
+    Adafruit_StepperMotor* motor;
     bool moving;
     void goToHeight(Fixed) const;
     void magnetize() const;
     void demagnetize() const;
   public:
-    MagnetArm(Adafruit_MotorShield*);
+    MagnetArm(Adafruit_StepperMotor*);
     void reset() const;
     void pickUpToken() const;
     void storeToken() const;

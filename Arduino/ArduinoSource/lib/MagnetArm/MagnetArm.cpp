@@ -8,7 +8,7 @@ void MagnetArm::demagnetize() const {}
 
 void MagnetArm::storeToken() const {}
 
-MagnetArm::MagnetArm(Adafruit_MotorShield* m) {
+MagnetArm::MagnetArm(Adafruit_StepperMotor* m) {
   motor = m;
 }
 

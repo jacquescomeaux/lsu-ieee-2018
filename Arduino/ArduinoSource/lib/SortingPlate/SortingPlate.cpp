@@ -1,11 +1,11 @@
 #include <SortingPlate.h>
 
-SortingPlate::SortingPlate(Adafruit_MotorShield*) :
+SortingPlate::SortingPlate(Adafruit_StepperMotor* m) :
   RPM(60),
   step_amount(25),
   target_step(250),
   total_steps(2000),
-  ready(true),
+  moving(false),
   position(0),
   target_position(0),
   bottom_offset(0),
@@ -23,8 +23,8 @@ void SortingPlate::stepBackward(int s) {
   motor->step(static_cast<uint16_t>(s), BACKWARD, SINGLE);
 }
 
-void SortingPlate::ready() {
-  return ready;
+bool SortingPlate::ready() {
+  return !moving;
 }
 
 void SortingPlate::reset() {
@@ -34,18 +34,18 @@ void SortingPlate::reset() {
   position = 0;
   target_position = 0;
   bottom_offset = 0;
-  ready = true;
+  moving = false;
 }
 
 void SortingPlate::rotateCW(int dst) {
-  if(!ready) return;
+  if(moving) return;
   target_position += dst * target_step;
   target_position %= total_steps;
-  ready = false;
+  moving = true;
 }
 
 void SortingPlate::rotateCCW() {
-  if(!ready) return;
+  if(moving) return;
   stepBackward(target_step);
   motor->release();
   position -= target_step;
@@ -56,12 +56,12 @@ void SortingPlate::rotateCCW() {
 }
 
 int SortingPlate::continueMoving() {
-  if(ready) return 1;
+  if(!moving) return 1;
   if((target_position - position) % total_steps < step_amount) {
     stepForward((target_position - position) % total_steps);
     position = target_position;
     motor->release();
-    ready = true;
+    moving = false;
     return 1;
   }
   position += step_amount;

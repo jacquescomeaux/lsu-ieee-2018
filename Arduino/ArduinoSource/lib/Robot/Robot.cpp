@@ -1,6 +1,10 @@
 #include <Robot.h>
 
 Robot::Robot() :
+  motor_shields {
+    MotorShield(0x61),
+    MotorShield(0x62)
+  },
   flags(Flag::NONE),
   NUM_TASKS(6),
   last_ran {0},
@@ -11,10 +15,6 @@ Robot::Robot() :
   veer_amount(Fixed(10)),
   acceleration(Fixed(3)),
   current_direction(Direction::NONE),
-  motor_shields {
-    MotorShield(0x61),
-    MotorShield(0x62)
-  },
   wheels {
     //Interrupt Pins: 2, 3, 18, 19, 20, 21
     Wheel(motor_shields[0].getMotor(1),  2,  4),
@@ -230,9 +230,9 @@ void Robot::adjustBaseSpeed(Fixed adjustment) {
 }
 
 SortBot::SortBot() :
-  motor_shields {
-    MotorShield(0x61),
-    MotorShield(0x62)
-  },
+  //motor_shields {
+ //   MotorShield(0x61),
+   // MotorShield(0x62)
+ // },
   //needs real pin numbers
-  SortingSystem(motor_shields[0].getStepperMotor(200, 1), motor_shields[0].getStepperMotor(200, 2)) {}
+  SortingSystem(Robot::motor_shields[0].getStepper(200, 1), Robot::motor_shields[0].getStepper(200, 2)) {}

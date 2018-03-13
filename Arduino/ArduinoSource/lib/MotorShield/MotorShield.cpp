@@ -16,6 +16,6 @@ Adafruit_DCMotor* MotorShield::getMotor(uint8_t n){//  const {
   return AFMS.getMotor(n);
 } 
 
-Adafruit_StepperMotor* getStepper(uint16_t steps, uint8_t n) {
+Adafruit_StepperMotor* MotorShield::getStepper(uint16_t steps, uint8_t n) {
   return AFMS.getStepper(steps, n);
 }

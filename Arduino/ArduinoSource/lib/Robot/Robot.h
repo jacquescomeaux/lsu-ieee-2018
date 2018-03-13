@@ -13,6 +13,8 @@
 #include <LineSensor.h>
 
 class Robot {
+  protected:
+    MotorShield motor_shields[2]; 
   private:
     Flag flags;
     const int NUM_TASKS;
@@ -20,7 +22,6 @@ class Robot {
     const Fixed SQRT_HALF, ZERO;
     Fixed XP, YP, RotP, base_speed, veer_amount, acceleration;
     Direction current_direction;
-    MotorShield motor_shields[2]; 
     Wheel wheels[4];
     Fixed current_wheel_pos[4], target_wheel_pos[4];
     LineSensor line_sensor;

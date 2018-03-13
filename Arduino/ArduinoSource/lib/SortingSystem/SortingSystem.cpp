@@ -2,7 +2,7 @@
 
 SortingSystem::SortingSystem(Adafruit_StepperMotor* arm_motor, Adafruit_StepperMotor* plate_motor) :
   NUM_COLORS(8),
-  COLOR_POSITIONS {0, 6, 5, 4, 1, 2, 3, 7}
+  COLOR_POSITIONS {0, 6, 5, 4, 1, 2, 3, 7},
   state(0),
   token_arm(arm_motor),
   storage_plate(plate_motor) {}
@@ -32,14 +32,15 @@ void SortingSystem::continueSorting() {
     task_buffer.pop();
   }
   else {
-    int pos = COLOR_POSITIONS[static_cast<Color>(current_task)];
+    int pos = COLOR_POSITIONS[current_task];
     if(state == 0) {
       if(storage_plate.ready()) storage_plate.rotateCW(pos);
       else state += storage_plate.continueMoving();
     }
     else if(state == 1) {
-      if(token_arm.ready()) token_arm.storeToken();
-      else state += token_arm.continueMoving();
+      //if(token_arm.ready()) token_arm.storeToken();
+      //else state += token_arm.continueMoving();
+      state++;
     }
     else if(state == 2) {
       if(storage_plate.ready()) storage_plate.rotateCW(8 - pos);

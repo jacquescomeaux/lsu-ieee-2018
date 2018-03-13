@@ -9,19 +9,19 @@
 //#include <RGBSensor.h>
 #include <SortingPlate.h>
 
-#include <ArduinoSTL>
+#include <ArduinoSTL.h>
 #include <queue>
 
 class SortingSystem {
   private:
     const int NUM_COLORS;
-    const int COLOR_POSITIONS[NUM_COLORS];
-    std::queue<Color> task_buffer;
+    const int COLOR_POSITIONS[8];
+    std::queue<int> task_buffer;
     int state;
     MagnetArm token_arm;
     LED token_light;
     //RGBSensor color_sensor;
-    SortingPlate storage_plate, selector_plate;
+    SortingPlate storage_plate;
   protected:
     SortingSystem(Adafruit_StepperMotor*, Adafruit_StepperMotor*);
   public:

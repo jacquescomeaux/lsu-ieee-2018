@@ -8,15 +8,15 @@ class SortingPlate {
   private:
     const uint16_t RPM;
     const int step_amount, target_step, total_steps;
-    bool ready;
+    bool moving;
     int position;
     int target_position;
     int bottom_offset;
-    Adafruit_MotorShield* motor;
-    void stepForward();
-    void stepBackward();
+    Adafruit_StepperMotor* motor;
+    void stepForward(int);
+    void stepBackward(int);
   public:
-    SortingPlate(Adafruit_MotorShield*);
+    SortingPlate(Adafruit_StepperMotor*);
     bool ready();
     void reset();
     void rotateCW(int);
