@@ -10,7 +10,7 @@ class MagnetArm {
     //bool moving;
     int position, target_position;
     Adafruit_StepperMotor* motor;
-    void goToHeight(Fixed);
+    void goToHeight(int);
     void magnetize() const;
     void demagnetize() const;
   public:

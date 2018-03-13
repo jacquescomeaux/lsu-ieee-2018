@@ -30,7 +30,7 @@ bool MagnetArm::ready() {
 
 void MagnetArm::reset() {
   demagnetize();
-  goToHeight(top_target)
+  goToHeight(top_target);
   motor->release();
   position = top_target;
   target_position = top_target;
@@ -46,7 +46,7 @@ void MagnetArm::pickUpToken() {
   target_position = top_target;
 }
 
-void MagnetArm::storeToken() {
+void MagnetArm::storeToken() const {
   ///if(moving) return;
   demagnetize();
 }
