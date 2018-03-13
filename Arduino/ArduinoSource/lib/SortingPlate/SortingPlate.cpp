@@ -14,12 +14,12 @@ SortingPlate::SortingPlate(Adafruit_StepperMotor* m) :
 }
 
 void SortingPlate::stepForward(int s) {
-  if(s < 0 || s >= 2000) return;
+  if(s < 0 || s >= total_steps) return;
   motor->step(static_cast<uint16_t>(s), FORWARD, SINGLE);
 }
 
 void SortingPlate::stepBackward(int s) {
-  if(s < 0 || s >= 2000) return;
+  if(s < 0 || s >= total_steps) return;
   motor->step(static_cast<uint16_t>(s), BACKWARD, SINGLE);
 }
 

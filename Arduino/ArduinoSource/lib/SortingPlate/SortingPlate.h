@@ -9,9 +9,7 @@ class SortingPlate {
     const uint16_t RPM;
     const int step_amount, target_step, total_steps;
     bool moving;
-    int position;
-    int target_position;
-    int bottom_offset;
+    int position, target_position, bottom_offset;
     Adafruit_StepperMotor* motor;
     void stepForward(int);
     void stepBackward(int);
