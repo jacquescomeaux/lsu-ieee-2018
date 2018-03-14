@@ -14,12 +14,14 @@ class LineSensor {
     QTRSensorsRC qtrrc1, qtrrc2;
     unsigned int sensor_values[32];
     Fixed SINES[32], COSINES[32];
+    void readSensors();
     Fixed getLinePosition(int offset, int range);
   public:
     LineSensor();
     void calibrateSensors();
     void getLineErrors(Fixed* x, Fixed* y, Fixed* rot, Direction);
     void getLineErrors(Fixed* x, Fixed* y, Fixed* rot, int);
+    int countLinePeaks();
     void printReadings();
 };
 

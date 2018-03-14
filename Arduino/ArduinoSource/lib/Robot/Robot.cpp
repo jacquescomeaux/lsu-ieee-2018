@@ -8,38 +8,35 @@ Robot::Robot() :
   flags(Flag::NONE),
   NUM_TASKS(6),
   last_ran {0},
-  XP(Fixed(2.03)),
-  YP(Fixed(2.03)),
-  RotP(Fixed(2.03)),
+  XP(Fixed(0.02)),
+  YP(Fixed(0.02)),
+  RotP(Fixed(0.02)),
   base_speed(Fixed(90)),
   veer_amount(Fixed(10)),
-  acceleration(Fixed(3)),
+  acceleration(Fixed(10)),
   current_direction(Direction::NONE),
   wheels {
     //Interrupt Pins: 2, 3, 18, 19, 20, 21
-    Wheel(motor_shields[0].getMotor(1),  2,  4),
-    Wheel(motor_shields[0].getMotor(2),  3,  5),
-    Wheel(motor_shields[1].getMotor(1), 18, 22),
-    Wheel(motor_shields[1].getMotor(2), 19, 23)
+    Wheel(motor_shields[0].getMotor(1),  2,  4), //FRONT_LEFT
+    Wheel(motor_shields[0].getMotor(2),  3,  5), //BACK_LEFT
+    Wheel(motor_shields[1].getMotor(1), 18, 22), //BACK_RIGHT
+    Wheel(motor_shields[1].getMotor(2), 19, 23)  //FRONT_RIGHT
   },
-  /*edge_detectors {
-    ProximitySensor(5, 6),
-    ProximitySensor(0, 0),
-    ProximitySensor(0, 0),
-    ProximitySensor(0, 0)
-  },*/
+  edge_detectors {
+    ProximitySensor(6, 7),   //FRONT(0)
+    ProximitySensor(8, 9),   //LEFT(1)
+    ProximitySensor(10, 11), //BACK(2)
+    ProximitySensor(12, 14)  //RIGHT(3)
+  },
   line_sensor() {
     stop();
-} 
+}
 
 void Robot::checkEdges() {
-  //for(const ProximitySensor& s : edge_detectors) if(s.edgeDetected()) stop();
-  //if(edge_detectors[0].edgeDetected()) stop();
-  //Serial.println(edge_detectors[0].getProximity());
+  for(const ProximitySensor& s : edge_detectors) if(s.edgeDetected()) stop();
 }
 
 void Robot::setWheelSpeeds(const Fixed* speeds) {
-  //for(int i = 0; i < 4; i++) Serial.println(speeds[i].getInt());
   for(int i = 0; i < 4; i++) wheels[i].setSpeed(speeds[i]);
 }
 
@@ -70,16 +67,16 @@ void Robot::update() {
     for(Wheel& w : wheels) w.approachSpeed(acceleration);
   }
 
-  if((dt[1] > 100) ? (last_ran[1] = time) : false) {
+  if((dt[1] > 0) ? (last_ran[1] = time) : false) {
     if((flags & Flag::FOLLOWING_LINE) != Flag::NONE) correctErrors();
   }
   
-  if((dt[2] > 100) ? (last_ran[2] = time) : false) {
+  if((dt[2] > 10) ? (last_ran[2] = time) : false) {
     if((flags & Flag::CALIBRATING_LINE) != Flag::NONE) line_sensor.calibrateSensors();
   }
   
   if((dt[3] > 1000) ? (last_ran[3] = time) : false) {
-    if((flags & Flag::PRINTING_LINE) != Flag::NONE) ;//line_sensors[static_cast<int>(current_direction)].printReadings(); 
+    if((flags & Flag::PRINTING_LINE) != Flag::NONE) line_sensor.printReadings(current_direction); 
   }
   
   if((dt[4] > 100) ? (last_ran[4] = time) : false) {
@@ -201,7 +198,7 @@ void Robot::veer(Fixed x, Fixed y, Fixed rot) {
 void Robot::toggle(Flag settings) {
   settings &= ~Flag::NONE;
   flags ^= settings;
-  if((flags & Flag::CALIBRATING_LINE) != Flag::NONE) Serial.println("CalibratingLine"); 
+  if((flags & Flag::CALIBRATING_LINE) != Flag::NONE) Serial.println("CalibratingLine");  
   if((flags & Flag::FOLLOWING_LINE) != Flag::NONE) Serial.println("FollowingLine"); 
 }
 
@@ -214,13 +211,13 @@ void Robot::adjustXP(Fixed adjustment) {
 void Robot::adjustYP(Fixed adjustment) {
   YP += adjustment;
   Serial.print("YP = ");
-  Serial.println(YP.getInt());
+  Serial.println(YP.getDouble());
 }
 
 void Robot::adjustRotP(Fixed adjustment) {
   RotP += adjustment;
   Serial.print("RotP = ");
-  Serial.println(RotP.getInt());
+  Serial.println(RotP.getDouble());
 }
 
 void Robot::adjustBaseSpeed(Fixed adjustment) {
@@ -229,10 +226,5 @@ void Robot::adjustBaseSpeed(Fixed adjustment) {
   Serial.println(base_speed.getInt());
 }
 
-SortBot::SortBot() :
-  //motor_shields {
- //   MotorShield(0x61),
-   // MotorShield(0x62)
- // },
+SortBot::SortBot() : SortingSystem(Robot::motor_shields[0].getStepper(200, 1), Robot::motor_shields[0].getStepper(200, 2)) {}
   //needs real pin numbers
-  SortingSystem(Robot::motor_shields[0].getStepper(200, 1), Robot::motor_shields[0].getStepper(200, 2)) {}

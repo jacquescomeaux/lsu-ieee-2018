@@ -2,6 +2,7 @@
 
 const int NUM_SENSORS = 32;
 const unsigned char PIN_START = 22;
+<<<<<<< HEAD
 QTRSensorsRC* qtrrc1, qtrrc2;
 unsigned int values[NUM_SENSORS];
 unsigned char pins[NUM_SENSORS];
@@ -36,4 +37,6 @@ void loop() {
   }
   Serial.println("\n------------------------------------------------------------------------------------------------");
   delay(2000);
+  }
 }
+void loop() {}
