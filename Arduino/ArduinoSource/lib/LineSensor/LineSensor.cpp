@@ -58,9 +58,9 @@ void LineSensor::getLineErrors(Fixed* x, Fixed* y, Fixed* rot, Direction dir) {
   switch(dir) {
     case(Direction::NONE): break;
     case(Direction::FRONT): getLineErrors(x, y, rot, 8); break;
-    case(Direction::BACK): getLineErrors(x, y, rot, 16); break;
-    case(Direction::LEFT): getLineErrors(x, y, rot, 24); break;
-    case(Direction::RIGHT): getLineErrors(x, y, rot, 0); break;
+    case(Direction::BACK): getLineErrors(x, y, rot, /*24*/8); break;
+    case(Direction::LEFT): getLineErrors(x, y, rot, 16); break;
+    case(Direction::RIGHT): getLineErrors(x, y, rot, /* 0*/16); break;
     case(Direction::FRONT_LEFT): getLineErrors(x, y, rot, 12); break;
     case(Direction::FRONT_RIGHT): getLineErrors(x, y, rot, 4); break;
     case(Direction::BACK_LEFT): getLineErrors(x, y, rot, 20); break;
