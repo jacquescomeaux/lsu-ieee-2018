@@ -20,38 +20,26 @@ LineSensor::LineSensor() :
     }
 }
 
-void LineSensor::calibrateSensors() {
-  qtrrc1.calibrate();
-  qtrrc2.calibrate();
+void LineSensor::readSensors() {
+  qtrrc1.readCalibrated(sensor_values);
+  qtrrc2.readCalibrated(&sensor_values[NUM_PINS/2]); 
 }
 
 Fixed LineSensor::getLinePosition(int offset, int range) {
   qtrrc1.readCalibrated(sensor_values);
   qtrrc2.readCalibrated(&sensor_values[NUM_PINS/2]);
-  
-  /*for(int i = 0; i < 5; i++) {
-    Serial.print("Offset: ");
-    Serial.print(offset);
-    Serial.print(", Sensor: ");
-    Serial.print(i-2);
-    Serial.print(", Value: ");
-    Serial.println(sensor_values[(i-2+offset)%32]);
-  }*/
-  
   Fixed weighted = 0;
   Fixed total = 0;
   for(int32_t i = 0 - range; i <= range; i++) { 
     weighted +=  Fixed(1000) * Fixed(i) * Fixed(static_cast<int32_t>(sensor_values[i + offset % 32]));
     total += Fixed(static_cast<int32_t>(sensor_values[i + offset % 32]));
   }
-/*  Serial.print("Line position:");
-  Serial.print(offset);
-  Serial.print(": ");
-  Serial.println(weighted.getInt());
-  Serial.println(total.getInt());
-  if(total == Fixed(0)) return Fixed(0);
-  Serial.println((weighted/total).getInt());
-  */return weighted/total;
+  return weighted/total;
+}
+
+void LineSensor::calibrateSensors() {
+  qtrrc1.calibrate();
+  qtrrc2.calibrate();
 }
 
 void LineSensor::getLineErrors(Fixed* x, Fixed* y, Fixed* rot, Direction dir) {
@@ -63,8 +51,8 @@ void LineSensor::getLineErrors(Fixed* x, Fixed* y, Fixed* rot, Direction dir) {
     case(Direction::RIGHT): getLineErrors(x, y, rot, /* 0*/16); break;
     case(Direction::FRONT_LEFT): getLineErrors(x, y, rot, 12); break;
     case(Direction::FRONT_RIGHT): getLineErrors(x, y, rot, 4); break;
-    case(Direction::BACK_LEFT): getLineErrors(x, y, rot, 20); break;
-    case(Direction::BACK_RIGHT): getLineErrors(x, y, rot, 28); break;
+    case(Direction::BACK_LEFT): getLineErrors(x, y, rot, 4); break;
+    case(Direction::BACK_RIGHT): getLineErrors(x, y, rot, 12); break;
     case(Direction::CLOCKWISE): break;
     case(Direction::COUNTER_CLOCKWISE): break;
     default: break; 
@@ -84,12 +72,38 @@ void LineSensor::getLineErrors(Fixed* x, Fixed* y, Fixed* rot, int offset) {
   *y = (r - l) * COSINES[offset];
 }
 
-/*void LineSensor::printReadings() {
-  qtrrc.readCalibrated(sensorValues);
+int LineSensor::countLinePeaks() {
+  //
+}
+
+void LineSensor::printReadings(Direction dir) {
+  /*qtrrc.readCalibrated(sensorValues);
+  Serial.print("leftleft=");
+  Serial.println(sensorValues[0]);
   Serial.print("left=");
   Serial.println(sensorValues[0]);
   Serial.print("middle=");
   Serial.println(sensorValues[1]);
   Serial.print("right=");
   Serial.println(sensorValues[2]);
-}*/
+  Serial.print("rightright=");
+  Serial.println(sensorValues[2]);
+  */
+  /*for(int i = 0; i < 5; i++) {
+    Serial.print("Offset: ");
+    Serial.print(offset);
+    Serial.print(", Sensor: ");
+    Serial.print(i-2);
+    Serial.print(", Value: ");
+    Serial.println(sensor_values[(i-2+offset)%32]);
+  }*/
+/*  Serial.print("Line position:");
+  Serial.print(offset);
+  Serial.print(": ");
+  Serial.println(weighted.getInt());
+  Serial.println(total.getInt());
+  if(total == Fixed(0)) return Fixed(0);
+  Serial.println((weighted/total).getInt());
+  */
+
+}

@@ -33,13 +33,10 @@ Robot::Robot() :
 }
 
 void Robot::checkEdges() {
-  //for(const ProximitySensor& s : edge_detectors) if(s.edgeDetected()) stop();
-  //if(edge_detectors[0].edgeDetected()) stop();
-  //Serial.println(edge_detectors[0].getProximity());
+  for(const ProximitySensor& s : edge_detectors) if(s.edgeDetected()) stop();
 }
 
 void Robot::setWheelSpeeds(const Fixed* speeds) {
-  //for(int i = 0; i < 4; i++) Serial.println(speeds[i].getInt());
   for(int i = 0; i < 4; i++) wheels[i].setSpeed(speeds[i]);
 }
 
@@ -54,11 +51,7 @@ void Robot::correctWheelSpeeds(const Fixed* speeds) {
 void Robot::correctErrors() {
   Fixed xerr, yerr, roterr;
   line_sensor.getLineErrors(&xerr, &yerr, &roterr, current_direction);
- /* Serial.println(xerr.getDouble());
-  Serial.println(yerr.getDouble());
-  Serial.println(roterr.getDouble());
-  Serial.println(" ");
-  */veer(XP*xerr, YP*yerr, RotP*roterr);
+  veer(XP*xerr, YP*yerr, RotP*roterr);
 }
 
 void Robot::stop() {
@@ -83,7 +76,7 @@ void Robot::update() {
   }
   
   if((dt[3] > 1000) ? (last_ran[3] = time) : false) {
-    if((flags & Flag::PRINTING_LINE) != Flag::NONE) ;//line_sensors[static_cast<int>(current_direction)].printReadings(); 
+    if((flags & Flag::PRINTING_LINE) != Flag::NONE) line_sensor.printReadings(current_direction); 
   }
   
   if((dt[4] > 100) ? (last_ran[4] = time) : false) {
@@ -205,7 +198,7 @@ void Robot::veer(Fixed x, Fixed y, Fixed rot) {
 void Robot::toggle(Flag settings) {
   settings &= ~Flag::NONE;
   flags ^= settings;
-  if((flags & Flag::CALIBRATING_LINE) != Flag::NONE) Serial.println("CalibratingLine"); 
+  if((flags & Flag::CALIBRATING_LINE) != Flag::NONE) Serial.println("CalibratingLine");  
   if((flags & Flag::FOLLOWING_LINE) != Flag::NONE) Serial.println("FollowingLine"); 
 }
 
@@ -233,10 +226,5 @@ void Robot::adjustBaseSpeed(Fixed adjustment) {
   Serial.println(base_speed.getInt());
 }
 
-SortBot::SortBot() :
-  //motor_shields {
- //   MotorShield(0x61),
-   // MotorShield(0x62)
- // },
+SortBot::SortBot() : SortingSystem(Robot::motor_shields[0].getStepper(200, 1), Robot::motor_shields[0].getStepper(200, 2)) {}
   //needs real pin numbers
-  SortingSystem(Robot::motor_shields[0].getStepper(200, 1), Robot::motor_shields[0].getStepper(200, 2)) {}

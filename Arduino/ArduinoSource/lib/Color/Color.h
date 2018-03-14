@@ -1,7 +1,6 @@
 #ifndef COLOR_H
 #define COLOR_H
 
-//wow
 enum class Color : int {
   NONE = 0,
   RED = 1,

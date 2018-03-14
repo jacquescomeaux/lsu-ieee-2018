@@ -29,7 +29,7 @@ void Wheel::setMotorSpeed() {
 }
 
 void Wheel::runForward() {
-//  if(forward) return;
+  //if(forward) return;
   motor->run(FORWARD);
   forward = true;
 }

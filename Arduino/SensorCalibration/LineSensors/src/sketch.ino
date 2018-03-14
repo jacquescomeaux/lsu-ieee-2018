@@ -3,8 +3,7 @@
 const int NUM_SENSORS = 32;
 const unsigned char PIN_START = 22;
 QTRSensorsRC qtrrc1, qtrrc2;
-unsigned int values1[NUM_SENSORS/2];
-unsigned int values2[NUM_SENSORS/2];
+unsigned int values[NUM_SENSORS];
 unsigned char pins1[NUM_SENSORS/2];
 unsigned char pins2[NUM_SENSORS/2];
 
