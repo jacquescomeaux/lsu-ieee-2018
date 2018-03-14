@@ -24,8 +24,8 @@ class Robot {
     Direction current_direction;
     Wheel wheels[4];
     Fixed current_wheel_pos[4], target_wheel_pos[4];
+    ProximitySensor edge_detectors[4];
     LineSensor line_sensor;
-    //ProximitySensor edge_detectors[4];
     void checkEdges();
     void setWheelSpeeds(const Fixed*);
     void adjustWheelSpeeds(const Fixed*);

@@ -17,20 +17,20 @@ Robot::Robot() :
   current_direction(Direction::NONE),
   wheels {
     //Interrupt Pins: 2, 3, 18, 19, 20, 21
-    Wheel(motor_shields[0].getMotor(1),  2,  4),
-    Wheel(motor_shields[0].getMotor(2),  3,  5),
-    Wheel(motor_shields[1].getMotor(1), 18, 22),
-    Wheel(motor_shields[1].getMotor(2), 19, 23)
+    Wheel(motor_shields[0].getMotor(1),  2,  4), //FRONT_LEFT
+    Wheel(motor_shields[0].getMotor(2),  3,  5), //BACK_LEFT
+    Wheel(motor_shields[1].getMotor(1), 18, 22), //BACK_RIGHT
+    Wheel(motor_shields[1].getMotor(2), 19, 23)  //FRONT_RIGHT
   },
-  /*edge_detectors {
-    ProximitySensor(5, 6),
-    ProximitySensor(0, 0),
-    ProximitySensor(0, 0),
-    ProximitySensor(0, 0)
-  },*/
+  edge_detectors {
+    ProximitySensor(6, 7),   //FRONT(0)
+    ProximitySensor(8, 9),   //LEFT(1)
+    ProximitySensor(10, 11), //BACK(2)
+    ProximitySensor(12, 14)  //RIGHT(3)
+  },
   line_sensor() {
     stop();
-} 
+}
 
 void Robot::checkEdges() {
   //for(const ProximitySensor& s : edge_detectors) if(s.edgeDetected()) stop();

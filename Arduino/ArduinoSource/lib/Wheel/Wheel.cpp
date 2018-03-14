@@ -29,13 +29,13 @@ void Wheel::setMotorSpeed() {
 }
 
 void Wheel::runForward() {
-  if(forward) return;
+//  if(forward) return;
   motor->run(FORWARD);
   forward = true;
 }
 
 void Wheel::runBackward() {
-  if(!forward) return;
+  //if(!forward) return;
   motor->run(BACKWARD);
   forward = false;
 }
@@ -72,19 +72,10 @@ void Wheel::stop() {
 }
 
 Fixed Wheel::getPosition() {
-  //lastPositionTime = currentPositionTime;
-  //currentPositionTime = millis();
-  //lastPosition = position;
-  //position = encoder.read();
-  //return position;
   return Fixed(static_cast<int>(encoder.read()));
 }
 
 void Wheel::resetPosition() {
-  //LastPositionTime = 0;
-  //CurrentPositionTime = 0;
-  //LastPosition = 0;
-  //position = 0;
   encoder.write(0);
 }
 
