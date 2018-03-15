@@ -39,6 +39,9 @@ class Robot {
 
     //to be called in a loop
     void update();
+
+    //centering on intersection
+    void center(int);
     
     //move indefinitely
     void move(Direction);

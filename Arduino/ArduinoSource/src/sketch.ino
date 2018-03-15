@@ -39,6 +39,8 @@ void parseCommand() {
     case 'g': robot->travel(Direction::FRONT, Fixed(moveSetDstAmt)); break;
     case 'b': robot->travel(Direction::BACK, Fixed(moveSetDstAmt)); break;
     case 'p': robot->pickUpToken(); break;
+    case '|': robot->center(0); break;
+    case '\\': robot->center(8); break;
     default: robot->stop();
   }
 }

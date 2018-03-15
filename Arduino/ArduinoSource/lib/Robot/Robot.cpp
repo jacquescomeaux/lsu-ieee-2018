@@ -76,7 +76,7 @@ void Robot::update() {
   }
   
   if((dt[3] > 1000) ? (last_ran[3] = time) : false) {
-    if((flags & Flag::PRINTING_LINE) != Flag::NONE) line_sensor.printReadings(current_direction); 
+    if((flags & Flag::PRINTING_LINE) != Flag::NONE) line_sensor.printReadings(); 
   }
   
   if((dt[4] > 100) ? (last_ran[4] = time) : false) {
@@ -85,6 +85,16 @@ void Robot::update() {
   
   if((dt[5] > 100) ? (last_ran[5] = time) : false) {
     if((flags & Flag::TRAVEL_TO_DST) != Flag::NONE) checkDestination();
+  }
+}
+
+void Robot::center(int offset) {
+  stop();
+  Fixed xerr, yerr, roterr;
+  for(int i = 0; i < 1000; i++) {
+    line_sensor.getLineErrors(&xerr, &yerr, &roterr, offset);
+    veer(XP*xerr, YP*yerr, RotP*roterr); 
+    delay(1);
   }
 }
 

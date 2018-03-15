@@ -65,7 +65,7 @@ void Wheel::approachSpeed(Fixed amount) {
 
 void Wheel::stop() {
   motor->run(RELEASE);
-  motor->setSpeed(0);
+  //motor->setSpeed(0);
   speed = Fixed(0);
   goal_speed = Fixed(0);
   correction = Fixed(0);

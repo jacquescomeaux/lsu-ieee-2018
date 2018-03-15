@@ -75,8 +75,8 @@ void LineSensor::getLineErrors(Fixed* x, Fixed* y, Fixed* rot, int offset) {
 
 void LineSensor::getIntersectionErrors(Fixed* x, Fixed* y, Fixed* rot, int offset) {
   Fixed x_p, y_p, rot_p, x_s, y_s, rot_s;
-  getLineErrors(x_p, y_p, rot_p, offset);
-  getLineErrors(x_s, y_s, rot_s, offset + 8 % 32);
+  getLineErrors(&x_p, &y_p, &rot_p, offset);
+  getLineErrors(&x_s, &y_s, &rot_s, offset + 8 % 32);
   *x = x_p + x_s;
   *y = y_p + y_s;
   *rot = Fixed(0.5) * (rot_p + rot_s);
@@ -103,7 +103,7 @@ void LineSensor::printReadings() {
       Serial.print(k);
       Serial.print(": p");
       Serial.print(pins[k]);
-      unsigned int v = values[k];
+      unsigned int v = sensor_values[k];
       Serial.print(" v: ");
       if(v < 1000) Serial.print(" "); 
       if(v < 100) Serial.print(" "); 
