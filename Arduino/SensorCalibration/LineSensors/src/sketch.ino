@@ -1,17 +1,17 @@
 #include <QTRSensors.h>
 
-const int NUM_SENSORS = 32;
+const unsigned char NUM_SENSORS = 32;
 const unsigned char PIN_START = 22;
-<<<<<<< HEAD
 QTRSensorsRC* qtrrc1, qtrrc2;
 unsigned int values[NUM_SENSORS];
 unsigned char pins[NUM_SENSORS];
 
 void setup() {
-  for(unsigned char i = 0; i < NUM_SENSORS; i++) pins1[i] = static_cast<unsigned char>(PIN_START + i);
+  for(unsigned char i = 0; i < NUM_SENSORS; i++) pins[i] = static_cast<unsigned char>(PIN_START + i);
+  //QTRSensorsRC*
   qtrrc1 = new QTRSensorsRC(pins, NUM_SENSORS/2);
   qtrrc2 = new QTRSensorsRC(&pins[NUM_SENSORS/2], NUM_SENSORS/2);
- Serial.begin(9600);
+  Serial.begin(9600);
 }
 
 void loop() {
@@ -37,6 +37,4 @@ void loop() {
   }
   Serial.println("\n------------------------------------------------------------------------------------------------");
   delay(2000);
-  }
 }
-void loop() {}
