@@ -2,7 +2,7 @@
 
 const unsigned char NUM_SENSORS = 32;
 const unsigned char PIN_START = 22;
-QTRSensorsRC* qtrrc1, qtrrc2;
+QTRSensorsRC* qtrrc1, * qtrrc2;
 unsigned int values[NUM_SENSORS];
 unsigned char pins[NUM_SENSORS];
 
