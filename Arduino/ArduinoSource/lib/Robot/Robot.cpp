@@ -33,7 +33,7 @@ Robot::Robot() :
 }
 
 void Robot::checkEdges() {
-  for(const ProximitySensor& s : edge_detectors) if(s.edgeDetected()) stop();
+  for(ProximitySensor& s : edge_detectors) if(s.edgeDetected()) stop();
 }
 
 void Robot::setWheelSpeeds(const Fixed* speeds) {

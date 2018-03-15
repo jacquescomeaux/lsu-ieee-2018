@@ -5,6 +5,7 @@
 
 LineSensor::LineSensor() :
   NUM_PINS(32),
+  line_threshold(500),
   OFFSET_TO_RAD(3.141592653589793 / 16),
   pins {
     22, 23, 24, 25, 26, 27, 28, 29,
@@ -72,8 +73,15 @@ void LineSensor::getLineErrors(Fixed* x, Fixed* y, Fixed* rot, int offset) {
   *y = (r - l) * COSINES[offset];
 }
 
-int LineSensor::countLinePeaks() {
-  //
+int LineSensor::countLinePeaks(int range) {
+  readSensors();
+  int peak_count = 0;
+  for(int i = 0; i < NUM_PINS; i++) if(sensor_values[i] > line_threshold) {
+    int higher_values_in_range = 0;
+    for(int j = 0 - range; j <= range; j++) if(sensor_values[i] < sensor_values[i + j % NUM_PINS]) higher_values_in_range++;
+    if(higher_values_in_range == 0) peak_count++;
+  }
+  return peak_count;
 }
 
 void LineSensor::printReadings(Direction dir) {
