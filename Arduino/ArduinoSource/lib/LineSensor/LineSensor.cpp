@@ -73,6 +73,18 @@ void LineSensor::getLineErrors(Fixed* x, Fixed* y, Fixed* rot, int offset) {
   *y = (r - l) * COSINES[offset];
 }
 
+void LineSensor::getIntersectionErrors(Fixed* x, Fixed* y, Fixed* rot, int offset) {
+  int fi = offset % 16;
+  int li = (fi + 8) % 16 ;
+  Fixed f = getLinePosition(fi, 3);
+  Fixed b = getLinePosition(fi + 16, 3);
+  Fixed l = getLinePosition(li, 3);
+  Fixed r = getLinePosition((li + 16) % 32, 3);
+  *rot = Fixed(0.5) * (b + f + r + l);
+  *x = (b - f);
+  *y = (r - l);
+}
+
 int LineSensor::countLinePeaks(int range) {
   readSensors();
   int peak_count = 0;
@@ -84,34 +96,25 @@ int LineSensor::countLinePeaks(int range) {
   return peak_count;
 }
 
-void LineSensor::printReadings(Direction dir) {
-  /*qtrrc.readCalibrated(sensorValues);
-  Serial.print("leftleft=");
-  Serial.println(sensorValues[0]);
-  Serial.print("left=");
-  Serial.println(sensorValues[0]);
-  Serial.print("middle=");
-  Serial.println(sensorValues[1]);
-  Serial.print("right=");
-  Serial.println(sensorValues[2]);
-  Serial.print("rightright=");
-  Serial.println(sensorValues[2]);
-  */
-  /*for(int i = 0; i < 5; i++) {
-    Serial.print("Offset: ");
-    Serial.print(offset);
-    Serial.print(", Sensor: ");
-    Serial.print(i-2);
-    Serial.print(", Value: ");
-    Serial.println(sensor_values[(i-2+offset)%32]);
-  }*/
-/*  Serial.print("Line position:");
-  Serial.print(offset);
-  Serial.print(": ");
-  Serial.println(weighted.getInt());
-  Serial.println(total.getInt());
-  if(total == Fixed(0)) return Fixed(0);
-  Serial.println((weighted/total).getInt());
-  */
-
+void LineSensor::printReadings() {
+  readSensors();
+  for(int i = 0; i < 4; i++) {
+    for(int j = 0; j < 8; j++) {
+      int k = i*8+j;
+      Serial.print("S");
+      if(k<10) Serial.print("0");
+      Serial.print(k);
+      Serial.print(": p");
+      Serial.print(pins[k]);
+      unsigned int v = values[k];
+      Serial.print(" v: ");
+      if(v < 1000) Serial.print(" "); 
+      if(v < 100) Serial.print(" "); 
+      if(v < 10) Serial.print(" "); 
+      Serial.print(v);
+      Serial.print("   ");
+    }
+    Serial.println("");
+  }
+  Serial.println("\n------------------------------------------------------------------------------------------------");
 }

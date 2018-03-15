@@ -22,8 +22,9 @@ class LineSensor {
     void calibrateSensors();
     void getLineErrors(Fixed* x, Fixed* y, Fixed* rot, Direction);
     void getLineErrors(Fixed* x, Fixed* y, Fixed* rot, int);
+    void getIntersectionErrors(Fixed* x, Fixed* y, Fixed* rot, int);
     int countLinePeaks(int range);
-    void printReadings(Direction);
+    void printReadings();
 };
 
 #endif//LINESENSOR_H
