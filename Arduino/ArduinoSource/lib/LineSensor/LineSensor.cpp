@@ -115,3 +115,8 @@ void LineSensor::printReadings() {
   }
   Serial.println("\n------------------------------------------------------------------------------------------------");
 }
+
+void LineSensor::printLinePeaks() {
+  Serial.print("Lines Seen: ");
+  Serial.println(countLinePeaks(3));
+}

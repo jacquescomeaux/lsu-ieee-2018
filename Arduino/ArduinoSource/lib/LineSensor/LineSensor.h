@@ -25,6 +25,7 @@ class LineSensor {
     void getIntersectionErrors(Fixed* x, Fixed* y, Fixed* rot, int);
     int countLinePeaks(int range);
     void printReadings();
+    void printLinePeaks();
 };
 
 #endif//LINESENSOR_H
