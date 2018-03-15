@@ -2,7 +2,6 @@
 #define SORTINGPLATE_H
 
 #include <Adafruit_MotorShield.h>
-#include <Fixed.h>
 
 class SortingPlate {
   private:
