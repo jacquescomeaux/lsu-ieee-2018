@@ -47,13 +47,13 @@ void LineSensor::getLineErrors(Fixed* x, Fixed* y, Fixed* rot, Direction dir) {
   switch(dir) {
     case(Direction::NONE): break;
     case(Direction::FRONT): getLineErrors(x, y, rot, 8); break;
-    case(Direction::BACK): getLineErrors(x, y, rot, /*24*/8); break;
+    case(Direction::BACK): getLineErrors(x, y, rot, 24); break;
     case(Direction::LEFT): getLineErrors(x, y, rot, 16); break;
-    case(Direction::RIGHT): getLineErrors(x, y, rot, /* 0*/16); break;
+    case(Direction::RIGHT): getLineErrors(x, y, rot, 0); break;
     case(Direction::FRONT_LEFT): getLineErrors(x, y, rot, 12); break;
     case(Direction::FRONT_RIGHT): getLineErrors(x, y, rot, 4); break;
-    case(Direction::BACK_LEFT): getLineErrors(x, y, rot, 4); break;
-    case(Direction::BACK_RIGHT): getLineErrors(x, y, rot, 12); break;
+    case(Direction::BACK_LEFT): getLineErrors(x, y, rot, 20); break;
+    case(Direction::BACK_RIGHT): getLineErrors(x, y, rot, 28); break;
     case(Direction::CLOCKWISE): break;
     case(Direction::COUNTER_CLOCKWISE): break;
     default: break; 
@@ -74,15 +74,12 @@ void LineSensor::getLineErrors(Fixed* x, Fixed* y, Fixed* rot, int offset) {
 }
 
 void LineSensor::getIntersectionErrors(Fixed* x, Fixed* y, Fixed* rot, int offset) {
-  int fi = offset % 16;
-  int li = (fi + 8) % 16 ;
-  Fixed f = getLinePosition(fi, 3);
-  Fixed b = getLinePosition(fi + 16, 3);
-  Fixed l = getLinePosition(li, 3);
-  Fixed r = getLinePosition((li + 16) % 32, 3);
-  *rot = Fixed(0.5) * (b + f + r + l);
-  *x = (b - f);
-  *y = (r - l);
+  Fixed x_p, y_p, rot_p, x_s, y_s, rot_s;
+  getLineErrors(x_p, y_p, rot_p, offset);
+  getLineErrors(x_s, y_s, rot_s, offset + 8 % 32);
+  *x = x_p + x_s;
+  *y = y_p + y_s;
+  *rot = Fixed(0.5) * (rot_p + rot_s);
 }
 
 int LineSensor::countLinePeaks(int range) {
