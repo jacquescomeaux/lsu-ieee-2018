@@ -14,6 +14,7 @@ class SortingPlate {
     void stepForward(int);
     void stepBackward(int);
   public:
+    SortingPlate();
     SortingPlate(Adafruit_StepperMotor*);
     bool ready();
     void reset();

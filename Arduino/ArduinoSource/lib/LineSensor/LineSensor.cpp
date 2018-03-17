@@ -63,14 +63,14 @@ void LineSensor::getLineErrors(Fixed* x, Fixed* y, Fixed* rot, Direction dir) {
 void LineSensor::getLineErrors(Fixed* x, Fixed* y, Fixed* rot, int offset) {
   int fi = offset % 16;
   int li = ((offset - 8) % 16) + 8;
-  Fixed f = getLinePosition(fi, 2);
-  Fixed b = getLinePosition(fi + 16, 2);
-  Fixed l = getLinePosition(li, 2);
-  Fixed r = getLinePosition((li + 16) % 32, 2);
-  *rot = (b + f) * SINES[offset] * SINES[offset]
-       + (r + l) * COSINES[offset] * COSINES[offset];
-  *x = (b - f) * SINES[offset];
-  *y = (r - l) * COSINES[offset];
+  Fixed f = getLinePosition(fi, 7);
+  Fixed b = getLinePosition(fi + 16, 7);
+  Fixed l = getLinePosition(li, 7);
+  Fixed r = getLinePosition((li + 16) % 32, 7);
+  *rot = (b + f) * SINES[fi] * SINES[fi]
+       + (r + l) * COSINES[li] * COSINES[li];
+  *x = (b - f) * SINES[fi];
+  *y = (r - l) * COSINES[li];
 }
 
 void LineSensor::getIntersectionErrors(Fixed* x, Fixed* y, Fixed* rot, int offset) {
@@ -94,6 +94,27 @@ int LineSensor::countLinePeaks(int range) {
 }
 
 void LineSensor::printReadings() {
+  unsigned int* front_mins = qtrrc1.calibratedMinimumOn;
+  unsigned int* back_mins = qtrrc2.calibratedMinimumOn;
+  unsigned int* front_maxs = qtrrc1.calibratedMaximumOn;
+  unsigned int* back_maxs = qtrrc2.calibratedMaximumOn;
+  for(int i = 0; i < 16; i++) {
+    Serial.print(front_mins[i]);
+    Serial.print(" ");
+  }
+  for(int i = 0; i < 16; i++) {
+    Serial.print(back_mins[i]);
+    Serial.print(" ");
+  }
+  Serial.println();
+  for(int i = 0; i < 16; i++) {
+    Serial.print(front_maxs[i]);
+    Serial.print(" ");
+  }
+  for(int i = 0; i < 16; i++) {
+    Serial.print(back_maxs[i]);
+    Serial.print(" ");
+  }
   readSensors();
   for(int i = 0; i < 4; i++) {
     for(int j = 0; j < 8; j++) {

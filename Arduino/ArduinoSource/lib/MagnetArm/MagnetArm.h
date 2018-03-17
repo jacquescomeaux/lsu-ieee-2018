@@ -14,6 +14,8 @@ class MagnetArm {
     void magnetize() const;
     void demagnetize() const;
   public:
+    //temp blank cons.
+    MagnetArm();
     MagnetArm(Adafruit_StepperMotor*);
     //void ready();
     void reset();

@@ -27,6 +27,7 @@ void parseCommand() {
     case 'j': robot->move(Direction::COUNTER_CLOCKWISE); break;
     case 'r': robot->toggle(Flag::CALIBRATING_LINE); break;
     case 'f': robot->toggle(Flag::FOLLOWING_LINE); break;
+    case 'v': robot->toggle(Flag::PRINTING_LINE); break;
     case '1': robot->adjustXP(Fixed(-0.01)); break;
     case '2': robot->adjustXP(Fixed(0.01)); break;
     case '3': robot->adjustYP(Fixed(-0.01)); break;
@@ -38,7 +39,7 @@ void parseCommand() {
     case 't': test(); break;
     case 'g': robot->travel(Direction::FRONT, Fixed(moveSetDstAmt)); break;
     case 'b': robot->travel(Direction::BACK, Fixed(moveSetDstAmt)); break;
-    case 'p': robot->pickUpToken(); break;
+  //  case 'p': robot->pickUpToken(); break;
     case '|': robot->center(0); break;
     case '\\': robot->center(8); break;
     default: robot->stop();

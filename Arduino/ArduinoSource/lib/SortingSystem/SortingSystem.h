@@ -23,6 +23,7 @@ class SortingSystem {
     //RGBSensor color_sensor;
     SortingPlate storage_plate;
   protected:
+    SortingSystem();
     SortingSystem(Adafruit_StepperMotor*, Adafruit_StepperMotor*);
   public:
     void pickUpToken();

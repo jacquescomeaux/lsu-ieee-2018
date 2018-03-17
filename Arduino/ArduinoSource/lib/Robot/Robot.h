@@ -16,6 +16,7 @@ class Robot {
   protected:
     MotorShield motor_shields[2]; 
   private:
+    bool seen;
     Flag flags;
     const int NUM_TASKS;
     int last_ran[6];
@@ -66,7 +67,7 @@ class Robot {
     void adjustBaseSpeed(Fixed);
 };
 
-class SortBot : public Robot, public SortingSystem {
+class SortBot : public Robot{//, public SortingSystem {
 //  private:
   //  MotorShield motor_shields[2];
   public:

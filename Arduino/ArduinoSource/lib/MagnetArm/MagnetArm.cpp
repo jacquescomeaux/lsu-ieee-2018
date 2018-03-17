@@ -4,6 +4,9 @@ void MagnetArm::magnetize() const {}
 
 void MagnetArm::demagnetize() const {}
 
+
+//TEMPORARAY
+MagnetArm::MagnetArm() {}
 MagnetArm::MagnetArm(Adafruit_StepperMotor* m) :
   RPM(60),
   //step_amount(10),
