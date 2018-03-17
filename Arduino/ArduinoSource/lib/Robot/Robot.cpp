@@ -130,7 +130,7 @@ void Robot::travel(Direction dir, Fixed dist) {
 
 void Robot::travel(Direction dir, Fixed speed, Fixed distance) {
   Fixed stepsToTravel = distance * 287; //286.7 steps per inch
-  if(dir == BACK) {
+  if(dir == Direction::BACK) {
 	stepsToTravel = 0 - stepsToTravel; //set steps negative
   }
   for(int i = 0; i < 4; i++) {
@@ -155,18 +155,10 @@ void Robot::checkDestination() {
     }
     
     //Debug Serial Printing
-    Serial.print("Wheel ");
-    Serial.print(i);
-    Serial.print(" has ");
-    Serial.print((target_wheel_pos[i] - current_wheel_pos[i]).getInt());
-    Serial.println(" steps remaining.");
-
     Serial.print("current_wheel_pos: ");
     Serial.println(current_wheel_pos[i].getInt());
     Serial.print("target_wheel_pos: ");
     Serial.println(target_wheel_pos[i].getInt());
-    Serial.print("abs(target_wheel_pos[i]): ");
-    Serial.println(abs(target_wheel_pos[i].getInt()));
 
     if(forward == true) {
       if (current_wheel_pos[i] >= target_wheel_pos[i]) {
