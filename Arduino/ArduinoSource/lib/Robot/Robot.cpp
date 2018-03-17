@@ -81,8 +81,8 @@ void Robot::update() {
     if((flags & Flag::PRINTING_LINE) != Flag::NONE) line_sensor.printReadings(); 
   }
   
-  if((dt[4] > 100) ? (last_ran[4] = time) : false) {
-    //checkEdges();
+  if((dt[4] > 50) ? (last_ran[4] = time) : false) {
+    if((flags & Flag::STOPPING_INT) != Flag::NONE) if(line_sensor.countLinePeaks(1) == 4) stop();//checkEdges();
   }
   
   if((dt[5] > 100) ? (last_ran[5] = time) : false) {
@@ -125,17 +125,15 @@ void Robot::move(Fixed x, Fixed y, Fixed rot) {
 }
 
 void Robot::travel(Direction dir, Fixed dist) {
-  travel(dir, base_speed, dist);
+  travel(dir, dist, base_speed);
 }
 
-void Robot::travel(Direction dir, Fixed speed, Fixed distance) {
+void Robot::travel(Direction dir, Fixed distance, Fixed speed) {
   Fixed stepsToTravel = distance * 287; //286.7 steps per inch
-  if(dir == Direction::BACK) {
-	stepsToTravel = 0 - stepsToTravel; //set steps negative
-  }
-  for(int i = 0; i < 4; i++) {
+  for(int i = 0; i < 2; i++) { //only check 2 encoders  b/c only 2 encoders currently working
     current_wheel_pos[i] = wheels[i].getPosition();
-    target_wheel_pos[i] = current_wheel_pos[i] + stepsToTravel;
+	if (dir == Direction::FRONT || dir == Direction::LEFT || dir == Direction::CLOCKWISE || dir == Direction::FRONT_LEFT) target_wheel_pos[i] = current_wheel_pos[i] + stepsToTravel;
+	else target_wheel_pos[i] = current_wheel_pos[i] - stepsToTravel;
   }
   flags |= Flag::TRAVEL_TO_DST; //enable flag
   Serial.println("Setting Flag TRAVEL_TO_DST");
@@ -143,7 +141,7 @@ void Robot::travel(Direction dir, Fixed speed, Fixed distance) {
 }
 
 void Robot::checkDestination() {
-  for(int i = 0; i < 4; i++) {
+  for(int i = 0; i < 2; i++) {
     current_wheel_pos[i] = wheels[i].getPosition();
     Fixed speed = wheels[i].getSpeed();
     bool forward; //check if wheel is moving in positive/negative direction
@@ -201,14 +199,16 @@ void Robot::veer(Fixed x, Fixed y, Fixed rot) {
 
 void Robot::toggle(Flag settings) {
   settings &= ~Flag::NONE;
-  flags ^= settings;
   Flag diff = flags ^ settings;
-  if((flags & diff & Flag::CALIBRATING_LINE) != Flag::NONE) Serial.println("CALIBRATING_LINE set");  
-  if((~flags & diff & Flag::CALIBRATING_LINE) != Flag::NONE) Serial.println("CALIBRATING_LINE set");  
-  if((flags & diff & Flag::FOLLOWING_LINE) != Flag::NONE) Serial.println("FOLLOWING_LINE set"); 
-  if((~flags & diff & Flag::FOLLOWING_LINE) != Flag::NONE) Serial.println("FOLLOWING_LINE set"); 
-  if((flags & diff & Flag::PRINTING_LINE) != Flag::NONE) Serial.println("PRINTING_LINE set"); 
-  if((~flags & diff & Flag::PRINTING_LINE) != Flag::NONE) Serial.println("PRINTING_LINE set"); 
+  flags ^= settings;
+  if((flags & settings & Flag::CALIBRATING_LINE) != Flag::NONE) Serial.println("CALIBRATING_LINE set");  
+  if((~flags & settings & Flag::CALIBRATING_LINE) != Flag::NONE) Serial.println("CALIBRATING_LINE cleared");  
+  if((flags & settings & Flag::FOLLOWING_LINE) != Flag::NONE) Serial.println("FOLLOWING_LINE set"); 
+  if((~flags & settings & Flag::FOLLOWING_LINE) != Flag::NONE) Serial.println("FOLLOWING_LINE cleared"); 
+  if((flags & settings & Flag::PRINTING_LINE) != Flag::NONE) Serial.println("PRINTING_LINE set"); 
+  if((~flags & settings & Flag::PRINTING_LINE) != Flag::NONE) Serial.println("PRINTING_LINE cleared"); 
+  if((flags & settings & Flag::STOPPING_INT) != Flag::NONE) Serial.println("STOPPING_INT set"); 
+  if((~flags & settings & Flag::STOPPING_INT) != Flag::NONE) Serial.println("STOPPING_INT cleared"); 
 }
 
 void Robot::adjustXP(Fixed adjustment) {
