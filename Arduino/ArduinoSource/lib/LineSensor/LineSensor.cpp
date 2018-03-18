@@ -43,34 +43,36 @@ void LineSensor::calibrateSensors() {
   qtrrc2.calibrate();
 }
 
-void LineSensor::getLineErrors(Fixed* x, Fixed* y, Fixed* rot, Direction dir) {
+void LineSensor::getLineErrors(Fixed* x, Fixed* y, Fixed* rot, Direction dir, int range) {
   switch(dir) {
     case(Direction::NONE): break;
-    case(Direction::FRONT): getLineErrors(x, y, rot, 8); break;
-    case(Direction::BACK): getLineErrors(x, y, rot, 24); break;
-    case(Direction::LEFT): getLineErrors(x, y, rot, 16); break;
-    case(Direction::RIGHT): getLineErrors(x, y, rot, 0); break;
-    case(Direction::FRONT_LEFT): getLineErrors(x, y, rot, 12); break;
-    case(Direction::FRONT_RIGHT): getLineErrors(x, y, rot, 4); break;
-    case(Direction::BACK_LEFT): getLineErrors(x, y, rot, 20); break;
-    case(Direction::BACK_RIGHT): getLineErrors(x, y, rot, 28); break;
+    case(Direction::FRONT): getLineErrors(x, y, rot, 8, range); break;
+    case(Direction::BACK): getLineErrors(x, y, rot, 24, range); break;
+    case(Direction::LEFT): getLineErrors(x, y, rot, 16, range); break;
+    case(Direction::RIGHT): getLineErrors(x, y, rot, 0, range); break;
+    case(Direction::FRONT_LEFT): getLineErrors(x, y, rot, 12, range); break;
+    case(Direction::FRONT_RIGHT): getLineErrors(x, y, rot, 4, range); break;
+    case(Direction::BACK_LEFT): getLineErrors(x, y, rot, 20), range; break;
+    case(Direction::BACK_RIGHT): getLineErrors(x, y, rot, 28), range; break;
     case(Direction::CLOCKWISE): break;
     case(Direction::COUNTER_CLOCKWISE): break;
     default: break; 
   }
 }
 
-void LineSensor::getLineErrors(Fixed* x, Fixed* y, Fixed* rot, int offset) {
+void LineSensor::getLineErrors(Fixed* x, Fixed* y, Fixed* rot, int offset, int range) {
   int fi = offset % 16;
+  int bi = fi + 16;
   int li = ((offset - 8) % 16) + 8;
-  Fixed f = getLinePosition(fi, 7);
-  Fixed b = getLinePosition(fi + 16, 7);
-  Fixed l = getLinePosition(li, 7);
-  Fixed r = getLinePosition((li + 16) % 32, 7);
+  int ri = (li + 16) % 32;
+  Fixed f = getLinePosition(fi, range);
+  Fixed b = getLinePosition(bi, range);
+  Fixed l = getLinePosition(li, range);
+  Fixed r = getLinePosition(ri, range);
   *rot = (b + f) * SINES[fi] * SINES[fi]
-       + (r + l) * COSINES[li] * COSINES[li];
+       + (r - l) * COSINES[ri] * COSINES[ri];
   *x = (b - f) * SINES[fi];
-  *y = (r - l) * COSINES[li];
+  *y = (r - l) * COSINES[ri];
 }
 
 void LineSensor::getIntersectionErrors(Fixed* x, Fixed* y, Fixed* rot, int offset) {
@@ -79,7 +81,7 @@ void LineSensor::getIntersectionErrors(Fixed* x, Fixed* y, Fixed* rot, int offse
   getLineErrors(&x_s, &y_s, &rot_s, offset + 8 % 32);
   *x = x_p + x_s;
   *y = y_p + y_s;
-  *rot = Fixed(0.5) * (rot_p + rot_s);
+  *rot = SINES[4] * SINES[4] * (rot_p + rot_s);
 }
 
 int LineSensor::countLinePeaks(int range) {
