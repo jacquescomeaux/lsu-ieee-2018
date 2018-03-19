@@ -7,6 +7,13 @@
 
 SortBot* robot;
 
+void setPins() { //allows pins 18-21 to be used with the Encoders. **If the robot stops functioning comment this out.**
+  pinMode(18, INPUT);
+  pinMode(19, INPUT);
+  pinMode(20, INPUT);
+  pinMode(21, INPUT);
+}
+
 void test() {
   Serial.println("still alive");
   while(true);
@@ -40,14 +47,15 @@ void parseCommand() {
     case 't': test(); break;
     case 'g': robot->travel(Direction::FRONT, Fixed(11), Fixed(40)); break;
     case 'b': robot->travel(Direction::COUNTER_CLOCKWISE, Fixed(10)); break;
-  //  case 'p': robot->pickUpToken(); break;
+    //case 'p': robot->pickUpToken(); break;
     case '|': robot->center(0); break;
-    case '\\': robot->center(8); break;
+    case '\\': robot->center(4); break;
     default: robot->stop();
   }
 }
 
 void setup() {
+  setPins();
   robot = new SortBot();
   robot->stop();
   Serial.begin(9600);

@@ -20,8 +20,8 @@ class LineSensor {
   public:
     LineSensor();
     void calibrateSensors();
-    void getLineErrors(Fixed* x, Fixed* y, Fixed* rot, Direction);
-    void getLineErrors(Fixed* x, Fixed* y, Fixed* rot, int);
+    void getLineErrors(Fixed* x, Fixed* y, Fixed* rot, Direction, int);
+    void getLineErrors(Fixed* x, Fixed* y, Fixed* rot, int, int);
     void getIntersectionErrors(Fixed* x, Fixed* y, Fixed* rot, int);
     int countLinePeaks(int range);
     void printReadings();

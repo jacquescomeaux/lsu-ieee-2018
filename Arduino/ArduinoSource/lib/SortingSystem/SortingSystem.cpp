@@ -1,11 +1,11 @@
 #include "SortingSystem.h"
 
-SortingSystem::SortingSystem()/*Adafruit_StepperMotor* arm_motor, Adafruit_StepperMotor* plate_motor) :
+SortingSystem::SortingSystem(Adafruit_StepperMotor* arm_motor, Adafruit_DCMotor* magnet, Adafruit_StepperMotor* plate_motor) :
   NUM_COLORS(8),
   COLOR_POSITIONS {0, 6, 5, 4, 1, 2, 3, 7},
   state(0),
-  token_arm(arm_motor),
-  storage_plate(plate_motor)*/ {}
+  token_arm(arm_motor, magnet),
+  storage_plate(plate_motor) {}
 
 void SortingSystem::pickUpToken() {
   //token_arm.pickUpToken();

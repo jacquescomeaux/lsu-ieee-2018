@@ -14,24 +14,23 @@
 
 class Robot {
   protected:
-    MotorShield motor_shields[2]; 
+    MotorShield motor_shields[3]; 
   private:
-    bool seen;
     Flag flags;
     const int NUM_TASKS;
     int last_ran[6];
-    const Fixed SQRT_HALF, ZERO;
     Fixed XP, YP, RotP, base_speed, veer_amount, acceleration;
     Direction current_direction;
     Wheel wheels[4];
     Fixed current_wheel_pos[4], target_wheel_pos[4];
     ProximitySensor edge_detectors[4];
     LineSensor line_sensor;
+    void resolveDirection(Direction, Fixed* x, Fixed* y, Fixed* rot);
     void checkEdges();
+    void checkDestination();	
     void setWheelSpeeds(const Fixed*);
     void adjustWheelSpeeds(const Fixed*);
     void correctWheelSpeeds(const Fixed*);
-    void checkDestination();	
     void correctErrors();
   public:
     Robot();
@@ -49,10 +48,15 @@ class Robot {
     void move(Direction, Fixed speed);
     void move(Fixed x, Fixed y, Fixed rot);
    
-    //adjust direction of movement
+    //temporarily adjust direction of movement
     void veer(Direction);
     void veer(Direction, Fixed amount);
     void veer(Fixed x, Fixed y, Fixed rot);
+   
+    //permanently adjust direction of movement
+    void steer(Direction);
+    void steer(Direction, Fixed amount);
+    void steer(Fixed x, Fixed y, Fixed rot);
    
     //move a set amount
     void travel(Direction, Fixed dist);
@@ -67,9 +71,7 @@ class Robot {
     void adjustBaseSpeed(Fixed);
 };
 
-class SortBot : public Robot{//, public SortingSystem {
-//  private:
-  //  MotorShield motor_shields[2];
+class SortBot : public Robot, public SortingSystem {
   public:
     SortBot();
 };

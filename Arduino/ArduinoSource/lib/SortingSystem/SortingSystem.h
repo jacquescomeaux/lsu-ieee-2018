@@ -24,7 +24,7 @@ class SortingSystem {
     SortingPlate storage_plate;
   protected:
     SortingSystem();
-    SortingSystem(Adafruit_StepperMotor*, Adafruit_StepperMotor*);
+    SortingSystem(Adafruit_StepperMotor*, Adafruit_DCMotor*, Adafruit_StepperMotor*);
   public:
     void pickUpToken();
     //Color checkTokenColor() const;
