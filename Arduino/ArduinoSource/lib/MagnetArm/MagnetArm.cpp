@@ -16,6 +16,8 @@ MagnetArm::MagnetArm(Adafruit_StepperMotor* mot, Adafruit_DCMotor* mag) :
   motor(mot),
   magnet(mag) {
   motor->setSpeed(RPM);
+  magnet->run(RELEASE);
+  magnet->setSpeed(255);
 }
 
 void MagnetArm::goToHeight(int s) {

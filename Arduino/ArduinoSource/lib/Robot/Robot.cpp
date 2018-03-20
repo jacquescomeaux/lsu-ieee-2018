@@ -4,7 +4,7 @@ Robot::Robot() :
   motor_shields {
     MotorShield(0x61),
     MotorShield(0x62),
-    MotorShield(0x63)
+    MotorShield(0x60)
   },
   flags(Flag::NONE),
   NUM_TASKS(6),
