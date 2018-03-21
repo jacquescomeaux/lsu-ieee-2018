@@ -17,7 +17,7 @@ class MagnetArm {
     MagnetArm(Adafruit_StepperMotor*, Adafruit_DCMotor*);
     void reset();
     void pickUpToken();
-    void storeToken() const;
+    void storeToken();
 };
 
 #endif//MAGNETARM_H

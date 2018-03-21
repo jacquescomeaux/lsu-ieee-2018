@@ -6,7 +6,6 @@ Robot::Robot() :
     MotorShield(0x62), //wheels 2 and 4; sorting plate 
     MotorShield(0x60)  //magnet
   },
-  debug(true), //if we wrap our Serial.prints checking for this we can toggle it more easily than commenting.
   flags(Flag::NONE),
   pid_terms {
     //Proportional //Integral    //Derivitave  //Accum.  //Last error
@@ -31,7 +30,8 @@ Robot::Robot() :
     ProximitySensor(10, 11), //LEFT(2)
     ProximitySensor(12, 14)  //BACK(3)
   },
-  line_sensor() {
+  line_sensor(),
+  debug(true) {  //if we wrap our Serial.prints checking for this we can toggle it more easily than commenting.
     stop();
 }
 
@@ -113,7 +113,7 @@ void Robot::stop() {
 
 void Robot::update() {
   static const int NUM_TASKS = 7;
-  static unsigned long last_ran[NUM_TASK] = {0};
+  static unsigned long last_ran[NUM_TASKS] = {0};
   unsigned long dt[NUM_TASKS];
   unsigned long time = millis();
   for(int i = 0; i < NUM_TASKS; i++)  dt[i] = time - last_ran[i];
@@ -149,9 +149,21 @@ void Robot::update() {
 
 void Robot::center(int offset) {
   flags &= ~Flag::FOLLOWING_LINE;
-  Fixed xerr, yerr, roterr;
-  line_sensor.getIntersectionErrors(&xerr, &yerr, &roterr, offset);
-  veer(XP*xerr, YP*yerr, RotP*roterr);
+  Fixed xerr, yerr, rerr;
+  line_sensor.getIntersectionErrors(&xerr, &yerr, &rerr, offset);
+  veer(
+    //PID CONTROLLER
+    //KP * current error     +  KI * accumulated error             +  KD * change in error
+    (pid_terms[0][0] * xerr) + (pid_terms[0][1] * pid_terms[0][3]) + (pid_terms[0][2] * (xerr - pid_terms[0][4])), //x correction
+    (pid_terms[1][0] * yerr) + (pid_terms[1][1] * pid_terms[1][3]) + (pid_terms[1][2] * (yerr - pid_terms[1][4])), //y correction
+    (pid_terms[2][0] * rerr) + (pid_terms[2][1] * pid_terms[2][3]) + (pid_terms[2][2] * (rerr - pid_terms[2][4]))  //rot correction
+  );
+  pid_terms[0][3] += xerr;
+  pid_terms[1][3] += yerr;
+  pid_terms[2][3] += rerr;
+  pid_terms[0][4]  = xerr;
+  pid_terms[1][4]  = yerr;
+  pid_terms[2][4]  = rerr;
 }
 
 void Robot::move(Direction dir) {

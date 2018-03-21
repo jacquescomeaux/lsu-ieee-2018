@@ -19,7 +19,7 @@ void test() {
   while(true);
 }
 
-void recievePIDCommand(unsigned int var) {
+void receivePIDCommand(unsigned int var) {
   while(Serial.available() < 2);
   unsigned char param1 = Serial.read();
   unsigned char param2 = Serial.read();
@@ -65,7 +65,7 @@ void parseCommand() {
     case 'g': robot->travel(Direction::FRONT, Fixed(11), Fixed(40)); break;
     case 'b': robot->travel(Direction::COUNTER_CLOCKWISE, Fixed(10)); break;
     //case 'p': robot->pickUpToken(); break;
-    case '|': robot->center(0); break;
+    //case '|': robot->center(0); break;
     case '\\': robot->toggle(Flag::CENTERING_INT); break;
     default: robot->stop();
   }

@@ -45,6 +45,6 @@ void MagnetArm::pickUpToken() {
   target_position = top_target;
 }
 
-void MagnetArm::storeToken() const {
+void MagnetArm::storeToken() {
   demagnetize();
 }
