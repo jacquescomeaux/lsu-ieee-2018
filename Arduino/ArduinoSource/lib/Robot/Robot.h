@@ -17,8 +17,7 @@ class Robot {
     MotorShield motor_shields[3]; 
   private:
     Flag flags;
-    Fixed x_terms[3], y_terms[3], rot_terms[3];
-    Fixed base_speed, veer_amount, acceleration;
+    Fixed pid_terms[3][5], base_speed, veer_amount, acceleration;
     Direction current_direction;
     Wheel wheels[4];
     Fixed current_wheel_pos[4], target_wheel_pos[4];
@@ -66,9 +65,7 @@ class Robot {
   
     //change robot state
     void toggle(Flag);
-    void adjustX(Fixed, bool);
-    void adjustY(Fixed, bool);
-    void adjustRot(Fixed, bool);
+    void adjustPID(unsigned int var, unsigned int term, Fixed);
     void adjustBaseSpeed(Fixed);
 };
 

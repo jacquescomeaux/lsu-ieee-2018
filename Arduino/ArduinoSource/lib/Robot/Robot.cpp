@@ -2,33 +2,34 @@
 
 Robot::Robot() :
   motor_shields {
-    MotorShield(0x61),
-    MotorShield(0x62),
-    MotorShield(0x60)
+    MotorShield(0x61), //wheels 0 and 1; token arm
+    MotorShield(0x62), //wheels 2 and 4; sorting plate 
+    MotorShield(0x60)  //magnet
   },
   debug(true), //if we wrap our Serial.prints checking for this we can toggle it more easily than commenting.
   flags(Flag::NONE),
-  x_terms {Fixed(0.005, Fixed(0.005), Fixed(0)},
-  y_terms {Fixed(0.005, Fixed(0.005), Fixed(0)},
-  rot_terms {Fixed(0.025, Fixed(0.005), Fixed(0)},
-  YP(Fixed(0.01)),
-  RotP(Fixed(0.02)),
+  pid_terms {
+    //Proportional //Integral    //Derivitave  //Accum.  //Last error
+    {Fixed(0.005), Fixed(0.005), Fixed(0.000), Fixed(0), Fixed(0)}, //x terms
+    {Fixed(0.005), Fixed(0.005), Fixed(0.000), Fixed(0), Fixed(0)}, //y terms
+    {Fixed(0.025), Fixed(0.005), Fixed(0.000), Fixed(0), Fixed(0)}, //rot terms
+  },
   base_speed(Fixed(90)),
   veer_amount(Fixed(10)),
   acceleration(Fixed(10)),
   current_direction(Direction::NONE),
   wheels {
     //Interrupt Pins: 2, 3, 18, 19, 20, 21
-    Wheel(motor_shields[0].getMotor(1),  2,  4), //FRONT_LEFT
-    Wheel(motor_shields[0].getMotor(2),  3,  5), //BACK_LEFT
+    Wheel(motor_shields[0].getMotor(1),  2, 4), //FRONT_LEFT
+    Wheel(motor_shields[0].getMotor(2),  3, 5), //BACK_LEFT
     Wheel(motor_shields[1].getMotor(1), 18, 8), //BACK_RIGHT
     Wheel(motor_shields[1].getMotor(2), 19, 9)  //FRONT_RIGHT
   },
   edge_detectors {
-    ProximitySensor(6, 7),   //FRONT(0)
-    ProximitySensor(8, 9),   //LEFT(1)
-    ProximitySensor(10, 11), //BACK(2)
-    ProximitySensor(12, 14)  //RIGHT(3)
+    ProximitySensor( 6,  7), //RIGHT(0)
+    ProximitySensor( 8,  9), //FRONT(1)
+    ProximitySensor(10, 11), //LEFT(2)
+    ProximitySensor(12, 14)  //BACK(3)
   },
   line_sensor() {
     stop();
@@ -83,14 +84,25 @@ void Robot::correctWheelSpeeds(const Fixed* speeds) {
 }
 
 void Robot::correctErrors() {
-  Fixed xerr, yerr, roterr;
-  line_sensor.getLineErrors(&xerr, &yerr, &roterr, current_direction, 7);
-  veer(XP*xerr, YP*yerr, RotP*roterr);
-  
-  if (debug) {
-  Serial.print("Time");
-  Serial.println(millis());
-  ReportWheelSpeeds();
+  Fixed xerr, yerr, rerr;
+  line_sensor.getLineErrors(&xerr, &yerr, &rerr, current_direction, 7);
+  veer(
+    //PID CONTROLLER
+    //KP * current error     +  KI * accumulated error             +  KD * change in error
+    (pid_terms[0][0] * xerr) + (pid_terms[0][1] * pid_terms[0][3]) + (pid_terms[0][2] * (xerr - pid_terms[0][4])), //x correction
+    (pid_terms[1][0] * yerr) + (pid_terms[1][1] * pid_terms[1][3]) + (pid_terms[1][2] * (yerr - pid_terms[1][4])), //y correction
+    (pid_terms[2][0] * rerr) + (pid_terms[2][1] * pid_terms[2][3]) + (pid_terms[2][2] * (rerr - pid_terms[2][4]))  //rot correction
+  );
+  pid_terms[0][3] += xerr;
+  pid_terms[1][3] += yerr;
+  pid_terms[2][3] += rerr;
+  pid_terms[0][4]  = xerr;
+  pid_terms[1][4]  = yerr;
+  pid_terms[2][4]  = rerr;
+  if(debug) {
+    Serial.print("Time");
+    Serial.println(millis());
+    reportWheelSpeeds();
   }
 }
 
@@ -222,22 +234,16 @@ void Robot::toggle(Flag settings) {
   if((~flags & settings & Flag::CENTERING_INT) != Flag::NONE) Serial.println("CENTERING_INT cleared"); 
 }
 
-void Robot::adjustX(Fixed adjustment, bool p_term) {
-  x_terms[p_term ? 0 : 1] += adjustment;
-  Serial.print(p_term ? "XP = " : "XD = ");
-  Serial.println(x_terms[p_term ? 0 : 1].getDouble());
-}
-
-void Robot::adjustY(Fixed adjustment, bool p_term) {
-  y_terms[p_term ? 0 : 1] += adjustment;
-  Serial.print(p_term ? "YP = " : "YD = ");
-  Serial.println(y_terms[p_term ? 0 : 1].getDouble());
-}
-
-void Robot::adjustRot(Fixed adjustment, bool p_term) {
-  rot_terms[p_term ? 0 : 1] += adjustment;
-  Serial.print(p_term ? "RotP = " : "RotD");
-  Serial.println(rot_terms[p_term ? 0 : 1].getDouble());
+void Robot::adjustPID(unsigned int var, unsigned int term, Fixed adjustment) {
+  if(var > 2 || term > 2) return;
+  pid_terms[var][term] += adjustment;
+  if(var == 0) Serial.print("X");
+  if(var == 1) Serial.print("Y");
+  if(var == 2) Serial.print("Rot");
+  if(term == 0) Serial.print("P = ");
+  if(term == 1) Serial.print("I = ");
+  if(term == 2) Serial.print("D = ");
+  Serial.println(pid_terms[var][term].getDouble());
 }
 
 void Robot::adjustBaseSpeed(Fixed adjustment) {
@@ -246,7 +252,7 @@ void Robot::adjustBaseSpeed(Fixed adjustment) {
   Serial.println(base_speed.getInt());
 }
 
-void Robot::ReportWheelSpeeds() {
+void Robot::reportWheelSpeeds() {
   for(int i = 0; i < 4; i++) {
     Fixed report = wheels[i].getActualSpeed();
     Serial.print("Wheel ");

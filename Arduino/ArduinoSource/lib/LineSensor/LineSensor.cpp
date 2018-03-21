@@ -27,8 +27,8 @@ void LineSensor::readSensors() {
 }
 
 Fixed LineSensor::getLinePosition(int offset, int range) {
-  qtrrc1.readCalibrated(sensor_values);
-  qtrrc2.readCalibrated(&sensor_values[NUM_PINS/2]);
+  //qtrrc1.readCalibrated(sensor_values);
+  //qtrrc2.readCalibrated(&sensor_values[NUM_PINS/2]);
   Fixed weighted = 0;
   Fixed total = 0;
   for(int32_t i = 0 - range; i <= range; i++) { 
@@ -61,11 +61,14 @@ void LineSensor::getLineErrors(Fixed* x, Fixed* y, Fixed* rot, Direction dir, in
 }
 
 void LineSensor::getLineErrors(Fixed* x, Fixed* y, Fixed* rot, int offset, int range) {
+  //qtrrc1.readCalibrated(sensor_values);
+  //qtrrc2.readCalibrated(&sensor_values[NUM_PINS/2]);
+  readSensors();
   int fi = offset % 16;
   int bi = fi + 16;
   int li = ((offset + 24) % 16) + 8;
   int ri = (li + 16) % 32;
-  Serial.print("fi: ");
+  /*Serial.print("fi: ");
   Serial.println(fi);
   Serial.print("bi: ");
   Serial.println(bi);
@@ -73,11 +76,12 @@ void LineSensor::getLineErrors(Fixed* x, Fixed* y, Fixed* rot, int offset, int r
   Serial.println(ri);
   Serial.print("li: ");
   Serial.println(li);
+  */
   Fixed f = getLinePosition(fi, range);
   Fixed b = getLinePosition(bi, range);
   Fixed l = getLinePosition(li, range);
   Fixed r = getLinePosition(ri, range);
-  Serial.print("f:");
+  /*Serial.print("f:");
   Serial.println(f.getInt());
   Serial.print("b: ");
   Serial.println(b.getInt());
@@ -89,16 +93,18 @@ void LineSensor::getLineErrors(Fixed* x, Fixed* y, Fixed* rot, int offset, int r
   Serial.println(SINES[fi].getDouble());
   Serial.print("Cosines[fi]:");
   Serial.println(COSINES[ri].getDouble());
+  */
   *rot = (b + f) * SINES[fi] * SINES[fi]
        + (r + l) * COSINES[ri] * COSINES[ri];
   *x = (b - f) * SINES[fi];
   *y = (r - l)  * COSINES[ri];
-  Serial.print("x: ");
+  /*Serial.print("x: ");
   Serial.println((*x).getDouble());
   Serial.print("y: ");
   Serial.println((*y).getDouble());
   Serial.print("rot: ");
   Serial.println((*rot).getDouble());
+  */
 }
 
 void LineSensor::getIntersectionErrors(Fixed* x, Fixed* y, Fixed* rot, int offset) {

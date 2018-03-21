@@ -19,6 +19,22 @@ void test() {
   while(true);
 }
 
+void recievePIDCommand(unsigned int var) {
+  while(Serial.available() < 2);
+  unsigned char param1 = Serial.read();
+  unsigned char param2 = Serial.read();
+  unsigned int term;
+  Fixed adjustment;
+  if(param1 == '1') term = 0;
+  else if(param1 == '2') term = 1;
+  else if(param1 == '3') term = 2;
+  else return;
+  if(param2 == '9') adjustment = Fixed(-0.001);
+  else if(param2 == '0') adjustment = Fixed(0.001);
+  else return;
+  robot->adjustPID(var, term, adjustment); 
+}
+
 void parseCommand() {
   unsigned char command = Serial.read();
   switch(command) {
@@ -34,22 +50,15 @@ void parseCommand() {
     case 'j': robot->move(Direction::COUNTER_CLOCKWISE); break;
     case 'u': robot->steer(Direction::COUNTER_CLOCKWISE); break;
     case 'i': robot->steer(Direction::CLOCKWISE); break;
+    case 'y': robot->steer(Direction::LEFT); break;
+    case 'o': robot->steer(Direction::RIGHT); break;
     case 'r': robot->toggle(Flag::CALIBRATING_LINE); break;
     case 'f': robot->toggle(Flag::FOLLOWING_LINE); break;
     case 'v': robot->toggle(Flag::PRINTING_LINE); break;
     case 'h': robot->toggle(Flag::STOPPING_INT); break;
-    case '1': robot->adjustX(Fixed(-0.001, true)); break;
-    case '2': robot->adjustX(Fixed(0.001, true)); break;
-    case '3': robot->adjustY(Fixed(-0.001, true)); break;
-    case '4': robot->adjustY(Fixed(0.001, true)); break;
-    case '5': robot->adjustRot(Fixed(-0.001, true)); break;
-    case '6': robot->adjustRot(Fixed(0.001, true)); break;
-    case '7': robot->adjustX(Fixed(-0.001, false)); break;
-    case '8': robot->adjustX(Fixed(0.001, false)); break;
-    case '9': robot->adjustY(Fixed(-0.001, false)); break;
-    case '0': robot->adjustY(Fixed(0.001, false)); break;
-    case '-': robot->adjustRot(Fixed(-0.001, false)); break;
-    case '=': robot->adjustRot(Fixed(0.001, false)); break;
+    case '1': Serial.println("Adjusting x"); receivePIDCommand(0); break;
+    case '2': Serial.println("Adjusting r"); receivePIDCommand(1); break;
+    case '3': Serial.println("Adjusting rot"); receivePIDCommand(2); break;
     case '<': robot->adjustBaseSpeed(Fixed(-10)); break;
     case '>': robot->adjustBaseSpeed(Fixed(10)); break;
     case 't': test(); break;
