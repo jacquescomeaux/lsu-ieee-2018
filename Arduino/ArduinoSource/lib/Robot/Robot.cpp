@@ -8,9 +8,9 @@ Robot::Robot() :
   },
   debug(true), //if we wrap our Serial.prints checking for this we can toggle it more easily than commenting.
   flags(Flag::NONE),
-  NUM_TASKS(7),
-  last_ran {0},
-  XP(Fixed(0.01)),
+  x_terms {Fixed(0.005, Fixed(0.005), Fixed(0)},
+  y_terms {Fixed(0.005, Fixed(0.005), Fixed(0)},
+  rot_terms {Fixed(0.025, Fixed(0.005), Fixed(0)},
   YP(Fixed(0.01)),
   RotP(Fixed(0.02)),
   base_speed(Fixed(90)),
@@ -100,8 +100,10 @@ void Robot::stop() {
 }
 
 void Robot::update() {
-  int dt[NUM_TASKS];
-  int time = millis();
+  static const int NUM_TASKS = 7;
+  static unsigned long last_ran[NUM_TASK] = {0};
+  unsigned long dt[NUM_TASKS];
+  unsigned long time = millis();
   for(int i = 0; i < NUM_TASKS; i++)  dt[i] = time - last_ran[i];
   
   if((dt[0] > 100) ? (last_ran[0] = time) : false) {
@@ -220,22 +222,22 @@ void Robot::toggle(Flag settings) {
   if((~flags & settings & Flag::CENTERING_INT) != Flag::NONE) Serial.println("CENTERING_INT cleared"); 
 }
 
-void Robot::adjustXP(Fixed adjustment) {
-  XP += adjustment;
-  Serial.print("XP = ");
-  Serial.println(XP.getDouble());
+void Robot::adjustX(Fixed adjustment, bool p_term) {
+  x_terms[p_term ? 0 : 1] += adjustment;
+  Serial.print(p_term ? "XP = " : "XD = ");
+  Serial.println(x_terms[p_term ? 0 : 1].getDouble());
 }
 
-void Robot::adjustYP(Fixed adjustment) {
-  YP += adjustment;
-  Serial.print("YP = ");
-  Serial.println(YP.getDouble());
+void Robot::adjustY(Fixed adjustment, bool p_term) {
+  y_terms[p_term ? 0 : 1] += adjustment;
+  Serial.print(p_term ? "YP = " : "YD = ");
+  Serial.println(y_terms[p_term ? 0 : 1].getDouble());
 }
 
-void Robot::adjustRotP(Fixed adjustment) {
-  RotP += adjustment;
-  Serial.print("RotP = ");
-  Serial.println(RotP.getDouble());
+void Robot::adjustRot(Fixed adjustment, bool p_term) {
+  rot_terms[p_term ? 0 : 1] += adjustment;
+  Serial.print(p_term ? "RotP = " : "RotD");
+  Serial.println(rot_terms[p_term ? 0 : 1].getDouble());
 }
 
 void Robot::adjustBaseSpeed(Fixed adjustment) {

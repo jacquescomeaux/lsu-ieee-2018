@@ -17,9 +17,8 @@ class Robot {
     MotorShield motor_shields[3]; 
   private:
     Flag flags;
-    const int NUM_TASKS;
-    int last_ran[6];
-    Fixed XP, YP, RotP, base_speed, veer_amount, acceleration;
+    Fixed x_terms[3], y_terms[3], rot_terms[3];
+    Fixed base_speed, veer_amount, acceleration;
     Direction current_direction;
     Wheel wheels[4];
     Fixed current_wheel_pos[4], target_wheel_pos[4];
@@ -32,7 +31,8 @@ class Robot {
     void adjustWheelSpeeds(const Fixed*);
     void correctWheelSpeeds(const Fixed*);
     void correctErrors();
-    void ReportWheelSpeeds(); //print current wheel speeds for debugging
+    void center(int);
+    void reportWheelSpeeds(); //print current wheel speeds for debugging
   public:
     Robot();
 
@@ -44,9 +44,6 @@ class Robot {
     //to be called in a loop
     void update();
 
-    //centering on intersection
-    void center(int);
-    
     //move indefinitely
     void move(Direction);
     void move(Direction, Fixed speed);
@@ -69,9 +66,9 @@ class Robot {
   
     //change robot state
     void toggle(Flag);
-    void adjustXP(Fixed);
-    void adjustYP(Fixed);
-    void adjustRotP(Fixed);
+    void adjustX(Fixed, bool);
+    void adjustY(Fixed, bool);
+    void adjustRot(Fixed, bool);
     void adjustBaseSpeed(Fixed);
 };
 
