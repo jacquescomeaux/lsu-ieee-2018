@@ -48,6 +48,10 @@ Fixed Wheel::getSpeed() const {
   return speed;
 }
 
+Fixed Wheel::getActualSpeed() const {
+  return speed + correction;
+}
+
 void Wheel::adjustSpeed(Fixed adjustment) {
   goal_speed += adjustment;
 }

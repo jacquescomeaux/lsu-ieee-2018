@@ -1,9 +1,12 @@
 #include <MagnetArm.h>
 
-void MagnetArm::magnetize() const {}
+void MagnetArm::magnetize() {
+  magnet->run(FORWARD);
+}
 
-void MagnetArm::demagnetize() const {}
-
+void MagnetArm::demagnetize() {
+  magnet->run(RELEASE);
+}
 
 //MagnetArm::MagnetArm() {}
 MagnetArm::MagnetArm(Adafruit_StepperMotor* mot, Adafruit_DCMotor* mag) :

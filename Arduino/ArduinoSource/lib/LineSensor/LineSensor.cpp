@@ -32,8 +32,8 @@ Fixed LineSensor::getLinePosition(int offset, int range) {
   Fixed weighted = 0;
   Fixed total = 0;
   for(int32_t i = 0 - range; i <= range; i++) { 
-    weighted +=  Fixed(1000) * Fixed(i) * Fixed(static_cast<int32_t>(sensor_values[i + offset % 32]));
-    total += Fixed(static_cast<int32_t>(sensor_values[i + offset % 32]));
+    weighted +=  Fixed(1000) * Fixed(i) * Fixed(static_cast<int32_t>(sensor_values[(i + offset + 32) % 32]));
+    total += Fixed(static_cast<int32_t>(sensor_values[(i + offset + 32) % 32]));
   }
   return weighted/total;
 }
@@ -48,8 +48,8 @@ void LineSensor::getLineErrors(Fixed* x, Fixed* y, Fixed* rot, Direction dir, in
     case(Direction::NONE): break;
     case(Direction::FRONT): getLineErrors(x, y, rot, 8, range); break;
     case(Direction::BACK): getLineErrors(x, y, rot, 24, range); break;
-    case(Direction::LEFT): getLineErrors(x, y, rot, 16, range); break;
-    case(Direction::RIGHT): getLineErrors(x, y, rot, 0, range); break;
+    case(Direction::LEFT): getLineErrors(x, y, rot, 15, range); break;
+    case(Direction::RIGHT): getLineErrors(x, y, rot, 31, range); break;
     case(Direction::FRONT_LEFT): getLineErrors(x, y, rot, 12, range); break;
     case(Direction::FRONT_RIGHT): getLineErrors(x, y, rot, 4, range); break;
     case(Direction::BACK_LEFT): getLineErrors(x, y, rot, 20, range); break;
@@ -63,22 +63,48 @@ void LineSensor::getLineErrors(Fixed* x, Fixed* y, Fixed* rot, Direction dir, in
 void LineSensor::getLineErrors(Fixed* x, Fixed* y, Fixed* rot, int offset, int range) {
   int fi = offset % 16;
   int bi = fi + 16;
-  int li = ((offset - 8) % 16) + 8;
+  int li = ((offset + 24) % 16) + 8;
   int ri = (li + 16) % 32;
+  Serial.print("fi: ");
+  Serial.println(fi);
+  Serial.print("bi: ");
+  Serial.println(bi);
+  Serial.print("ri: ");
+  Serial.println(ri);
+  Serial.print("li: ");
+  Serial.println(li);
   Fixed f = getLinePosition(fi, range);
   Fixed b = getLinePosition(bi, range);
   Fixed l = getLinePosition(li, range);
   Fixed r = getLinePosition(ri, range);
+  Serial.print("f:");
+  Serial.println(f.getInt());
+  Serial.print("b: ");
+  Serial.println(b.getInt());
+  Serial.print("r: ");
+  Serial.println(r.getInt());
+  Serial.print("l: ");
+  Serial.println(l.getInt());
+  Serial.print("Sines[fi]:");
+  Serial.println(SINES[fi].getDouble());
+  Serial.print("Cosines[fi]:");
+  Serial.println(COSINES[ri].getDouble());
   *rot = (b + f) * SINES[fi] * SINES[fi]
-       + (r - l) * COSINES[ri] * COSINES[ri];
+       + (r + l) * COSINES[ri] * COSINES[ri];
   *x = (b - f) * SINES[fi];
-  *y = (r - l) * COSINES[ri];
+  *y = (r - l)  * COSINES[ri];
+  Serial.print("x: ");
+  Serial.println((*x).getDouble());
+  Serial.print("y: ");
+  Serial.println((*y).getDouble());
+  Serial.print("rot: ");
+  Serial.println((*rot).getDouble());
 }
 
 void LineSensor::getIntersectionErrors(Fixed* x, Fixed* y, Fixed* rot, int offset) {
   Fixed x_p, y_p, rot_p, x_s, y_s, rot_s;
   getLineErrors(&x_p, &y_p, &rot_p, offset, 4);
-  getLineErrors(&x_s, &y_s, &rot_s, offset + 8 % 32, 4);
+  getLineErrors(&x_s, &y_s, &rot_s, (offset + 8) % 32, 4);
   *x = x_p + x_s;
   *y = y_p + y_s;
   *rot = SINES[4] * SINES[4] * (rot_p + rot_s);
@@ -89,13 +115,18 @@ int LineSensor::countLinePeaks(int range) {
   int peak_count = 0;
   for(int i = 0; i < NUM_PINS; i++) if(sensor_values[i] > line_threshold) {
     int higher_values_in_range = 0;
-    for(int j = 0 - range; j <= range; j++) if(sensor_values[i] < sensor_values[i + j % NUM_PINS]) higher_values_in_range++;
+    for(int j = 0 - range; j <= range; j++) if(sensor_values[i] < sensor_values[(i + j) % NUM_PINS]) higher_values_in_range++;
     if(higher_values_in_range == 0) peak_count++;
   }
   return peak_count;
 }
 
 void LineSensor::printReadings() {
+  readSensors();
+  unsigned int total = 0;
+  for(unsigned int v : sensor_values) total += v;
+  Serial.print("Total line: ");
+  Serial.println(total);
   unsigned int* front_mins = qtrrc1.calibratedMinimumOn;
   unsigned int* back_mins = qtrrc2.calibratedMinimumOn;
   unsigned int* front_maxs = qtrrc1.calibratedMaximumOn;
@@ -117,7 +148,7 @@ void LineSensor::printReadings() {
     Serial.print(back_maxs[i]);
     Serial.print(" ");
   }
-  readSensors();
+  Serial.println();
   for(int i = 0; i < 4; i++) {
     for(int j = 0; j < 8; j++) {
       int k = i*8+j;

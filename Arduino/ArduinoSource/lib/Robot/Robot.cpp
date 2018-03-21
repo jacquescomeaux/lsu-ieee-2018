@@ -6,11 +6,12 @@ Robot::Robot() :
     MotorShield(0x62),
     MotorShield(0x60)
   },
+  debug(true), //if we wrap our Serial.prints checking for this we can toggle it more easily than commenting.
   flags(Flag::NONE),
-  NUM_TASKS(6),
+  NUM_TASKS(7),
   last_ran {0},
-  XP(Fixed(0.02)),
-  YP(Fixed(0.02)),
+  XP(Fixed(0.01)),
+  YP(Fixed(0.01)),
   RotP(Fixed(0.02)),
   base_speed(Fixed(90)),
   veer_amount(Fixed(10)),
@@ -85,6 +86,12 @@ void Robot::correctErrors() {
   Fixed xerr, yerr, roterr;
   line_sensor.getLineErrors(&xerr, &yerr, &roterr, current_direction, 7);
   veer(XP*xerr, YP*yerr, RotP*roterr);
+  
+  if (debug) {
+  Serial.print("Time");
+  Serial.println(millis());
+  ReportWheelSpeeds();
+  }
 }
 
 void Robot::stop() {
@@ -120,10 +127,13 @@ void Robot::update() {
   if((dt[5] > 100) ? (last_ran[5] = time) : false) {
     if((flags & Flag::TRAVEL_TO_DST) != Flag::NONE) checkDestination();
   }
+  
+  if((dt[6] > 0) ? (last_ran[6] = time) : false) {
+    if((flags & Flag::CENTERING_INT) != Flag::NONE) center(4);
+  }
 }
 
 void Robot::center(int offset) {
-  stop();
   flags &= ~Flag::FOLLOWING_LINE;
   Fixed xerr, yerr, roterr;
   line_sensor.getIntersectionErrors(&xerr, &yerr, &roterr, offset);
@@ -206,6 +216,8 @@ void Robot::toggle(Flag settings) {
   if((~flags & settings & Flag::PRINTING_LINE) != Flag::NONE) Serial.println("PRINTING_LINE cleared"); 
   if((flags & settings & Flag::STOPPING_INT) != Flag::NONE) Serial.println("STOPPING_INT set"); 
   if((~flags & settings & Flag::STOPPING_INT) != Flag::NONE) Serial.println("STOPPING_INT cleared"); 
+  if((flags & settings & Flag::CENTERING_INT) != Flag::NONE) Serial.println("CENTERING_INT set"); 
+  if((~flags & settings & Flag::CENTERING_INT) != Flag::NONE) Serial.println("CENTERING_INT cleared"); 
 }
 
 void Robot::adjustXP(Fixed adjustment) {
@@ -230,6 +242,16 @@ void Robot::adjustBaseSpeed(Fixed adjustment) {
   base_speed += adjustment;
   Serial.print("Speed = ");
   Serial.println(base_speed.getInt());
+}
+
+void Robot::ReportWheelSpeeds() {
+  for(int i = 0; i < 4; i++) {
+    Fixed report = wheels[i].getActualSpeed();
+    Serial.print("Wheel ");
+    Serial.print(i);
+    Serial.print("-->");
+    Serial.println(report.getInt());
+  }
 }
 
 SortBot::SortBot() : SortingSystem(Robot::motor_shields[0].getStepper(200, 2), Robot::motor_shields[2].getMotor(1), Robot::motor_shields[1].getStepper(200, 2)) {}

@@ -11,8 +11,8 @@ class MagnetArm {
     Adafruit_StepperMotor* motor;
     Adafruit_DCMotor* magnet;
     void goToHeight(int);
-    void magnetize() const;
-    void demagnetize() const;
+    void magnetize();
+    void demagnetize();
   public:
     MagnetArm(Adafruit_StepperMotor*, Adafruit_DCMotor*);
     void reset();

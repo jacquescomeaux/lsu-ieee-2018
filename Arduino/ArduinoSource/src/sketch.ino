@@ -49,7 +49,7 @@ void parseCommand() {
     case 'b': robot->travel(Direction::COUNTER_CLOCKWISE, Fixed(10)); break;
     //case 'p': robot->pickUpToken(); break;
     case '|': robot->center(0); break;
-    case '\\': robot->center(4); break;
+    case '\\': robot->toggle(Flag::CENTERING_INT); break;
     default: robot->stop();
   }
 }
