@@ -108,11 +108,13 @@ void Robot::correctErrors() {
 
 void Robot::stop() {
   flags &= ~Flag::FOLLOWING_LINE;
+  flags &= ~Flag::CENTERING_CROSS;
+  flags &= ~Flag::CENTERING_CORNER;
   for(Wheel& w : wheels) w.stop();
 }
 
 void Robot::update() {
-  static const int NUM_TASKS = 7;
+  static const int NUM_TASKS = 8;
   static unsigned long last_ran[NUM_TASKS] = {0};
   unsigned long dt[NUM_TASKS];
   unsigned long time = millis();
@@ -143,14 +145,39 @@ void Robot::update() {
   }
   
   if((dt[6] > 0) ? (last_ran[6] = time) : false) {
-    if((flags & Flag::CENTERING_INT) != Flag::NONE) center(4);
+    if((flags & Flag::CENTERING_CROSS) != Flag::NONE) centerCross(4);
+  }
+  
+  if((dt[7] > 0) ? (last_ran[7] = time) : false) {
+    if((flags & Flag::CENTERING_CORNER) != Flag::NONE) centerCorner(16);
   }
 }
 
-void Robot::center(int offset) {
+void Robot::centerCross(int offset) {
   flags &= ~Flag::FOLLOWING_LINE;
+  flags &= ~Flag::CENTERING_CORNER;
   Fixed xerr, yerr, rerr;
-  line_sensor.getIntersectionErrors(&xerr, &yerr, &rerr, offset);
+  line_sensor.getCrossIntersectionErrors(&xerr, &yerr, &rerr, offset);
+  veer(
+    //PID CONTROLLER
+    //KP * current error     +  KI * accumulated error             +  KD * change in error
+    (pid_terms[0][0] * xerr) + (pid_terms[0][1] * pid_terms[0][3]) + (pid_terms[0][2] * (xerr - pid_terms[0][4])), //x correction
+    (pid_terms[1][0] * yerr) + (pid_terms[1][1] * pid_terms[1][3]) + (pid_terms[1][2] * (yerr - pid_terms[1][4])), //y correction
+    (pid_terms[2][0] * rerr) + (pid_terms[2][1] * pid_terms[2][3]) + (pid_terms[2][2] * (rerr - pid_terms[2][4]))  //rot correction
+  );
+  pid_terms[0][3] += xerr;
+  pid_terms[1][3] += yerr;
+  pid_terms[2][3] += rerr;
+  pid_terms[0][4]  = xerr;
+  pid_terms[1][4]  = yerr;
+  pid_terms[2][4]  = rerr;
+}
+
+void Robot::centerCorner(int offset) {
+  flags &= ~Flag::FOLLOWING_LINE;
+  flags &= ~Flag::CENTERING_CROSS;
+  Fixed xerr, yerr, rerr;
+  line_sensor.getCornerIntersectionErrors(&xerr, &yerr, &rerr, offset);
   veer(
     //PID CONTROLLER
     //KP * current error     +  KI * accumulated error             +  KD * change in error
@@ -242,8 +269,10 @@ void Robot::toggle(Flag settings) {
   if((~flags & settings & Flag::PRINTING_LINE) != Flag::NONE) Serial.println("PRINTING_LINE cleared"); 
   if((flags & settings & Flag::STOPPING_INT) != Flag::NONE) Serial.println("STOPPING_INT set"); 
   if((~flags & settings & Flag::STOPPING_INT) != Flag::NONE) Serial.println("STOPPING_INT cleared"); 
-  if((flags & settings & Flag::CENTERING_INT) != Flag::NONE) Serial.println("CENTERING_INT set"); 
-  if((~flags & settings & Flag::CENTERING_INT) != Flag::NONE) Serial.println("CENTERING_INT cleared"); 
+  if((flags & settings & Flag::CENTERING_CROSS) != Flag::NONE) Serial.println("CENTERING_CROSS set"); 
+  if((~flags & settings & Flag::CENTERING_CROSS) != Flag::NONE) Serial.println("CENTERING_CROSS cleared"); 
+  if((flags & settings & Flag::CENTERING_CORNER) != Flag::NONE) Serial.println("CENTERING_CORNER set"); 
+  if((~flags & settings & Flag::CENTERING_CORNER) != Flag::NONE) Serial.println("CENTERING_CORNER cleared"); 
 }
 
 void Robot::adjustPID(unsigned int var, unsigned int term, Fixed adjustment) {

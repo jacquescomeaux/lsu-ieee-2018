@@ -26,7 +26,7 @@ int main() {
     cv::imshow("Live Video", frame);
     if(cv::waitKey(33) >= 0) break;
     
-    bool bSuccess = cap.read(frame);
+/*    bool bSuccess = cap.read(frame);
     if(!bSuccess) break;
     cv::Mat imgHSV;
     cv::cvtColor(frame, imgHSV, cv::COLOR_BGR2HSV);
@@ -39,7 +39,7 @@ int main() {
     cv::imshow("Thresholded Image", imgThresholded);
     cv::imshow("Original", frame);
     if(cv::waitKey(1) == 27) break;
-  }
+  */}
 
   return 0;
 }
