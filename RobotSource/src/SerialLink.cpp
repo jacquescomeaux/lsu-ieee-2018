@@ -1,56 +1,57 @@
 #include "../include/SerialLink.h"
 
-//#include <libserialport.h>
+#include <libserialport.h>
 
-#include "../include/rs232.h"
+#include <iostream>
 
-SerialLink::SerialLink() : PORTNUM(24), BAUD(9600), CONFIG("8N1") {
-  RS232_OpenComport(PORTNUM, BAUD, CONFIG);
+int SerialLink::object_count = 0;
+struct sp_port* SerialLink::port;
+
+SerialLink::SerialLink() : PORTNAME("/dev/ttyACM0"), BAUD(9600) {
+  object_count++;
+  std::cout << "Constructing object " << object_count << std::endl;
+  if(object_count == 1) {
+    std::cout << "Initializing serial link " << object_count << std::endl;
+    sp_get_port_by_name(PORTNAME, &port);
+    sp_open(port, SP_MODE_READ_WRITE);	
+    sp_set_baudrate(port, BAUD);
+  }
 }
 
 SerialLink::~SerialLink() {
-  RS232_CloseComport(PORTNUM);
+  std::cout << "Destructing object " << object_count << std::endl;
+  if(object_count == 1) {sp_close(port); std::cout << "Freeing serial link " << object_count << std::endl;}
+  object_count--;
 }
 
 int SerialLink::receiveInt() const {
-  union multinum n;
-  //int bytes_received = 0;
-  SerialLink::receiveBuffer(n.data, sizeof(int));
-  //while(bytes_received != sizeof(int)) bytes_received += RS232_PollComport(PORTNUM, n.data + bytes_received, sizeof(int) - bytes_received);
-  return n.integer;
+  int n;
+  receiveBuffer(&n, sizeof(int));
+  return n;
 }
 
 float SerialLink::receiveFloat() const {
-  union multinum n;
-  SerialLink::receiveBuffer(n.data, sizeof(float));
-  //float bytes_received = 0;
-  //while(bytes_received != sizeof(float)) bytes_received += RS232_PollComport(PORTNUM, n.data + bytes_received, sizeof(float) - bytes_received);
-  return n.floating;
+  float n;
+  receiveBuffer(&n, sizeof(float));
+  return n;
 }
 
 void SerialLink::transmitChar(char c) const {
-  SerialLink::transmitBuffer(&c, sizeof(char));
+  transmitBuffer(&c, sizeof(char));
 }
 
 void SerialLink::transmitInt(int n) const {
-  //union multinum n;
-  //n.integer = t;
-  //RS232_SendBuf(PORTNUM, n.data, sizeof(int));
-  SerialLink::transmitBuffer(&n, sizeof(int));
+  transmitBuffer(&n, sizeof(int));
 }
 
 void SerialLink::transmitFloat(float n) const {
-  //union multinum n;
-  //n.floating = t;
-  //RS232_SendBuf(PORTNUM, n.data, sizeof(float));
-  SerialLink::transmitBuffer(&n, sizeof(float));
+  transmitBuffer(&n, sizeof(float));
 }
 
-void SerialLink::receiveBuffer(void* buf, int size) const {
-  int bytes_received = 0;
-  while(bytes_received != size) RS232_PollComport(PORTNUM, static_cast<unsigned char*>(buf) + bytes_received, size - bytes_received);
+void SerialLink::receiveBuffer(void* buf, size_t size) const {
+  sp_blocking_read(port, buf, size, 0);
 }
 
-void SerialLink::transmitBuffer(void* buf, int size) const {
-  RS232_SendBuf(PORTNUM, static_cast<unsigned char*>(buf), size);
+void SerialLink::transmitBuffer(void* buf, size_t size) const {
+  sp_nonblocking_write(port, buf, size);
 }

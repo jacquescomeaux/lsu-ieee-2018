@@ -31,7 +31,7 @@ void Controller::coverLine(Direction dir, int num_tokens) const {
   for(int i = 0; i < num_tokens; i++) {
     robot.center();
     if(robot.tokenSeen()) robot.sortToken();
-    robot.followUntilIntersection(dir);
+    if(i < num_tokens - 1) robot.followUntilIntersection(dir);
   }
 }
 
@@ -41,4 +41,4 @@ void Controller::runAlgorithm() const {
     robot.followUntilIntersection(follow_sequence[i]);
     coverLine(cover_sequence[i], 4);
   }
-};
+}

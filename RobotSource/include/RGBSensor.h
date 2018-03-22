@@ -11,4 +11,4 @@ class RGBSensor : private SerialLink {
     Color getColor() const;
 };
 
-#endif
+#endif///RGBSENSOR_H

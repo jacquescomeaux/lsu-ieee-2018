@@ -6,7 +6,7 @@
 
 class SortBot;
 
-class Controller {
+class Controller : private SerialLink {
   private:
     SortBot& robot;
     const int NUM_LINES;
@@ -19,4 +19,4 @@ class Controller {
     void runAlgorithm() const;
 };
 
-#endif
+#endif//CONTROLLER_H

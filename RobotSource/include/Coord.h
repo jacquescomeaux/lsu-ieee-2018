@@ -9,4 +9,4 @@ class Coord {
     float dist(Coord) const; //distance between this coord and another coord
 };
 
-#endif
+#endif//COORD_H

@@ -10,7 +10,7 @@ std::string Camera::getName() const {
   return name;
 }
 
-bool Camera::onLine() const {return false;}
+bool Camera::onLine() const {return true;}
 
 bool Camera::atIntersection() const {return true;}
 

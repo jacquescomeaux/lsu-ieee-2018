@@ -20,4 +20,4 @@ class Token {
     Color getColor() const;
 };
 
-#endif
+#endif//TOKEN_H

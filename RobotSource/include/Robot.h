@@ -35,4 +35,4 @@ class SortBot : public Robot, public SortingSystem {
     const Controller control;
 };
 
-#endif
+#endif//ROBOT_H

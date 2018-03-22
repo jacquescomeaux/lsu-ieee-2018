@@ -8,8 +8,8 @@ Board::Board() : Board(8, 8) {}
 Board::Board(float l, float w) :
   length(l),
   width(w),
-  NUM_HOLES(24),
   NUM_COLORS(7),
+  NUM_HOLES(24),
   SQUARES {
     Coord(-3.5f,  3.5f),     //Red
     Coord(-3.5f,  0.0f),     //Green
@@ -77,7 +77,7 @@ Coord Board::getEnd() const {
 
 void Board::checkTokens() const {
   if(tokens.empty()) return;
-  for(int i = 0; i < tokens.size(); i++) {
+  for(unsigned int i = 0; i < tokens.size(); i++) {
     float x = tokens[i].getLocation().x;
     float y = tokens[i].getLocation().y;
     Color c = tokens[i].getColor();

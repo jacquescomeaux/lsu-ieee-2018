@@ -16,4 +16,4 @@ class MagnetArm : private SerialLink {
     void dropTokens() const;
 };
 
-#endif
+#endif//MAGNETARM_H

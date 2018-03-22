@@ -13,4 +13,4 @@ class LED : private SerialLink {
     bool isOn() const;
 };
 
-#endif
+#endif//LED_H
