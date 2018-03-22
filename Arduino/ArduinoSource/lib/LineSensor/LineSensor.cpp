@@ -30,7 +30,7 @@ Fixed LineSensor::getLinePosition(int offset, int range, bool along_arc) {
   Fixed weighted = 0;
   Fixed total = 0;
   for(int32_t i = 0 - range; i <= range; i++) {
-    Fixed pos = along_arc ? i : SINES[i];
+    Fixed pos = along_arc ? i : SINES[i % 32];
     weighted +=  Fixed(1000) * pos * Fixed(static_cast<int32_t>(sensor_values[(i + offset + 32) % 32]));
     total += Fixed(static_cast<int32_t>(sensor_values[(i + offset + 32) % 32]));
   }
@@ -84,10 +84,10 @@ void LineSensor::getLineErrors(Fixed* x, Fixed* y, Fixed* rot, int offset, int r
   */
   *rot = (b + f) * SINES[fi] * SINES[fi]
        + (r + l) * COSINES[ri] * COSINES[ri];
-  f = getLinePosition(fi, range, false);
-  b = getLinePosition(bi, range, false);
-  l = getLinePosition(li, range, false);
-  r = getLinePosition(ri, range, false);
+  f = getLinePosition(fi, range, true);
+  b = getLinePosition(bi, range, true);
+  l = getLinePosition(li, range, true);
+  r = getLinePosition(ri, range, true);
   *x = (b - f) * SINES[fi];
   *y = (r - l)  * COSINES[ri];
   /*Serial.print("x: ");
