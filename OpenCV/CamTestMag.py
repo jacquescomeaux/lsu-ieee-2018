@@ -7,6 +7,7 @@ picam = cv2.VideoCapture(0)
 
 while True:
         ret,  img=picam.read()
+	#img=cv2.resize(img,(340,220))
 
         cv2.imshow("picam", img)
 

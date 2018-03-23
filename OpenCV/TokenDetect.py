@@ -74,14 +74,14 @@ def trackSquare( lowBound, upBound):
                 cv2.rectangle(img,(x,y),(x+w,y+h),(0,0,255),2)
 
 	if conts:
-		return true
+		return True
 
 while True:
 	ret, img=cam.read()
 	img=cv2.resize(img,(340,220))
 
 	# disable camera after capturing img
-	cam.release()
+	#cam.release()
 
 	imgHSV=cv2.cvtColor( img, cv2.COLOR_BGR2HSV )
 
@@ -116,9 +116,9 @@ while True:
 	if (count==1):
 		print("Detection Successful")
 		break
-	else if (count<0):
+	elif (count<0):
 		print("No color detected")
-	else if (count>1):
+	elif (count>1):
 		print("Multiple colors detected")
 
 	# Show Image
