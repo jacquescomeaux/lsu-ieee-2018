@@ -8,7 +8,7 @@ class MagnetArm {
     const uint16_t RPM;
     const int /*step_amount,*/ bot_target, /*mid_target,*/ top_target, total_steps;
     //bool moving;
-    int position, target_position;
+    int position;
     Adafruit_StepperMotor* motor;
     void goToHeight(int);
     void magnetize() const;
