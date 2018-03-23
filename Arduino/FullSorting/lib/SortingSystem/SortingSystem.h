@@ -20,10 +20,8 @@ class SortingSystem {
     MagnetArm token_arm;
     LED token_light;
     SortingPlate storage_plate;
-  protected:
-    SortingSystem();
-    SortingSystem(Adafruit_StepperMotor*, Adafruit_DCMotor*, Adafruit_StepperMotor*);
   public:
+    SortingSystem(Adafruit_StepperMotor*, Adafruit_DCMotor*, Adafruit_StepperMotor*);
     void pickUpToken();
     void storeToken(Color);
     void dropNextTokenStack();

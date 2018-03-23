@@ -6,19 +6,18 @@
 class MagnetArm {
   private:
     const uint16_t RPM;
-    const int /*step_amount,*/ bot_target, /*mid_target,*/ top_target, total_steps;
-    //bool moving;
+    const int bot_target, top_target, total_steps;
     int position, target_position;
     Adafruit_StepperMotor* motor;
+    Adafruit_DCMotor* magnet;
     void goToHeight(int);
-    void magnetize() const;
-    void demagnetize() const;
+    void magnetize();
+    void demagnetize();
   public:
-    MagnetArm(Adafruit_StepperMotor*);
-    //void ready();
+    MagnetArm(Adafruit_StepperMotor* , Adafruit_DCMotor*);
     void reset();
     void pickUpToken();
-    void storeToken() const;
+    void storeToken();
 };
 
 #endif//MAGNETARM_H

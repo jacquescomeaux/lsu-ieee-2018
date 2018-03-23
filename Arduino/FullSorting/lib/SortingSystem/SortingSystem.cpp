@@ -38,8 +38,7 @@ void SortingSystem::continueSorting() {
       else state += storage_plate.continueMoving();
     }
     else if(state == 1) {
-      if(token_arm.ready()) token_arm.storeToken();
-      else state += token_arm.continueMoving();
+      token_arm.storeToken();
       state++;
     }
     else if(state == 2) {

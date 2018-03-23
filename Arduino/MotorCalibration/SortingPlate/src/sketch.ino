@@ -7,13 +7,14 @@ bool paused;
 void setup() {
   Adafruit_MotorShield AFMS(0x61);
   AFMS.begin();
-  test_plate = new SortingPlate(AFMS.getStepper(200, 1));
+  test_plate = new SortingPlate(AFMS.getStepper(200, 2));
   Serial.begin(9600);
   Serial.write("Sorting Plate Ready");
   paused = true;
 }
 
 void parseCommand(char c) {
+  String s;
   switch(c) {
     case 'p':
       Serial.println(test_plate->ready()?"Ready":"Not ready");
@@ -22,14 +23,16 @@ void parseCommand(char c) {
       Serial.println("Resetting plate"); 
       test_plate->reset();
       break;
-    case 'c':
+    case 'j':
+      while(!Serial.available());
       c = Serial.read();
-      Serial.println("Rotating CW"); 
-      test_plate->rotateCW(static_cast<int>(c));
-      break;
-    case 'x':
+      s = c;
       Serial.println("Rotating CCW"); 
-      test_plate->rotateCCW();
+      test_plate->rotateCCW(static_cast<unsigned int>(s.toInt()));
+      break;
+    case 'k':
+      Serial.println("Rotating CW"); 
+      test_plate->rotateCW();
       break;
     case ' ':
       paused = !paused;
@@ -42,5 +45,5 @@ void parseCommand(char c) {
 
 void loop() {
   if(Serial.available()) parseCommand(Serial.read());
-  test_plate->continueMoving();
+  if(!paused) test_plate->continueMoving();
 }
