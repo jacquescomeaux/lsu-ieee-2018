@@ -9,9 +9,33 @@ void parseCommand(char c) {
       Serial.println("Picking up token"); 
       sorter->pickUpToken();
       break;
-    case 's':
+    case 'R':
       Serial.println("Storing Token"); 
       sorter->storeToken(Color::RED);
+      break;
+    case 'G':
+      Serial.println("Storing Token"); 
+      sorter->storeToken(Color::GREEN);
+      break;
+    case 'B':
+      Serial.println("Storing Token"); 
+      sorter->storeToken(Color::BLUE);
+      break;
+    case 'C':
+      Serial.println("Storing Token"); 
+      sorter->storeToken(Color::CYAN);
+      break;
+    case 'M':
+      Serial.println("Storing Token"); 
+      sorter->storeToken(Color::MAGENTA);
+      break;
+    case 'Y':
+      Serial.println("Storing Token"); 
+      sorter->storeToken(Color::YELLOW);
+      break;
+    case 'K':
+      Serial.println("Storing Token"); 
+      sorter->storeToken(Color::GRAY);
       break;
     case 'd':
       Serial.println("Resetting arm"); 

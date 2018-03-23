@@ -60,11 +60,6 @@ void Robot::checkEdges() {
 
 void Robot::checkDestination() {
   for(int i = 0; i < 2; i++) {
-    /*//Debug Serial Printing
-    Serial.print("current_wheel_pos: ");
-    Serial.println(wheels[i].getPosition().getInt());
-    Serial.print("target_wheel_pos: ");
-    Serial.println(target_wheel_pos[i].getInt());*/
     if((wheels[i].getSpeed() > Fixed(0)) != (wheels[i].getPosition() >= target_wheel_pos[i])) continue;
     flags &= ~Flag::TRAVEL_TO_DST;
     stop();
@@ -104,13 +99,6 @@ void Robot::correctErrors() {
     (pid_terms[1][0] * avgs[1]) + (pid_terms[1][1] * pid_terms[1][3]) + (pid_terms[1][2] * (avgs[1] - pid_terms[1][4])), //y correction
     (pid_terms[2][0] * avgs[2]) + (pid_terms[2][1] * pid_terms[2][3]) + (pid_terms[2][2] * (avgs[2] - pid_terms[2][4]))  //rot correction
   );
-  /*veer(
-    //PID CONTROLLER
-    //KP * current error     +  KI * accumulated error             +  KD * change in error
-    (pid_terms[0][0] * xerr) + (pid_terms[0][1] * pid_terms[0][3]) + (pid_terms[0][2] * (xerr - pid_terms[0][4])), //x correction
-    (pid_terms[1][0] * yerr) + (pid_terms[1][1] * pid_terms[1][3]) + (pid_terms[1][2] * (yerr - pid_terms[1][4])), //y correction
-    (pid_terms[2][0] * rerr) + (pid_terms[2][1] * pid_terms[2][3]) + (pid_terms[2][2] * (rerr - pid_terms[2][4]))  //rot correction
-  );*/
   pid_terms[0][3] += xerr;
   pid_terms[1][3] += yerr;
   pid_terms[2][3] += rerr;
@@ -195,13 +183,6 @@ void Robot::centerCross(int offset) {
     (pid_terms[1][0] * avgs[1]) + (pid_terms[1][1] * pid_terms[1][3]) + (pid_terms[1][2] * (avgs[1] - pid_terms[1][4])), //y correction
     (pid_terms[2][0] * avgs[2]) + (pid_terms[2][1] * pid_terms[2][3]) + (pid_terms[2][2] * (avgs[2] - pid_terms[2][4]))  //rot correction
   );
-  /*veer(
-    //PID CONTROLLER
-    //KP * current error     +  KI * accumulated error             +  KD * change in error
-    (pid_terms[0][0] * xerr) + (pid_terms[0][1] * pid_terms[0][3]) + (pid_terms[0][2] * (xerr - pid_terms[0][4])), //x correction
-    (pid_terms[1][0] * yerr) + (pid_terms[1][1] * pid_terms[1][3]) + (pid_terms[1][2] * (yerr - pid_terms[1][4])), //y correction
-    (pid_terms[2][0] * rerr) + (pid_terms[2][1] * pid_terms[2][3]) + (pid_terms[2][2] * (rerr - pid_terms[2][4]))  //rot correction
-  );*/
   pid_terms[0][3] += xerr;
   pid_terms[1][3] += yerr;
   pid_terms[2][3] += rerr;
