@@ -6,7 +6,7 @@ Robot::Robot() :
     MotorShield(0x62), //wheels 2 and 4; sorting plate 
     MotorShield(0x60)  //magnet
   },
-  stopped(true);
+  stopped(true),
   flags(Flag::NONE),
   pid_terms {
     //Proportional //Integral    //Derivitave  //Accum.  //Last error
@@ -128,7 +128,7 @@ bool Robot::ready() {
   int stop = digitalRead(A9);
   if(go == HIGH) stopped = false;
   if(stop == HIGH) stopped = true;
-  return stopped;
+  return !stopped;
 }
 
 void Robot::update() {
@@ -170,7 +170,7 @@ void Robot::update() {
     if((flags & Flag::CENTERING_CORNER) != Flag::NONE) centerCorner(16);
   }
   
-  if(!robot->ready()) stop();
+  if(!ready()) stop();
 }
 
 void Robot::centerCross(int offset) {
