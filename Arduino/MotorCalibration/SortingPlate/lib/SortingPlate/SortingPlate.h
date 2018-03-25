@@ -6,18 +6,18 @@
 class SortingPlate {
   private:
     const uint16_t RPM;
-    const int step_amount, target_step, total_steps;
+    const unsigned int step_amount, target_step, total_steps;
     bool moving;
-    int position, target_position, bottom_offset;
+    unsigned int position, target_position, bottom_offset;
     Adafruit_StepperMotor* motor;
-    void stepForward(int);
-    void stepBackward(int);
+    void stepForward(unsigned int);
+    void stepBackward(unsigned int);
   public:
     SortingPlate(Adafruit_StepperMotor*);
     bool ready();
     void reset();
-    void rotateCW(int);
-    void rotateCCW();
+    void rotateCCW(unsigned int);
+    void rotateCW();
     int continueMoving();
 };
 

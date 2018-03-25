@@ -7,11 +7,11 @@
 
 SortBot* robot;
 
-void setPins() { //allows pins 18-21 to be used with the Encoders. **If the robot stops functioning comment this out.**
+void setPins() { //allows pins to be used with the Encoders.
   pinMode(18, INPUT);
   pinMode(19, INPUT);
-  pinMode(20, INPUT);
-  pinMode(21, INPUT);
+  pinMode(16, INPUT);
+  pinMode(17, INPUT);
 }
 
 void test() {
@@ -25,12 +25,14 @@ void receivePIDCommand(unsigned int var) {
   unsigned char param2 = Serial.read();
   unsigned int term;
   Fixed adjustment;
-  if(param1 == '1') term = 0;
-  else if(param1 == '2') term = 1;
-  else if(param1 == '3') term = 2;
+  if(param1 == '1') {term = 0; Serial.println("P");}
+  else if(param1 == '2') {term = 1; Serial.println("I");}
+  else if(param1 == '3') {term = 2; Serial.println("D");}
   else return;
   if(param2 == '9') adjustment = Fixed(-0.001);
   else if(param2 == '0') adjustment = Fixed(0.001);
+  else if(param2 == '8') adjustment = Fixed(-0.01);
+  else if(param2 == '-') adjustment = Fixed(0.01);
   else return;
   robot->adjustPID(var, term, adjustment); 
 }
@@ -56,17 +58,20 @@ void parseCommand() {
     case 'f': robot->toggle(Flag::FOLLOWING_LINE); break;
     case 'v': robot->toggle(Flag::PRINTING_LINE); break;
     case 'h': robot->toggle(Flag::STOPPING_INT); break;
-    case '1': Serial.println("Adjusting x"); receivePIDCommand(0); break;
-    case '2': Serial.println("Adjusting r"); receivePIDCommand(1); break;
-    case '3': Serial.println("Adjusting rot"); receivePIDCommand(2); break;
+    case '1': Serial.print("Adjusting x"); receivePIDCommand(0); break;
+    case '2': Serial.print("Adjusting y"); receivePIDCommand(1); break;
+    case '3': Serial.print("Adjusting rot"); receivePIDCommand(2); break;
     case '<': robot->adjustBaseSpeed(Fixed(-10)); break;
     case '>': robot->adjustBaseSpeed(Fixed(10)); break;
     case 't': test(); break;
     case 'g': robot->travel(Direction::FRONT, Fixed(11), Fixed(40)); break;
     case 'b': robot->travel(Direction::COUNTER_CLOCKWISE, Fixed(10)); break;
-    //case 'p': robot->pickUpToken(); break;
+    case 'p': robot->pickUpToken(); break;
+    case 'm': robot->storeToken(Color::RED); break;
+    case 'l': robot->dropNextTokenStack(); break;
     //case '|': robot->center(0); break;
-    case '\\': robot->toggle(Flag::CENTERING_INT); break;
+    case '|': robot->toggle(Flag::CENTERING_CROSS); break;
+    case '\\': robot->toggle(Flag::CENTERING_CORNER); break;
     default: robot->stop();
   }
 }

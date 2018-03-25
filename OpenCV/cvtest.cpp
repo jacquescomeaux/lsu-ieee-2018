@@ -52,7 +52,21 @@ cv2.imwrite('subpixel5.png',img)
     drawContours(mc, contours, contours.size() - 1, cv::Scalar(0, 0, 255), 1);
     */cv::imshow("Live Video", dst);
     if(cv::waitKey(33) >= 0) break;
-  }
+    
+/*    bool bSuccess = cap.read(frame);
+    if(!bSuccess) break;
+    cv::Mat imgHSV;
+    cv::cvtColor(frame, imgHSV, cv::COLOR_BGR2HSV);
+    cv::Mat imgThresholded;
+    cv::inRange(imgHSV, cv::Scalar(iLowH, iLowS, iLowV), cv::Scalar(iHighH, iHighS, iHighV), imgThresholded);
+    cv::erode(imgThresholded, imgThresholded, cv::getStructuringElement(cv::MORPH_ELLIPSE, cv::Size(5, 5)));
+    cv::dilate(imgThresholded, imgThresholded, cv::getStructuringElement(cv::MORPH_ELLIPSE, cv::Size(5, 5)));
+    cv::dilate(imgThresholded, imgThresholded, cv::getStructuringElement(cv::MORPH_ELLIPSE, cv::Size(5, 5)));
+    cv::erode(imgThresholded, imgThresholded, cv::getStructuringElement(cv::MORPH_ELLIPSE, cv::Size(5, 5)));
+    cv::imshow("Thresholded Image", imgThresholded);
+    cv::imshow("Original", frame);
+    if(cv::waitKey(1) == 27) break;
+  */}
 
   return 0;
 }

@@ -9,7 +9,8 @@ enum class Flag : uint8_t {
   PRINTING_EDGE    = 0x01 << 3,
   TRAVEL_TO_DST    = 0x01 << 4,
   STOPPING_INT     = 0x01 << 5,
-  CENTERING_INT    = 0x01 << 6
+  CENTERING_CROSS  = 0x01 << 6,
+  CENTERING_CORNER = 0x01 << 7
 };
 
 inline bool operator==(Flag a, Flag b) {return static_cast<uint8_t>(a) == static_cast<uint8_t>(b);}

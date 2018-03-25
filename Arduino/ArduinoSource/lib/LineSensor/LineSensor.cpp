@@ -26,13 +26,12 @@ void LineSensor::readSensors() {
   qtrrc2.readCalibrated(&sensor_values[NUM_PINS/2]); 
 }
 
-Fixed LineSensor::getLinePosition(int offset, int range) {
-  //qtrrc1.readCalibrated(sensor_values);
-  //qtrrc2.readCalibrated(&sensor_values[NUM_PINS/2]);
+Fixed LineSensor::getLinePosition(int offset, int range, bool along_arc) {
   Fixed weighted = 0;
   Fixed total = 0;
-  for(int32_t i = 0 - range; i <= range; i++) { 
-    weighted +=  Fixed(1000) * Fixed(i) * Fixed(static_cast<int32_t>(sensor_values[(i + offset + 32) % 32]));
+  for(int32_t i = 0 - range; i <= range; i++) {
+    Fixed pos = along_arc ? i : SINES[i % 32];
+    weighted +=  Fixed(1000) * pos * Fixed(static_cast<int32_t>(sensor_values[(i + offset + 32) % 32]));
     total += Fixed(static_cast<int32_t>(sensor_values[(i + offset + 32) % 32]));
   }
   return weighted/total;
@@ -48,8 +47,8 @@ void LineSensor::getLineErrors(Fixed* x, Fixed* y, Fixed* rot, Direction dir, in
     case(Direction::NONE): break;
     case(Direction::FRONT): getLineErrors(x, y, rot, 8, range); break;
     case(Direction::BACK): getLineErrors(x, y, rot, 24, range); break;
-    case(Direction::LEFT): getLineErrors(x, y, rot, 15, range); break;
-    case(Direction::RIGHT): getLineErrors(x, y, rot, 31, range); break;
+    case(Direction::LEFT): getLineErrors(x, y, rot, 16, range); break;
+    case(Direction::RIGHT): getLineErrors(x, y, rot, 0, range); break;
     case(Direction::FRONT_LEFT): getLineErrors(x, y, rot, 12, range); break;
     case(Direction::FRONT_RIGHT): getLineErrors(x, y, rot, 4, range); break;
     case(Direction::BACK_LEFT): getLineErrors(x, y, rot, 20, range); break;
@@ -61,26 +60,15 @@ void LineSensor::getLineErrors(Fixed* x, Fixed* y, Fixed* rot, Direction dir, in
 }
 
 void LineSensor::getLineErrors(Fixed* x, Fixed* y, Fixed* rot, int offset, int range) {
-  //qtrrc1.readCalibrated(sensor_values);
-  //qtrrc2.readCalibrated(&sensor_values[NUM_PINS/2]);
   readSensors();
   int fi = offset % 16;
   int bi = fi + 16;
   int li = ((offset + 24) % 16) + 8;
   int ri = (li + 16) % 32;
-  /*Serial.print("fi: ");
-  Serial.println(fi);
-  Serial.print("bi: ");
-  Serial.println(bi);
-  Serial.print("ri: ");
-  Serial.println(ri);
-  Serial.print("li: ");
-  Serial.println(li);
-  */
-  Fixed f = getLinePosition(fi, range);
-  Fixed b = getLinePosition(bi, range);
-  Fixed l = getLinePosition(li, range);
-  Fixed r = getLinePosition(ri, range);
+  Fixed f = getLinePosition(fi, range, true);
+  Fixed b = getLinePosition(bi, range, true);
+  Fixed l = getLinePosition(li, range, true);
+  Fixed r = getLinePosition(ri, range, true);
   /*Serial.print("f:");
   Serial.println(f.getInt());
   Serial.print("b: ");
@@ -96,6 +84,10 @@ void LineSensor::getLineErrors(Fixed* x, Fixed* y, Fixed* rot, int offset, int r
   */
   *rot = (b + f) * SINES[fi] * SINES[fi]
        + (r + l) * COSINES[ri] * COSINES[ri];
+  f = getLinePosition(fi, range, true);
+  b = getLinePosition(bi, range, true);
+  l = getLinePosition(li, range, true);
+  r = getLinePosition(ri, range, true);
   *x = (b - f) * SINES[fi];
   *y = (r - l)  * COSINES[ri];
   /*Serial.print("x: ");
@@ -107,13 +99,24 @@ void LineSensor::getLineErrors(Fixed* x, Fixed* y, Fixed* rot, int offset, int r
   */
 }
 
-void LineSensor::getIntersectionErrors(Fixed* x, Fixed* y, Fixed* rot, int offset) {
+void LineSensor::getCrossIntersectionErrors(Fixed* x, Fixed* y, Fixed* rot, int offset) {
   Fixed x_p, y_p, rot_p, x_s, y_s, rot_s;
   getLineErrors(&x_p, &y_p, &rot_p, offset, 4);
   getLineErrors(&x_s, &y_s, &rot_s, (offset + 8) % 32, 4);
   *x = x_p + x_s;
   *y = y_p + y_s;
   *rot = SINES[4] * SINES[4] * (rot_p + rot_s);
+}
+
+void LineSensor::getCornerIntersectionErrors(Fixed* x, Fixed* y, Fixed* rot, int offset) {
+  int bi = (offset + 16) % 32;
+  int di = (bi + 4) % 32;
+  Fixed x_d, y_d, rot_d;
+  getLineErrors(&x_d, &y_d, &rot_d, di, 4);
+  Fixed b = getLinePosition(bi, 4, false);
+  *x = x_d// + b * COSINES[di];
+  *y = y_d// + b * SINES[di];
+  *rot = rot_d;
 }
 
 int LineSensor::countLinePeaks(int range) {

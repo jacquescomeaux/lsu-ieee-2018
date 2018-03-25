@@ -10,7 +10,6 @@ SortingSystem::SortingSystem(Adafruit_StepperMotor* arm_motor, Adafruit_DCMotor*
   }
 
 void SortingSystem::pickUpToken() {
-  Serial.println("picking up token my man");
   //token_arm.pickUpToken();
   task_buffer.push(9);
 }
