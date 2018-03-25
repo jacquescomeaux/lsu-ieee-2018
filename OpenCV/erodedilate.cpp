@@ -25,7 +25,7 @@ int main( int argc, char** argv ) {
   /// Load an image
   VideoCapture cap(0);
   if(!cap.isOpened()) return -1;
-  while(true) {
+//  while(true) {
     cap >> src;
     if( !src.data )
     { return -1; }
@@ -57,8 +57,9 @@ int main( int argc, char** argv ) {
     Erosion( 0, 0 );
    // Dilation( 0, 0 );
   
-    while(waitKey(1) == 27);
-  }
+  waitKey(0);
+  //  while(waitKey(1) == 27);
+  //}
   return 0;
 }
 
