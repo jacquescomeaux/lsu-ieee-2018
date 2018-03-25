@@ -5,7 +5,7 @@ Robot::Robot() :
     MotorShield(0x61),
     MotorShield(0x62)
   },
-  seen(false),
+  stopped(true),
   flags(Flag::NONE),
   NUM_TASKS(6),
   last_ran {0},
@@ -31,6 +31,8 @@ Robot::Robot() :
   },
   line_sensor() {
     stop();
+    pinMode(A8, INPUT);
+    pinMode(A9, INPUT);
 }
 
 void Robot::checkEdges() {
@@ -57,7 +59,17 @@ void Robot::correctErrors() {
 
 void Robot::stop() {
   flags &= ~Flag::FOLLOWING_LINE;
+  flags &= ~Flag::CENTERING_CROSS;
+  flags &= ~Flag::CENTERING_CORNER;
   for(Wheel& w : wheels) w.stop();
+}
+
+bool Robot::ready() {
+  int go = digitalRead(A8);
+  int stop = digitalRead(A9);
+  if(go == HIGH) stopped = false;
+  if(stop == HIGH) stopped = true;
+  return stopped;
 }
 
 void Robot::update() {

@@ -16,7 +16,7 @@ class Robot {
   protected:
     MotorShield motor_shields[2]; 
   private:
-    bool seen;
+    bool stopped;
     Flag flags;
     const int NUM_TASKS;
     int last_ran[6];
@@ -35,6 +35,8 @@ class Robot {
     void correctErrors();
   public:
     Robot();
+    bool ready();
+
     //stop immediately
     void stop();
 

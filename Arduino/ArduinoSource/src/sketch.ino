@@ -49,6 +49,7 @@ void parseCommand() {
 void setup() {
   robot = new SortBot();
   robot->stop();
+  while(!robot->ready());
   Serial.begin(9600);
   Serial.println("Robot ready");
   delay(500);
