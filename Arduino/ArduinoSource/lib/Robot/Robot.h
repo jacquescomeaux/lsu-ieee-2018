@@ -73,6 +73,7 @@ class Robot {
 class SortBot : public Robot, public SortingSystem {
   public:
     SortBot();
+    void update();
 };
 
 #endif//ROBOT_H

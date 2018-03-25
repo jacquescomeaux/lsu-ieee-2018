@@ -1,7 +1,7 @@
 #include <SortingPlate.h>
 
 SortingPlate::SortingPlate(Adafruit_StepperMotor* m) :
-  RPM(60),
+  RPM(100),
   step_amount(25),
   target_step(250),
   total_steps(2000),
@@ -15,12 +15,12 @@ SortingPlate::SortingPlate(Adafruit_StepperMotor* m) :
 
 void SortingPlate::stepForward(unsigned int s) {
   //if(s >= total_steps) return;
-  motor->step(static_cast<uint16_t>(s), FORWARD, SINGLE);
+  motor->step(static_cast<uint16_t>(s), FORWARD, DOUBLE);
 }
 
 void SortingPlate::stepBackward(unsigned int s) {
   //if(s < 0 || s >= total_steps) return;
-  motor->step(static_cast<uint16_t>(s), BACKWARD, SINGLE);
+  motor->step(static_cast<uint16_t>(s), BACKWARD, DOUBLE);
 }
 
 bool SortingPlate::ready() {

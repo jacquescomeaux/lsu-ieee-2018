@@ -15,12 +15,12 @@ SortingPlate::SortingPlate(Adafruit_StepperMotor* m) :
 
 void SortingPlate::stepForward(unsigned int s) {
   //if(s >= total_steps) return;
-  motor->step(static_cast<uint16_t>(s), FORWARD, SINGLE);
+  motor->step(static_cast<uint16_t>(s), FORWARD, DOUBLE);
 }
 
 void SortingPlate::stepBackward(unsigned int s) {
   //if(s < 0 || s >= total_steps) return;
-  motor->step(static_cast<uint16_t>(s), BACKWARD, SINGLE);
+  motor->step(static_cast<uint16_t>(s), BACKWARD, DOUBLE);
 }
 
 bool SortingPlate::ready() {
@@ -46,7 +46,7 @@ void SortingPlate::rotateCCW(unsigned int dst) {
 
 void SortingPlate::rotateCW() {
   if(moving) return;
-  stepForward(target_step);
+  stepForward(target_step);//+11);
   motor->release();
   position += total_steps;
   position -= target_step;

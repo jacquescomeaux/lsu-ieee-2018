@@ -7,11 +7,11 @@
 
 SortBot* robot;
 
-void setPins() { //allows pins 18-21 to be used with the Encoders. **If the robot stops functioning comment this out.**
+void setPins() { //allows pins to be used with the Encoders.
   pinMode(18, INPUT);
   pinMode(19, INPUT);
-  pinMode(20, INPUT);
-  pinMode(21, INPUT);
+  pinMode(16, INPUT);
+  pinMode(17, INPUT);
 }
 
 void test() {
@@ -66,7 +66,9 @@ void parseCommand() {
     case 't': test(); break;
     case 'g': robot->travel(Direction::FRONT, Fixed(11), Fixed(40)); break;
     case 'b': robot->travel(Direction::COUNTER_CLOCKWISE, Fixed(10)); break;
-    //case 'p': robot->pickUpToken(); break;
+    case 'p': robot->pickUpToken(); break;
+    case 'm': robot->storeToken(Color::RED); break;
+    case 'l': robot->dropNextTokenStack(); break;
     //case '|': robot->center(0); break;
     case '|': robot->toggle(Flag::CENTERING_CROSS); break;
     case '\\': robot->toggle(Flag::CENTERING_CORNER); break;

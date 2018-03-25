@@ -2,6 +2,7 @@
 #include <SortingSystem.h>
 
 SortingSystem* sorter;
+bool paused;
 
 void parseCommand(char c) {
   switch(c) {
@@ -38,8 +39,12 @@ void parseCommand(char c) {
       sorter->storeToken(Color::GRAY);
       break;
     case 'd':
-      Serial.println("Resetting arm"); 
+      Serial.println("Dropping Next Token Stack"); 
       sorter->dropNextTokenStack();
+      break;
+    case ' ':
+      paused = !paused;
+      Serial.println(paused?"Paused":"Resumed");
       break;
     default:
       break; 
@@ -47,17 +52,18 @@ void parseCommand(char c) {
 }
 
 void setup() {
+  paused = false;
   Adafruit_MotorShield AFMS[3];
   for(int i = 0; i < 3; i++) AFMS[i] = Adafruit_MotorShield(0x60 + i);
   for(auto& m : AFMS) m.begin();
   sorter = new SortingSystem(AFMS[1].getStepper(200, 2), AFMS[0].getMotor(1), AFMS[2].getStepper(200, 2));
   Serial.begin(9600);
-  Serial.write("Magnet Arm Ready");
+  Serial.println("Sorting System Ready");
 }
 
 void loop() {
   while(true) {
     if(Serial.available()) parseCommand(Serial.read());
-    sorter->continueSorting();
+    if(!paused) sorter->continueSorting();
   }
 }

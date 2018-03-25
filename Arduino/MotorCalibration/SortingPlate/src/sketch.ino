@@ -5,11 +5,11 @@ SortingPlate* test_plate;
 bool paused;
 
 void setup() {
-  Adafruit_MotorShield AFMS(0x61);
+  Adafruit_MotorShield AFMS(0x62);
   AFMS.begin();
   test_plate = new SortingPlate(AFMS.getStepper(200, 2));
   Serial.begin(9600);
-  Serial.write("Sorting Plate Ready");
+  Serial.println("Sorting Plate Ready");
   paused = true;
 }
 

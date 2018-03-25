@@ -11,9 +11,9 @@ void MagnetArm::demagnetize() {
 MagnetArm::MagnetArm(Adafruit_StepperMotor* mot, Adafruit_DCMotor* mag) :
   RPM(30),
   bot_target(0),
-  top_target(400),
-  total_steps(440),
-  position(0),
+  top_target(455),
+  total_steps(460),
+  position(455),
   motor(mot),
   magnet(mag) {
     motor->setSpeed(RPM);
@@ -26,9 +26,10 @@ void MagnetArm::goToHeight(int s) {
   Serial.println(s);
   Serial.print("from ");
   Serial.println(position);
+  Serial.println();
   if(s < 0 || s >= total_steps) return;
-  if(s - position > 0) motor->step(static_cast<uint16_t>(s-position), FORWARD, SINGLE);
-  else motor->step(static_cast<uint16_t>(-1*(s-position)), BACKWARD, SINGLE);
+  if(s - position > 0) motor->step(static_cast<uint16_t>(s-position), FORWARD, DOUBLE);
+  else motor->step(static_cast<uint16_t>(-1*(s-position)), BACKWARD, DOUBLE);
   motor->release();
   position = s;
 }

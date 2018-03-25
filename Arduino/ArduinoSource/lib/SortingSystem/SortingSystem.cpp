@@ -2,13 +2,16 @@
 
 SortingSystem::SortingSystem(Adafruit_StepperMotor* arm_motor, Adafruit_DCMotor* magnet, Adafruit_StepperMotor* plate_motor) :
   NUM_COLORS(8),
-  COLOR_POSITIONS {0, 6, 5, 4, 1, 2, 3, 7},
+  COLOR_POSITIONS {0, 4, 5, 6, 3, 2, 1, 7},
   state(0),
   token_arm(arm_motor, magnet),
-  storage_plate(plate_motor) {}
+  storage_plate(plate_motor) {
+    token_arm.reset();
+  }
 
 void SortingSystem::pickUpToken() {
-  token_arm.pickUpToken();
+  Serial.println("picking up token my man");
+  //token_arm.pickUpToken();
   task_buffer.push(9);
 }
 
@@ -32,12 +35,14 @@ void SortingSystem::continueSorting() {
     task_buffer.pop();
   }
   else {
+    //Serial.println("hi");
     int pos = COLOR_POSITIONS[current_task];
     if(state == 0) {
       if(storage_plate.ready()) storage_plate.rotateCCW(pos);
       else state += storage_plate.continueMoving();
     }
     else if(state == 1) {
+      delay(20);
       token_arm.storeToken();
       state++;
     }

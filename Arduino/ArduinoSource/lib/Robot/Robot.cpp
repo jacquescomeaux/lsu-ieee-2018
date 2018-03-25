@@ -21,8 +21,8 @@ Robot::Robot() :
     //Interrupt Pins: 2, 3, 18, 19, 20, 21
     Wheel(motor_shields[0].getMotor(1),  2, 4), //FRONT_LEFT
     Wheel(motor_shields[0].getMotor(2),  3, 5), //BACK_LEFT
-    Wheel(motor_shields[1].getMotor(1), 18, 8), //BACK_RIGHT
-    Wheel(motor_shields[1].getMotor(2), 19, 9)  //FRONT_RIGHT
+    Wheel(motor_shields[1].getMotor(1), 18, 16), //BACK_RIGHT
+    Wheel(motor_shields[1].getMotor(2), 19, 17)  //FRONT_RIGHT
   },
   edge_detectors {
     ProximitySensor( 6,  7), //RIGHT(0)
@@ -158,6 +158,9 @@ void Robot::update() {
   if((dt[7] > 0) ? (last_ran[7] = time) : false) {
     if((flags & Flag::CENTERING_CORNER) != Flag::NONE) centerCorner(16);
   }
+
+  //ontinueSorting();
+
 }
 
 void Robot::centerCross(int offset) {
@@ -345,3 +348,8 @@ void Robot::reportWheelSpeeds() {
 }
 
 SortBot::SortBot() : SortingSystem(Robot::motor_shields[0].getStepper(200, 2), Robot::motor_shields[2].getMotor(1), Robot::motor_shields[1].getStepper(200, 2)) {}
+
+void SortBot::update() {
+  continueSorting();
+  Robot::update();
+}
