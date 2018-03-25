@@ -6,6 +6,7 @@ Robot::Robot() :
     MotorShield(0x62), //wheels 2 and 4; sorting plate 
     MotorShield(0x60)  //magnet
   },
+  stopped(true);
   flags(Flag::NONE),
   pid_terms {
     //Proportional //Integral    //Derivitave  //Accum.  //Last error
@@ -120,6 +121,14 @@ void Robot::stop() {
   for(Wheel& w : wheels) w.stop();
 }
 
+bool Robot::ready() {
+  int go = digitalRead(A8);
+  int stop = digitalRead(A9);
+  if(go == HIGH) stopped = false;
+  if(stop == HIGH) stopped = true;
+  return stopped;
+}
+
 void Robot::update() {
   static const int NUM_TASKS = 8;
   static unsigned long last_ran[NUM_TASKS] = {0};
@@ -158,9 +167,8 @@ void Robot::update() {
   if((dt[7] > 0) ? (last_ran[7] = time) : false) {
     if((flags & Flag::CENTERING_CORNER) != Flag::NONE) centerCorner(16);
   }
-
-  //ontinueSorting();
-
+  
+  if(!robot->ready()) stop();
 }
 
 void Robot::centerCross(int offset) {

@@ -16,6 +16,7 @@ class Robot {
   protected:
     MotorShield motor_shields[3]; 
   private:
+    bool stopped;
     Flag flags;
     Fixed pid_terms[3][5], base_speed, veer_amount, acceleration;
     Direction current_direction;
@@ -35,6 +36,8 @@ class Robot {
     void reportWheelSpeeds(); //print current wheel speeds for debugging
   public:
     Robot();
+
+    bool ready();
 
     bool debug;
 
