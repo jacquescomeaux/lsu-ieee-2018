@@ -34,6 +34,8 @@ Robot::Robot() :
   line_sensor(),
   debug(false) {  //if we wrap our Serial.prints checking for this we can toggle it more easily than commenting.
     stop();
+    pinMode(A8, INPUT);
+    pinMode(A9, INPUT);
 }
 
 void Robot::resolveDirection(Direction dir, Fixed* x, Fixed* y, Fixed* rot) {
