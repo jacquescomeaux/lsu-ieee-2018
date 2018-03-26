@@ -20,8 +20,8 @@ Robot::Robot() :
     //Interrupt Pins: 2, 3, 18, 19, 20, 21
     Wheel(motor_shields[0].getMotor(1),  2,  4), //FRONT_LEFT
     Wheel(motor_shields[0].getMotor(2),  3,  5), //BACK_LEFT
-    Wheel(motor_shields[1].getMotor(1), 18, 8), //BACK_RIGHT
-    Wheel(motor_shields[1].getMotor(2), 19, 9)  //FRONT_RIGHT
+    Wheel(motor_shields[1].getMotor(1), 18, 16), //BACK_RIGHT
+    Wheel(motor_shields[1].getMotor(2), 19, 17)  //FRONT_RIGHT
   },
   edge_detectors {
     ProximitySensor(6, 7),   //FRONT(0)
@@ -145,7 +145,7 @@ void Robot::travel(Direction dir, Fixed speed, Fixed distance) {
   if(dir == BACK) {
 	stepsToTravel = 0 - stepsToTravel; //set steps negative
   }
-  for(int i = 0; i < 4; i++) {
+  for(int i = 0; i < 2; i++) { //only 2 working encoders
     current_wheel_pos[i] = wheels[i].getPosition();
     target_wheel_pos[i] = current_wheel_pos[i] + stepsToTravel;
   }
@@ -155,7 +155,7 @@ void Robot::travel(Direction dir, Fixed speed, Fixed distance) {
 }
 
 void Robot::checkDestination() {
-  for(int i = 0; i < 4; i++) {
+  for(int i = 0; i < 2; i++) { //2 working encoders
     current_wheel_pos[i] = wheels[i].getPosition();
     Fixed speed = wheels[i].getSpeed();
     bool forward; //check if wheel is moving in positive/negative direction
@@ -209,7 +209,7 @@ void Robot::veer(Direction dir, Fixed amount) {
     case(Direction::BACK_RIGHT): veer(amount * SQRT_HALF, ZERO - amount * SQRT_HALF, ZERO); break;
     case(Direction::CLOCKWISE): veer(ZERO, ZERO, amount); break;
     case(Direction::COUNTER_CLOCKWISE): veer(ZERO, ZERO, ZERO - amount); break;
-    default: break; 
+    default: break;
   }
 }
 
