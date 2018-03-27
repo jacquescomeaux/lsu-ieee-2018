@@ -7,6 +7,7 @@
 class Camera {
   private:
     std::string name;
+    int countLines() const;
   public:
     Camera();
     Camera(std::string name);

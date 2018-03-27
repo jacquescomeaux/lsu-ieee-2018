@@ -2,17 +2,17 @@
 
 Robot::Robot() :
   motor_shields {
-    MotorShield(0x61), //wheels 0 and 1; token arm
-    MotorShield(0x62), //wheels 2 and 4; sorting plate 
+    MotorShield(0x61), //wheels
+    MotorShield(0x62), //1:Token Arm 2:Sorting Plate
     MotorShield(0x60)  //magnet
   },
   stopped(true),
   flags(Flag::NONE),
   pid_terms {
     //Proportional //Integral    //Derivitave  //Accum.  //Last error
-    {Fixed(0.012), Fixed(0.000), Fixed(0.060), Fixed(0), Fixed(0)}, //x terms  //P: 0.014 D: 0.0600
-    {Fixed(0.005), Fixed(0.000), Fixed(0.050), Fixed(0), Fixed(0)}, //y terms  //P: 0.005 D: 0.0500
-    {Fixed(0.037), Fixed(0.000), Fixed(0.100), Fixed(0), Fixed(0)}, //rot terms //best so far: P: 0.037 D: 0.1
+    {Fixed(0.012), Fixed(0.0004), Fixed(0.060), Fixed(0), Fixed(0)}, //x terms  //P: 0.014 D: 0.0600
+    {Fixed(0.005), Fixed(0.0004), Fixed(0.050), Fixed(0), Fixed(0)}, //y terms  //P: 0.005 D: 0.0500
+    {Fixed(0.037), Fixed(0.0004), Fixed(0.100), Fixed(0), Fixed(0)}, //rot terms //best so far: P: 0.037 D: 0.1
   },
   base_speed(Fixed(90)),
   veer_amount(Fixed(10)),
@@ -22,14 +22,14 @@ Robot::Robot() :
     //Interrupt Pins: 2, 3, 18, 19, 20, 21
     Wheel(motor_shields[0].getMotor(1),  2, 4), //FRONT_LEFT
     Wheel(motor_shields[0].getMotor(2),  3, 5), //BACK_LEFT
-    Wheel(motor_shields[1].getMotor(1), 18, 16), //BACK_RIGHT
-    Wheel(motor_shields[1].getMotor(2), 19, 17)  //FRONT_RIGHT
+    Wheel(motor_shields[0].getMotor(3), 18, 16), //BACK_RIGHT
+    Wheel(motor_shields[0].getMotor(4), 19, 17)  //FRONT_RIGHT
   },
   edge_detectors {
     ProximitySensor( 6,  7), //RIGHT(0)
     ProximitySensor( 8,  9), //FRONT(1)
     ProximitySensor(10, 11), //LEFT(2)
-    ProximitySensor(12, 14)  //BACK(3)
+    //ProximitySensor(12, 14)  //BACK(3)
   },
   line_sensor(),
   debug(false) {  //if we wrap our Serial.prints checking for this we can toggle it more easily than commenting.
@@ -53,12 +53,29 @@ void Robot::resolveDirection(Direction dir, Fixed* x, Fixed* y, Fixed* rot) {
     case(Direction::BACK_RIGHT):  assign(POS_SQRT_HALF, NEG_SQRT_HALF, ZERO); break;
     case(Direction::CLOCKWISE):         assign(ZERO, ZERO, NEG_ONE); break;
     case(Direction::COUNTER_CLOCKWISE): assign(ZERO, ZERO, POS_ONE); break;
-    default: break; 
+    default: break;
   }
 }
 
 void Robot::checkEdges() {
-  for(ProximitySensor& s : edge_detectors) if(s.edgeDetected()) stop();
+  //for(ProximitySensor& s : edge_detectors) if(s.edgeDetected()) stop();
+
+  //DEBUGGING CODE
+  for (int s = 0; s < 3; s++) {
+	Serial.print("S: ");
+	Serial.print(s);
+	Serial.print("  ");
+	if (edge_detectors[s].edgeDetected()) {}
+	Serial.print(" | ");
+  }
+  Serial.println(" | ");
+
+  /* COMMENTED OUT WORKING CODE
+  if(current_direction == Direction::FRONT) if(edge_detectors[1].edgeDetected()) stop();
+  //if(current_direction == Direction::BACK) if(edge_detectors[3].edgeDetected()) stop();
+  if(current_direction == Direction::LEFT) if(edge_detectors[2].edgeDetected()) stop();
+  if(current_direction == Direction::RIGHT) if(edge_detectors[0].edgeDetected()) stop();
+  */
 }
 
 void Robot::checkDestination() {
@@ -82,11 +99,12 @@ void Robot::correctWheelSpeeds(const Fixed* speeds) {
 }
 
 void Robot::correctErrors() {
+  if(((flags & Flag::CENTERING_CORNER) != Flag::NONE) || ((flags & Flag::CENTERING_CROSS) != Flag::NONE)) for(int i = 0; i < 3; i++) pid_terms[i][3] = Fixed(0);
   static const Fixed TENTH = 0.1;
   static unsigned long t = 0;
   static Fixed prev_errors[3][5] = {0};
   Fixed xerr, yerr, rerr;
-  line_sensor.getLineErrors(&xerr, &yerr, &rerr, current_direction, 7);
+  line_sensor.getLineErrors(&xerr, &yerr, &rerr, current_direction, 2);
   prev_errors[0][t] = xerr;
   prev_errors[1][t] = yerr;
   prev_errors[2][t] = rerr;
@@ -121,6 +139,7 @@ void Robot::stop() {
   flags &= ~Flag::CENTERING_CROSS;
   flags &= ~Flag::CENTERING_CORNER;
   for(Wheel& w : wheels) w.stop();
+  for(int i = 0; i < 3; i++) pid_terms[i][3] = Fixed(0);
 }
 
 bool Robot::ready() {
@@ -147,15 +166,19 @@ void Robot::update() {
   }
   
   if((dt[2] > 10) ? (last_ran[2] = time) : false) {
-    if((flags & Flag::CALIBRATING_LINE) != Flag::NONE) line_sensor.calibrateSensors();
+    if((flags & Flag::CALIBRATING_LINE) != Flag::NONE) {
+      line_sensor.calibrateSensors();
+      line_sensor.printCalibratedValues();
+    }
   }
   
   if((dt[3] > 1000) ? (last_ran[3] = time) : false) {
     if((flags & Flag::PRINTING_LINE) != Flag::NONE) line_sensor.printReadings(); 
   }
   
-  if((dt[4] > 50) ? (last_ran[4] = time) : false) {
-    if((flags & Flag::STOPPING_INT) != Flag::NONE) if(line_sensor.countLinePeaks(1) == 4) stop();//checkEdges();
+  if((dt[4] > 0) ? (last_ran[4] = time) : false) {
+    //if((flags & Flag::STOPPING_INT) != Flag::NONE) if(line_sensor.countLinePeaks(1) == 4) stop();
+    checkEdges();
   }
   
   if((dt[5] > 100) ? (last_ran[5] = time) : false) {
@@ -163,7 +186,7 @@ void Robot::update() {
   }
   
   if((dt[6] > 0) ? (last_ran[6] = time) : false) {
-    if((flags & Flag::CENTERING_CROSS) != Flag::NONE) centerCross(4);
+    if((flags & Flag::CENTERING_CROSS) != Flag::NONE) centerCross(0);
   }
   
   if((dt[7] > 0) ? (last_ran[7] = time) : false) {
@@ -174,6 +197,7 @@ void Robot::update() {
 }
 
 void Robot::centerCross(int offset) {
+  if(((flags & Flag::FOLLOWING_LINE) != Flag::NONE) || ((flags & Flag::CENTERING_CORNER) != Flag::NONE)) for(int i = 0; i < 3; i++) pid_terms[i][3] = Fixed(0);
   flags &= ~Flag::FOLLOWING_LINE;
   flags &= ~Flag::CENTERING_CORNER;
   static const Fixed TENTH = 0.1;
@@ -211,6 +235,7 @@ void Robot::centerCross(int offset) {
 }
 
 void Robot::centerCorner(int offset) {
+  if(((flags & Flag::FOLLOWING_LINE) != Flag::NONE) || ((flags & Flag::CENTERING_CROSS) != Flag::NONE)) for(int i = 0; i < 3; i++) pid_terms[i][3] = Fixed(0);
   flags &= ~Flag::FOLLOWING_LINE;
   flags &= ~Flag::CENTERING_CROSS;
   static const Fixed TENTH = 0.1;
@@ -357,7 +382,7 @@ void Robot::reportWheelSpeeds() {
   }
 }
 
-SortBot::SortBot() : SortingSystem(Robot::motor_shields[0].getStepper(200, 2), Robot::motor_shields[2].getMotor(1), Robot::motor_shields[1].getStepper(200, 2)) {}
+SortBot::SortBot() : SortingSystem(Robot::motor_shields[1].getStepper(200, 1), Robot::motor_shields[2].getMotor(1), Robot::motor_shields[1].getStepper(200, 2)) {}
 
 void SortBot::update() {
   continueSorting();

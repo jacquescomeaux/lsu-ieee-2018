@@ -1,7 +1,7 @@
 #include <SortingPlate.h>
 
 SortingPlate::SortingPlate(Adafruit_StepperMotor* m) :
-  RPM(100),
+  RPM(250),
   step_amount(25),
   target_step(250),
   total_steps(2000),

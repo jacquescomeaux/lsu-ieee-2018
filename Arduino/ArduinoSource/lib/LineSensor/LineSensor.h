@@ -27,6 +27,8 @@ class LineSensor {
     int countLinePeaks(int range);
     void printReadings();
     void printLinePeaks();
+    void printCalibratedValues();
+    void printErrors(Fixed, Fixed, Fixed);
 };
 
 #endif//LINESENSOR_H

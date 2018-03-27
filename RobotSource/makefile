@@ -1,6 +1,6 @@
 CXX = g++
 CXX_FLAGS = -std=c++11 -Wall #-I/usr/local/include
-LFLAGS = $(shell pkg-config --cflags --libs libserialport)
+LFLAGS = $(shell pkg-config --cflags --libs libserialport opencv)
 
 BIN = mybin
 BUILD_DIR = ./build

@@ -1,6 +1,8 @@
 #ifndef CONTROLLER_H
 #define CONTROLLER_H
 
+#include "SerialLink.h"
+
 #include "Direction.h"
 #include <vector> 
 

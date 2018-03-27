@@ -24,10 +24,10 @@ SerialLink::~SerialLink() {
   object_count--;
 }
 
-void SerialLink::waitForAck() const {
+/*void SerialLink::waitForAck() const {
   void* buf;
   sp_blocking_read(port, buf, 1, 0);
-}
+}*/
 
 int SerialLink::receiveInt() const {
   int n;

@@ -11,14 +11,14 @@ void MagnetArm::demagnetize() {
 MagnetArm::MagnetArm(Adafruit_StepperMotor* mot, Adafruit_DCMotor* mag) :
   RPM(60),
   bot_target(0),
-  top_target(450),
-  total_steps(455),
-  position(455),
+  top_target(455),
+  total_steps(460),
+  position(460),
   motor(mot),
   magnet(mag) {
     motor->setSpeed(RPM);
     magnet->run(RELEASE);
-    magnet->setSpeed(255);
+    magnet->setSpeed(250);
 }
 
 void MagnetArm::goToHeight(int s) {
