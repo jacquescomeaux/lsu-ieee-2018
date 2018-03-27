@@ -10,7 +10,7 @@ int main(int argc, char* argv[]) {
     cv::Mat src, img, eroded, temp, element;
     cap >> src;
     cv::cvtColor(src, src, CV_BGR2GRAY);
-    //src = src(cv::Rect(490,255,305,315));
+    src = src(cv::Rect(200,165,235,240));
     cv::bilateralFilter(src, img, 10, 250, 250);
     cv::threshold(img, img, 180, 255, cv::THRESH_BINARY_INV); 
     cv::Mat skel(img.size(), CV_8UC1, cv::Scalar(0));
