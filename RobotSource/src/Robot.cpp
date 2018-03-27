@@ -11,8 +11,8 @@ void Robot::moveUntilLine(Direction dir) const {
   if(dir == Direction::CLOCKWISE) return;
   if(dir == Direction::COUNTER_CLOCKWISE) return;
   move(dir);
-  while(!token_cam.onLine());
-  stop();
+  //while(!token_cam.onLine());
+  //stop();
 }
 
 void Robot::followUntilIntersection(Direction dir) const {
