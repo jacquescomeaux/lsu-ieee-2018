@@ -13,7 +13,7 @@ import numpy as np
 lowBoundBRGB = np.array([0,0,0])
 upBoundBRGB = np.array([40,40,40])
 
-cam=cv2.VideoCapture(1)
+cam=cv2.VideoCapture(0)
 kernelOpen=np.ones((5,5))
 kernelClose=np.ones((20,20))
 
@@ -155,13 +155,13 @@ while True:
 	# export picture w/ contours to png file
 	# cv2.imwrite("Calibration.png", img)
 
+
+        cv2.imshow("cam",img)
 	cv2.waitKey()
 
-        # cv2.imshow("cam",img)
-
         # BREAK ON ESCAPE KEY
-	# if cv2.waitKey(10) == 27:
-	#        break
+	#if cv2.waitKey(10) == 27:
+	 #       break
 
 cam.release();
 cv2.destroyAllWindows;
