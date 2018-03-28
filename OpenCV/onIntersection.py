@@ -13,7 +13,7 @@ import numpy as np
 lowBoundBRGB = np.array([0,0,0])
 upBoundBRGB = np.array([40,40,40])
 
-cam=cv2.VideoCapture(0)
+cam=cv2.VideoCapture(1)
 kernelOpen=np.ones((5,5))
 kernelClose=np.ones((20,20))
 

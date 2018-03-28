@@ -30,38 +30,39 @@ def trackSquare( lowBound, upBound):
 	maskFinal=maskClose
 	_,conts,h=cv2.findContours( maskFinal.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE )
 
-	#cv2.drawContours(img,conts,-1,(255,0,0),3)
+	cv2.drawContours(img,conts,-1,(255,0,0),3)
 	if conts:
-        	#for i in range(len(conts)):
-                	#x,y,w,h=cv2.boundingRect(conts[i])
-                	#cv2.rectangle(img,(x,y),(x+w,y+h),(0,0,255),2)
-	  cnt = conts[0]
-	  M = cv2.moments(cnt)
-	  cx = int(M['m10']/M['m00'])
-	  cy = int(M['m01']/M['m00'])
-
-	  print('Calculated from Moments')
-	  print('cx')
-	  print(cx)
-	  print('cy')
-	  print(cy)
-
-	  (x,y),radius = cv2.minEnclosingCircle(cnt)
-	  center = (int(x),int(y))
-	  radius = int(radius)
-	  cv2.circle(img, center, radius, (0,255,0),2)
-	  print('Calculated using Minimum Enclosing Circle')
-	  print('x')
-	  print(x)
-	  print('y')
-	  print(y)
+          for i in range(len(conts)):
+              x,y,w,h=cv2.boundingRect(conts[i])
+              cv2.rectangle(img,(x,y),(x+w,y+h),(0,0,255),2)
+          
+          cnt = conts[0]
+          M = cv2.moments(cnt)
+          cx = int(M['m10']/M['m00'])
+          cy = int(M['m01']/M['m00'])
+        
+          print('Calculated from Moments')
+          print('cx')
+          print(cx)
+          print('cy')
+          print(cy)
+        
+          (x,y),radius = cv2.minEnclosingCircle(cnt)
+          center = (int(x),int(y))
+          radius = int(radius)
+          cv2.circle(img, center, radius, (0,255,0),2)
+          print('Calculated using Minimum Enclosing Circle')
+          print('x')
+      	  print(x)
+      	  print('y')
+       	  print(y)
 
 
 while True:
 	ret, img=cam.read()
-	#img=cv2.resize(img,(340,220))
+	img=cv2.resize(img,(340,220))
 
-	#imgHSV=cv2.cvtColor( img, cv2.COLOR_BGR2HSV )
+	imgHSV=cv2.cvtColor( img, cv2.COLOR_BGR2HSV )
 
         imgCrop=img[Y1:Y2, X1:X2]
 

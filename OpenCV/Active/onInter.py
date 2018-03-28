@@ -136,7 +136,7 @@ while True:
         maskCloseGray=cv2.morphologyEx( maskOpenGray, cv2.MORPH_CLOSE, kernelClose )
 
         maskFinalGray=maskCloseGray
-        _,contsG,hG=cv2.findContours( maskFinalGray.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMP$
+        _,contsG,hG=cv2.findContours( maskFinalGray.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMP )
 
         cv2.drawContours(imgGRAY,contsG,-1,(255,0,0),3)
         cv2.imwrite("GRAYCalib.png", imgGRAY)

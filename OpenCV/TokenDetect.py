@@ -54,7 +54,7 @@ upperBoundC=np.array([200,150,200])
 # lowerBoundGr=np.array([0,0,40])
 # upperBoundGr=np.array([0,0,85])
 
-cam=cv2.VideoCapture(1)
+cam=cv2.VideoCapture(0)
 kernelOpen=np.ones((5,5))
 kernelClose=np.ones((20,20))
 

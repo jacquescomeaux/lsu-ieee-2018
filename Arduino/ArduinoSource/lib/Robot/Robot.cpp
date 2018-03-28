@@ -150,14 +150,6 @@ bool Robot::ready() {
   return !stopped;
 }
 
-bool Robot::ready() {
-  int go = digitalRead(A8);
-  int stop = digitalRead(A9);
-  if(go == HIGH) stopped = false;
-  if(stop == HIGH) stopped = true;
-  return stopped;
-}
-
 void Robot::update() {
   static const int NUM_TASKS = 8;
   static unsigned long last_ran[NUM_TASKS] = {0};
