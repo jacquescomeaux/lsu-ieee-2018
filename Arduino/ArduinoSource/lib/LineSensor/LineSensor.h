@@ -16,16 +16,20 @@ class LineSensor {
     unsigned int sensor_values[32];
     Fixed SINES[32], COSINES[32];
     void readSensors();
-    Fixed getLinePosition(int offset, int range);
+    Fixed getLinePosition(int offset, int range, bool along_arc);
   public:
     LineSensor();
     void calibrateSensors();
-    void getLineErrors(Fixed* x, Fixed* y, Fixed* rot, Direction);
-    void getLineErrors(Fixed* x, Fixed* y, Fixed* rot, int);
-    void getIntersectionErrors(Fixed* x, Fixed* y, Fixed* rot, int);
+    void getLineErrors(Fixed* x, Fixed* y, Fixed* rot, Direction, int);
+    void getLineErrors(Fixed* x, Fixed* y, Fixed* rot, int, int);
+    void getCrossIntersectionErrors(Fixed* x, Fixed* y, Fixed* rot, int);
+    void getCornerIntersectionErrors(Fixed* x, Fixed* y, Fixed* rot, int);
+    void precalibrate(int, int);
     int countLinePeaks(int range);
     void printReadings();
     void printLinePeaks();
+    void printCalibratedValues();
+    void printErrors(Fixed, Fixed, Fixed);
 };
 
 #endif//LINESENSOR_H

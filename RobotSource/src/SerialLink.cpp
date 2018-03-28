@@ -24,6 +24,11 @@ SerialLink::~SerialLink() {
   object_count--;
 }
 
+/*void SerialLink::waitForAck() const {
+  void* buf;
+  sp_blocking_read(port, buf, 1, 0);
+}*/
+
 int SerialLink::receiveInt() const {
   int n;
   receiveBuffer(&n, sizeof(int));
@@ -53,5 +58,6 @@ void SerialLink::receiveBuffer(void* buf, size_t size) const {
 }
 
 void SerialLink::transmitBuffer(void* buf, size_t size) const {
-  sp_nonblocking_write(port, buf, size);
+  std::cout << "Writing" << std::endl;
+  sp_blocking_write(port, buf, size, 0);
 }

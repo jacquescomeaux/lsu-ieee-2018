@@ -2,41 +2,88 @@
 
 Robot::Robot() :
   motor_shields {
-    MotorShield(0x61),
-    MotorShield(0x62)
+    MotorShield(0x61), //wheels
+    MotorShield(0x62), //1:Token Arm 2:Sorting Plate
+    MotorShield(0x60)  //magnet
   },
   stopped(true),
   flags(Flag::NONE),
-  NUM_TASKS(6),
-  last_ran {0},
-  XP(Fixed(0.02)),
-  YP(Fixed(0.02)),
-  RotP(Fixed(0.02)),
+  pid_terms {
+    //Proportional //Integral    //Derivitave  //Accum.  //Last error
+    {Fixed(0), Fixed(0), Fixed(0), Fixed(0), Fixed(0)}, //x terms  //P: 0.014 D: 0.0600
+    {Fixed(0), Fixed(0), Fixed(0), Fixed(0), Fixed(0)}, //y terms  //P: 0.005 D: 0.0500
+    {Fixed(0), Fixed(0), Fixed(0), Fixed(0), Fixed(0)}, //rot terms //best so far: P: 0.037 D: 0.1
+  },
   base_speed(Fixed(90)),
   veer_amount(Fixed(10)),
-  acceleration(Fixed(10)),
+  acceleration(Fixed(20)), //previously set at 10
   current_direction(Direction::NONE),
   wheels {
     //Interrupt Pins: 2, 3, 18, 19, 20, 21
-    Wheel(motor_shields[0].getMotor(1),  2,  4), //FRONT_LEFT
-    Wheel(motor_shields[0].getMotor(2),  3,  5), //BACK_LEFT
-    Wheel(motor_shields[1].getMotor(1), 18, 16), //BACK_RIGHT
-    Wheel(motor_shields[1].getMotor(2), 19, 17)  //FRONT_RIGHT
+    Wheel(motor_shields[0].getMotor(1),  2, 4), //FRONT_LEFT
+    Wheel(motor_shields[0].getMotor(2),  3, 5), //BACK_LEFT
+    Wheel(motor_shields[0].getMotor(3), 18, 16), //BACK_RIGHT
+    Wheel(motor_shields[0].getMotor(4), 19, 17)  //FRONT_RIGHT
   },
   edge_detectors {
-    ProximitySensor(6, 7),   //FRONT(0)
-    ProximitySensor(8, 9),   //LEFT(1)
-    ProximitySensor(10, 11), //BACK(2)
-    ProximitySensor(12, 14)  //RIGHT(3)
+    ProximitySensor( 6,  7), //RIGHT(0)
+    ProximitySensor( 8,  9), //FRONT(1)
+    ProximitySensor(10, 11), //LEFT(2)
+    //ProximitySensor(12, 14)  //BACK(3)
   },
-  line_sensor() {
+  line_sensor(),
+  debug(false) {  //if we wrap our Serial.prints checking for this we can toggle it more easily than commenting.
     stop();
     pinMode(A8, INPUT);
     pinMode(A9, INPUT);
 }
 
+void Robot::resolveDirection(Direction dir, Fixed* x, Fixed* y, Fixed* rot) {
+  static const Fixed ZERO = 0, POS_ONE = 1, NEG_ONE = -1, POS_SQRT_HALF = sqrt(0.5), NEG_SQRT_HALF = -1 * sqrt(0.5);
+  auto assign = [&] (Fixed x_new, Fixed y_new, Fixed rot_new) {*x = x_new; *y = y_new; *rot = rot_new;};
+  switch(dir) {
+    case(Direction::NONE): assign(ZERO, ZERO, ZERO); break;
+    case(Direction::FRONT): assign(ZERO, POS_ONE, ZERO); break;
+    case(Direction::BACK):  assign(ZERO, NEG_ONE, ZERO); break;
+    case(Direction::LEFT):  assign(NEG_ONE, ZERO, ZERO); break;
+    case(Direction::RIGHT): assign(POS_ONE, ZERO, ZERO); break;
+    case(Direction::FRONT_LEFT):  assign(NEG_SQRT_HALF, POS_SQRT_HALF, ZERO); break;
+    case(Direction::FRONT_RIGHT): assign(POS_SQRT_HALF, POS_SQRT_HALF, ZERO); break;
+    case(Direction::BACK_LEFT):   assign(NEG_SQRT_HALF, NEG_SQRT_HALF, ZERO); break;
+    case(Direction::BACK_RIGHT):  assign(POS_SQRT_HALF, NEG_SQRT_HALF, ZERO); break;
+    case(Direction::CLOCKWISE):         assign(ZERO, ZERO, NEG_ONE); break;
+    case(Direction::COUNTER_CLOCKWISE): assign(ZERO, ZERO, POS_ONE); break;
+    default: break;
+  }
+}
+
 void Robot::checkEdges() {
-  for(ProximitySensor& s : edge_detectors) if(s.edgeDetected()) stop();
+  //for(ProximitySensor& s : edge_detectors) if(s.edgeDetected()) stop();
+
+  //DEBUGGING CODE
+  for (int s = 0; s < 3; s++) {
+	Serial.print("S: ");
+	Serial.print(s);
+	Serial.print("  ");
+	if (edge_detectors[s].edgeDetected()) {}
+	Serial.print(" | ");
+  }
+  Serial.println(" | ");
+
+  /* COMMENTED OUT WORKING CODE
+  if(current_direction == Direction::FRONT) if(edge_detectors[1].edgeDetected()) stop();
+  //if(current_direction == Direction::BACK) if(edge_detectors[3].edgeDetected()) stop();
+  if(current_direction == Direction::LEFT) if(edge_detectors[2].edgeDetected()) stop();
+  if(current_direction == Direction::RIGHT) if(edge_detectors[0].edgeDetected()) stop();
+  */
+}
+
+void Robot::checkDestination() {
+  for(int i = 0; i < 2; i++) {
+    if((wheels[i].getSpeed() > Fixed(0)) != (wheels[i].getPosition() >= target_wheel_pos[i])) continue;
+    flags &= ~Flag::TRAVEL_TO_DST;
+    stop();
+  }
 }
 
 void Robot::setWheelSpeeds(const Fixed* speeds) {
@@ -52,9 +99,39 @@ void Robot::correctWheelSpeeds(const Fixed* speeds) {
 }
 
 void Robot::correctErrors() {
-  Fixed xerr, yerr, roterr;
-  line_sensor.getLineErrors(&xerr, &yerr, &roterr, current_direction);
-  veer(XP*xerr, YP*yerr, RotP*roterr);
+  if(((flags & Flag::CENTERING_CORNER) != Flag::NONE) || ((flags & Flag::CENTERING_CROSS) != Flag::NONE)) for(int i = 0; i < 3; i++) pid_terms[i][3] = Fixed(0);
+  static const Fixed TENTH = 0.1;
+  static unsigned long t = 0;
+  static Fixed prev_errors[3][5] = {0};
+  Fixed xerr, yerr, rerr;
+  line_sensor.getLineErrors(&xerr, &yerr, &rerr, current_direction, 5);
+  prev_errors[0][t] = xerr;
+  prev_errors[1][t] = yerr;
+  prev_errors[2][t] = rerr;
+  Fixed avgs[3];
+  for(int i = 0; i < 3; i++) {
+    for(Fixed f : prev_errors[i]) avgs[i] += f;
+    avgs[i] *= TENTH;
+  }
+  veer(
+    //PID CONTROLLER
+    //KP * current error        +  KI * accumulated error             +  KD * change in error
+    (pid_terms[0][0]  * avgs[0]) + (pid_terms[0][1] * pid_terms[0][3]) + (pid_terms[0][2] * (avgs[0] - pid_terms[0][4])), //x correction
+    (pid_terms[1][0]  * avgs[1]) + (pid_terms[1][1] * pid_terms[1][3]) + (pid_terms[1][2] * (avgs[1] - pid_terms[1][4])), //y correction
+    (pid_terms[2][0]  * avgs[2]) + (pid_terms[2][1] * pid_terms[2][3]) + (pid_terms[2][2] * (avgs[2] - pid_terms[2][4]))  //rot correction
+  );
+  pid_terms[0][3] += xerr;
+  pid_terms[1][3] += yerr;
+  pid_terms[2][3] += rerr;
+  pid_terms[0][4]  = avgs[0];
+  pid_terms[1][4]  = avgs[1];
+  pid_terms[2][4]  = avgs[2];
+  if(debug) {
+    Serial.print("Time");
+    Serial.println(millis());
+    reportWheelSpeeds();
+  }
+  if(++t >= 5) t = 0;
 }
 
 void Robot::stop() {
@@ -62,6 +139,15 @@ void Robot::stop() {
   flags &= ~Flag::CENTERING_CROSS;
   flags &= ~Flag::CENTERING_CORNER;
   for(Wheel& w : wheels) w.stop();
+  for(int i = 0; i < 3; i++) pid_terms[i][3] = Fixed(0);
+}
+
+bool Robot::ready() {
+  int go = digitalRead(A8);
+  int stop = digitalRead(A9);
+  if(go == HIGH) stopped = false;
+  if(stop == HIGH) stopped = true;
+  return !stopped;
 }
 
 bool Robot::ready() {
@@ -73,8 +159,10 @@ bool Robot::ready() {
 }
 
 void Robot::update() {
-  int dt[NUM_TASKS];
-  int time = millis();
+  static const int NUM_TASKS = 8;
+  static unsigned long last_ran[NUM_TASKS] = {0};
+  unsigned long dt[NUM_TASKS];
+  unsigned long time = millis();
   for(int i = 0; i < NUM_TASKS; i++)  dt[i] = time - last_ran[i];
   
   if((dt[0] > 100) ? (last_ran[0] = time) : false) {
@@ -86,7 +174,10 @@ void Robot::update() {
   }
   
   if((dt[2] > 10) ? (last_ran[2] = time) : false) {
-    if((flags & Flag::CALIBRATING_LINE) != Flag::NONE) line_sensor.calibrateSensors();
+    if((flags & Flag::CALIBRATING_LINE) != Flag::NONE) {
+      line_sensor.calibrateSensors();
+      line_sensor.printCalibratedValues();
+    }
   }
   
   if((dt[3] > 1000) ? (last_ran[3] = time) : false) {
@@ -94,19 +185,99 @@ void Robot::update() {
   }
   
   if((dt[4] > 100) ? (last_ran[4] = time) : false) {
+    if((flags & Flag::STOPPING_INT) != Flag::NONE) if(line_sensor.countLinePeaks(1) == 4) stop();
     //checkEdges();
   }
   
   if((dt[5] > 100) ? (last_ran[5] = time) : false) {
     if((flags & Flag::TRAVEL_TO_DST) != Flag::NONE) checkDestination();
   }
+  
+  if((dt[6] > 0) ? (last_ran[6] = time) : false) {
+    if((flags & Flag::CENTERING_CROSS) != Flag::NONE) centerCross(0);
+  }
+  
+  if((dt[7] > 0) ? (last_ran[7] = time) : false) {
+    if((flags & Flag::CENTERING_CORNER) != Flag::NONE) centerCorner(16);
+  }
+  
+  if(!ready()) stop();
 }
 
-void Robot::center(int offset) {
-  stop();
-  Fixed xerr, yerr, roterr;
-  line_sensor.getLineErrors(&xerr, &yerr, &roterr, offset);
-  veer(XP*xerr, YP*yerr, RotP*roterr);
+void Robot::centerCross(int offset) {
+  if(((flags & Flag::FOLLOWING_LINE) != Flag::NONE) || ((flags & Flag::CENTERING_CORNER) != Flag::NONE)) for(int i = 0; i < 3; i++) pid_terms[i][3] = Fixed(0);
+  flags &= ~Flag::FOLLOWING_LINE;
+  flags &= ~Flag::CENTERING_CORNER;
+  static const Fixed TENTH = 0.1;
+  static unsigned long t = 0;
+  static Fixed prev_errors[3][5] = {0};
+  Fixed xerr, yerr, rerr;
+  line_sensor.getCrossIntersectionErrors(&xerr, &yerr, &rerr, offset);
+  prev_errors[0][t] = xerr;
+  prev_errors[1][t] = yerr;
+  prev_errors[2][t] = rerr;
+  Fixed avgs[3];
+  for(int i = 0; i < 3; i++) {
+    for(Fixed f : prev_errors[i]) avgs[i] += f;
+    avgs[i] *= TENTH;
+  }
+  veer(
+    //PID CONTROLLER
+    //KP * current error        +  KI * accumulated error             +  KD * change in error
+    (pid_terms[0][0] * avgs[0]) + (pid_terms[0][1] * pid_terms[0][3]) + (pid_terms[0][2] * (avgs[0] - pid_terms[0][4])), //x correction
+    (pid_terms[1][0] * avgs[1]) + (pid_terms[1][1] * pid_terms[1][3]) + (pid_terms[1][2] * (avgs[1] - pid_terms[1][4])), //y correction
+    (pid_terms[2][0] * avgs[2]) + (pid_terms[2][1] * pid_terms[2][3]) + (pid_terms[2][2] * (avgs[2] - pid_terms[2][4]))  //rot correction
+  );
+  pid_terms[0][3] += xerr;
+  pid_terms[1][3] += yerr;
+  pid_terms[2][3] += rerr;
+  pid_terms[0][4]  = avgs[0];
+  pid_terms[1][4]  = avgs[1];
+  pid_terms[2][4]  = avgs[2];
+  if(debug) {
+    Serial.print("Time");
+    Serial.println(millis());
+    reportWheelSpeeds();
+  }
+  if(++t >= 5) t = 0;
+}
+
+void Robot::centerCorner(int offset) {
+  if(((flags & Flag::FOLLOWING_LINE) != Flag::NONE) || ((flags & Flag::CENTERING_CROSS) != Flag::NONE)) for(int i = 0; i < 3; i++) pid_terms[i][3] = Fixed(0);
+  flags &= ~Flag::FOLLOWING_LINE;
+  flags &= ~Flag::CENTERING_CROSS;
+  static const Fixed TENTH = 0.1;
+  static unsigned long t = 0;
+  static Fixed prev_errors[3][5] = {0};
+  Fixed xerr, yerr, rerr;
+  line_sensor.getCornerIntersectionErrors(&xerr, &yerr, &rerr, offset);
+  prev_errors[0][t] = xerr;
+  prev_errors[1][t] = yerr;
+  prev_errors[2][t] = rerr;
+  Fixed avgs[3];
+  for(int i = 0; i < 3; i++) {
+    for(Fixed f : prev_errors[i]) avgs[i] += f;
+    avgs[i] *= TENTH;
+  }
+  veer(
+    //PID CONTROLLER
+    //KP * current error        +  KI * accumulated error             +  KD * change in error
+    (pid_terms[0][0] * avgs[0]) + (pid_terms[0][1] * pid_terms[0][3]) + (pid_terms[0][2] * (avgs[0] - pid_terms[0][4])), //x correction
+    (pid_terms[1][0] * avgs[1]) + (pid_terms[1][1] * pid_terms[1][3]) + (pid_terms[1][2] * (avgs[1] - pid_terms[1][4])), //y correction
+    (pid_terms[2][0] * avgs[2]) + (pid_terms[2][1] * pid_terms[2][3]) + (pid_terms[2][2] * (avgs[2] - pid_terms[2][4]))  //rot correction
+  );
+  pid_terms[0][3] += xerr;
+  pid_terms[1][3] += yerr;
+  pid_terms[2][3] += rerr;
+  pid_terms[0][4]  = avgs[0];
+  pid_terms[1][4]  = avgs[1];
+  pid_terms[2][4]  = avgs[2];
+  if(debug) {
+    Serial.print("Time");
+    Serial.println(millis());
+    reportWheelSpeeds();
+  }
+  if(++t >= 5) t = 0;
 }
 
 void Robot::move(Direction dir) {
@@ -115,20 +286,9 @@ void Robot::move(Direction dir) {
 
 void Robot::move(Direction dir, Fixed speed) {
   current_direction = dir;
-  switch(dir) {
-    case(Direction::NONE): stop(); break;
-    case(Direction::FRONT): move(ZERO, speed, ZERO); break;
-    case(Direction::BACK): move(ZERO, ZERO - speed, ZERO); break;
-    case(Direction::LEFT): move(ZERO - speed, ZERO, ZERO); break;
-    case(Direction::RIGHT): move(speed, ZERO, ZERO); break;
-    case(Direction::FRONT_LEFT): move(ZERO - speed * SQRT_HALF, speed * SQRT_HALF, ZERO); break;
-    case(Direction::FRONT_RIGHT): move(speed * SQRT_HALF, speed * SQRT_HALF, ZERO); break;
-    case(Direction::BACK_LEFT): move(ZERO - speed * SQRT_HALF, ZERO - speed * SQRT_HALF, ZERO); break;
-    case(Direction::BACK_RIGHT): move(speed * SQRT_HALF, ZERO - speed * SQRT_HALF, ZERO); break;
-    case(Direction::CLOCKWISE): move(ZERO, ZERO, ZERO - speed); break;
-    case(Direction::COUNTER_CLOCKWISE): move(ZERO, ZERO, speed); break;
-    default: break; 
-  }
+  Fixed x, y, rot;
+  resolveDirection(dir, &x, &y, &rot);
+  move(speed * x, speed * y, speed * rot);
 }
 
 void Robot::move(Fixed x, Fixed y, Fixed rot) {
@@ -136,117 +296,82 @@ void Robot::move(Fixed x, Fixed y, Fixed rot) {
   setWheelSpeeds(speeds);
 }
 
-void Robot::travel(Direction dir, Fixed dist) {
-  travel(dir, base_speed, dist);
-}
-
-void Robot::travel(Direction dir, Fixed speed, Fixed distance) {
-  Fixed stepsToTravel = distance * 287; //286.7 steps per inch
-  if(dir == BACK) {
-	stepsToTravel = 0 - stepsToTravel; //set steps negative
-  }
-  for(int i = 0; i < 2; i++) { //only 2 working encoders
-    current_wheel_pos[i] = wheels[i].getPosition();
-    target_wheel_pos[i] = current_wheel_pos[i] + stepsToTravel;
-  }
-  flags |= Flag::TRAVEL_TO_DST; //enable flag
-  Serial.println("Setting Flag TRAVEL_TO_DST");
-  move(dir, speed);
-}
-
-void Robot::checkDestination() {
-  for(int i = 0; i < 2; i++) { //2 working encoders
-    current_wheel_pos[i] = wheels[i].getPosition();
-    Fixed speed = wheels[i].getSpeed();
-    bool forward; //check if wheel is moving in positive/negative direction
-    if(speed > 0) {
-      forward = true;
-    }
-    else {
-      forward = false;
-    }
-    
-    //Debug Serial Printing
-    Serial.print("Wheel ");
-    Serial.print(i);
-    Serial.print(" has ");
-    Serial.print((target_wheel_pos[i] - current_wheel_pos[i]).getInt());
-    Serial.println(" steps remaining.");
-
-    Serial.print("current_wheel_pos: ");
-    Serial.println(current_wheel_pos[i].getInt());
-    Serial.print("target_wheel_pos: ");
-    Serial.println(target_wheel_pos[i].getInt());
-    Serial.print("abs(target_wheel_pos[i]): ");
-    Serial.println(abs(target_wheel_pos[i].getInt()));
-
-    if(forward == true) {
-      if (current_wheel_pos[i] >= target_wheel_pos[i]) {
-        flags &= ~Flag::TRAVEL_TO_DST; //end moveSetDistance
-	stop(); //stop all wheels once 1 wheel has gone desired distance
-      }
-    }
-    else if (current_wheel_pos[i] <= target_wheel_pos[i]) {
-      flags &= ~Flag::TRAVEL_TO_DST;
-      stop();
-    }
-  }
-}
-
 void Robot::veer(Direction dir) {
   veer(dir, veer_amount);
 }
 
 void Robot::veer(Direction dir, Fixed amount) {
-  switch(dir) {
-    case(Direction::NONE): break;
-    case(Direction::BACK): veer(ZERO, ZERO - amount, ZERO); break;
-    case(Direction::LEFT): veer(ZERO - amount, ZERO, ZERO); break;
-    case(Direction::RIGHT): veer(amount, ZERO, ZERO); break;
-    case(Direction::FRONT_LEFT): veer(ZERO - amount * SQRT_HALF, amount * SQRT_HALF, ZERO); break;
-    case(Direction::FRONT_RIGHT): veer(amount * SQRT_HALF, amount * SQRT_HALF, ZERO); break;
-    case(Direction::BACK_LEFT): veer(ZERO - amount * SQRT_HALF, ZERO - amount * SQRT_HALF, ZERO); break;
-    case(Direction::BACK_RIGHT): veer(amount * SQRT_HALF, ZERO - amount * SQRT_HALF, ZERO); break;
-    case(Direction::CLOCKWISE): veer(ZERO, ZERO, amount); break;
-    case(Direction::COUNTER_CLOCKWISE): veer(ZERO, ZERO, ZERO - amount); break;
-    default: break;
-  }
+  Fixed x, y, rot;
+  resolveDirection(dir, &x, &y, &rot);
+  veer(amount * x, amount * y, amount * rot);
 }
 
 void Robot::veer(Fixed x, Fixed y, Fixed rot) {
   const Fixed adjustments[4] = {y + x - rot, y - x - rot, y + x + rot, y - x + rot};
   correctWheelSpeeds(adjustments);
-  //adjustWheelSpeeds(adjustments);
+}
+
+void Robot::steer(Direction dir) {
+  steer(dir, veer_amount);
+}
+
+void Robot::steer(Direction dir, Fixed amount) {
+  Fixed x, y, rot;
+  resolveDirection(dir, &x, &y, &rot);
+  steer(amount * x, amount * y, amount * rot);
+}
+
+void Robot::steer(Fixed x, Fixed y, Fixed rot) {
+  const Fixed adjustments[4] = {y + x - rot, y - x - rot, y + x + rot, y - x + rot};
+  adjustWheelSpeeds(adjustments);
+}
+
+void Robot::travel(Direction dir, Fixed dist) {
+  travel(dir, dist, base_speed);
+}
+
+void Robot::travel(Direction dir, Fixed dist, Fixed speed) {
+  Fixed x, y, rot;
+  resolveDirection(dir, &x, &y, &rot);
+  travel(speed * x, speed * y, speed * rot, dist);
+}
+
+void Robot::travel(Fixed x, Fixed y, Fixed rot, Fixed dist) {
+  static const Fixed STEPS_PER_INCH = 286.7, ZERO = 0, POS_ONE = 1, NEG_ONE = -1;
+  Fixed steps_to_travel = dist * STEPS_PER_INCH;
+  const Fixed speeds[4] = {y + x - rot, y - x - rot, y + x + rot, y - x + rot};
+  for(int i = 0; i < 2; i++) target_wheel_pos[i] = wheels[i].getPosition() + steps_to_travel * ((speeds[i] > ZERO) ? POS_ONE : NEG_ONE);
+  flags |= Flag::TRAVEL_TO_DST;
+  setWheelSpeeds(speeds);
 }
 
 void Robot::toggle(Flag settings) {
   settings &= ~Flag::NONE;
   flags ^= settings;
-  Flag diff = flags ^ settings;
-  if((flags & diff & Flag::CALIBRATING_LINE) != Flag::NONE) Serial.println("CALIBRATING_LINE set");  
-  if((~flags & diff & Flag::CALIBRATING_LINE) != Flag::NONE) Serial.println("CALIBRATING_LINE set");  
-  if((flags & diff & Flag::FOLLOWING_LINE) != Flag::NONE) Serial.println("FOLLOWING_LINE set"); 
-  if((~flags & diff & Flag::FOLLOWING_LINE) != Flag::NONE) Serial.println("FOLLOWING_LINE set"); 
-  if((flags & diff & Flag::PRINTING_LINE) != Flag::NONE) Serial.println("PRINTING_LINE set"); 
-  if((~flags & diff & Flag::PRINTING_LINE) != Flag::NONE) Serial.println("PRINTING_LINE set"); 
+  if((flags & settings & Flag::CALIBRATING_LINE) != Flag::NONE) Serial.println("CALIBRATING_LINE set");  
+  if((~flags & settings & Flag::CALIBRATING_LINE) != Flag::NONE) Serial.println("CALIBRATING_LINE cleared");  
+  if((flags & settings & Flag::FOLLOWING_LINE) != Flag::NONE) Serial.println("FOLLOWING_LINE set"); 
+  if((~flags & settings & Flag::FOLLOWING_LINE) != Flag::NONE) Serial.println("FOLLOWING_LINE cleared"); 
+  if((flags & settings & Flag::PRINTING_LINE) != Flag::NONE) Serial.println("PRINTING_LINE set"); 
+  if((~flags & settings & Flag::PRINTING_LINE) != Flag::NONE) Serial.println("PRINTING_LINE cleared"); 
+  if((flags & settings & Flag::STOPPING_INT) != Flag::NONE) Serial.println("STOPPING_INT set"); 
+  if((~flags & settings & Flag::STOPPING_INT) != Flag::NONE) Serial.println("STOPPING_INT cleared"); 
+  if((flags & settings & Flag::CENTERING_CROSS) != Flag::NONE) Serial.println("CENTERING_CROSS set"); 
+  if((~flags & settings & Flag::CENTERING_CROSS) != Flag::NONE) Serial.println("CENTERING_CROSS cleared"); 
+  if((flags & settings & Flag::CENTERING_CORNER) != Flag::NONE) Serial.println("CENTERING_CORNER set"); 
+  if((~flags & settings & Flag::CENTERING_CORNER) != Flag::NONE) Serial.println("CENTERING_CORNER cleared"); 
 }
 
-void Robot::adjustXP(Fixed adjustment) {
-  XP += adjustment;
-  Serial.print("XP = ");
-  Serial.println(XP.getDouble());
-}
-
-void Robot::adjustYP(Fixed adjustment) {
-  YP += adjustment;
-  Serial.print("YP = ");
-  Serial.println(YP.getDouble());
-}
-
-void Robot::adjustRotP(Fixed adjustment) {
-  RotP += adjustment;
-  Serial.print("RotP = ");
-  Serial.println(RotP.getDouble());
+void Robot::adjustPID(unsigned int var, unsigned int term, Fixed adjustment) {
+  if(var > 2 || term > 2) return;
+  pid_terms[var][term] += adjustment;
+  if(var == 0) Serial.print("X");
+  if(var == 1) Serial.print("Y");
+  if(var == 2) Serial.print("Rot");
+  if(term == 0) Serial.print("P = ");
+  if(term == 1) Serial.print("I = ");
+  if(term == 2) Serial.print("D = ");
+  Serial.println(pid_terms[var][term].getDouble(), 4);
 }
 
 void Robot::adjustBaseSpeed(Fixed adjustment) {
@@ -255,5 +380,19 @@ void Robot::adjustBaseSpeed(Fixed adjustment) {
   Serial.println(base_speed.getInt());
 }
 
-SortBot::SortBot() {}//SortingSystem(Robot::motor_shields[0].getStepper(200, 3), Robot::motor_shields[0].getStepper(200, 3)) {}
-  //needs real pin numbers
+void Robot::reportWheelSpeeds() {
+  for(int i = 0; i < 4; i++) {
+    Fixed report = wheels[i].getActualSpeed();
+    Serial.print("Wheel ");
+    Serial.print(i);
+    Serial.print("-->");
+    Serial.println(report.getInt());
+  }
+}
+
+SortBot::SortBot() : SortingSystem(Robot::motor_shields[1].getStepper(200, 1), Robot::motor_shields[2].getMotor(1), Robot::motor_shields[1].getStepper(200, 2)) {}
+
+void SortBot::update() {
+  continueSorting();
+  Robot::update();
+}

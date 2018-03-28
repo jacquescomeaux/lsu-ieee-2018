@@ -16,15 +16,15 @@
 class Robot : public Drivetrain, public LineFollower {
   private:
     //Coord location;
-    const Camera token_cam;
-    const Camera location_cam;
+    Camera token_cam;
+    Camera location_cam;
     const SensorRing line_sensor_array;
     const ProximitySensor prox_sensors[4];
   public:
     Robot();
     Coord getLocation() const;
-    void moveUntilLine(Direction) const;
-    void followUntilIntersection(Direction) const;
+    void moveUntilLine(Direction);
+    void followUntilIntersection(Direction);
     void center() const;
     bool tokenSeen() const;
 };

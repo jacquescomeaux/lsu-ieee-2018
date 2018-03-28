@@ -9,8 +9,8 @@ enum class Color : int {
   CYAN = 4,
   MAGENTA = 5,
   YELLOW = 6,
-  WHITE = 7,
-  GRAY = 8
+  GRAY = 7,
+  WHITE = 8
 };
 
 #endif

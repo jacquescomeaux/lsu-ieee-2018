@@ -6,7 +6,6 @@
 #include <Adafruit_MotorShield.h>
 #include <MagnetArm.h>
 #include <LED.h>
-//#include <RGBSensor.h>
 #include <SortingPlate.h>
 
 #include <ArduinoSTL.h>
@@ -20,14 +19,10 @@ class SortingSystem {
     int state;
     MagnetArm token_arm;
     LED token_light;
-    //RGBSensor color_sensor;
     SortingPlate storage_plate;
-  protected:
-    SortingSystem();
-    SortingSystem(Adafruit_StepperMotor*, Adafruit_StepperMotor*);
   public:
+    SortingSystem(Adafruit_StepperMotor*, Adafruit_DCMotor*, Adafruit_StepperMotor*);
     void pickUpToken();
-    //Color checkTokenColor() const;
     void storeToken(Color);
     void dropNextTokenStack();
     void continueSorting();

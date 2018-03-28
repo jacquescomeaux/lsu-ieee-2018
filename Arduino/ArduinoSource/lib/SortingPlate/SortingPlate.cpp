@@ -1,8 +1,7 @@
 #include <SortingPlate.h>
 
-SortingPlate::SortingPlate() {}
 SortingPlate::SortingPlate(Adafruit_StepperMotor* m) :
-  RPM(60),
+  RPM(250),
   step_amount(25),
   target_step(250),
   total_steps(2000),
@@ -14,14 +13,14 @@ SortingPlate::SortingPlate(Adafruit_StepperMotor* m) :
   motor->setSpeed(RPM);
 }
 
-void SortingPlate::stepForward(int s) {
-  if(s < 0 || s >= total_steps) return;
-  motor->step(static_cast<uint16_t>(s), FORWARD, SINGLE);
+void SortingPlate::stepForward(unsigned int s) {
+  //if(s >= total_steps) return;
+  motor->step(static_cast<uint16_t>(s), FORWARD, DOUBLE);
 }
 
-void SortingPlate::stepBackward(int s) {
-  if(s < 0 || s >= total_steps) return;
-  motor->step(static_cast<uint16_t>(s), BACKWARD, SINGLE);
+void SortingPlate::stepBackward(unsigned int s) {
+  //if(s < 0 || s >= total_steps) return;
+  motor->step(static_cast<uint16_t>(s), BACKWARD, DOUBLE);
 }
 
 bool SortingPlate::ready() {
@@ -38,34 +37,38 @@ void SortingPlate::reset() {
   moving = false;
 }
 
-void SortingPlate::rotateCW(int dst) {
+void SortingPlate::rotateCCW(unsigned int dst) {
   if(moving) return;
   target_position += dst * target_step;
   target_position %= total_steps;
   moving = true;
 }
 
-void SortingPlate::rotateCCW() {
+void SortingPlate::rotateCW() {
   if(moving) return;
-  stepBackward(target_step);
+  stepForward(target_step);
   motor->release();
+  position += total_steps;
   position -= target_step;
   position %= total_steps;
+  target_position += total_steps;
   target_position -= target_step;
   target_position %= total_steps;
   bottom_offset += target_step;
+  bottom_offset %= total_steps;
 }
 
 int SortingPlate::continueMoving() {
   if(!moving) return 1;
-  if((target_position - position) % total_steps < step_amount) {
-    stepForward((target_position - position) % total_steps);
+  if((target_position - position + total_steps) % total_steps < step_amount) {
+    stepBackward((target_position - position + total_steps) % total_steps);
     position = target_position;
     motor->release();
     moving = false;
     return 1;
   }
   position += step_amount;
-  stepForward(step_amount);
+  position %= total_steps;
+  stepBackward(step_amount);
   return 0;
 }

@@ -28,6 +28,7 @@ class Wheel {
     void adjustSpeed(Fixed);
     void correctSpeed(Fixed);
     Fixed getSpeed() const;
+    Fixed getActualSpeed() const;
 
     //motor interaction
     void approachSpeed(Fixed);
