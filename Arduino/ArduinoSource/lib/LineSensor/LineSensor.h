@@ -24,6 +24,7 @@ class LineSensor {
     void getLineErrors(Fixed* x, Fixed* y, Fixed* rot, int, int);
     void getCrossIntersectionErrors(Fixed* x, Fixed* y, Fixed* rot, int);
     void getCornerIntersectionErrors(Fixed* x, Fixed* y, Fixed* rot, int);
+    void precalibrate(int, int);
     int countLinePeaks(int range);
     void printReadings();
     void printLinePeaks();

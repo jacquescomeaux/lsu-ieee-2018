@@ -58,5 +58,6 @@ void SerialLink::receiveBuffer(void* buf, size_t size) const {
 }
 
 void SerialLink::transmitBuffer(void* buf, size_t size) const {
+  std::cout << "Writing" << std::endl;
   sp_blocking_write(port, buf, size, 0);
 }

@@ -1,19 +1,20 @@
 #ifndef CAMERA_H
 #define CAMERA_H
 
+#include "opencv2/highgui/highgui.hpp"
+#include "opencv2/imgproc/imgproc.hpp"
+
 #include "Coord.h"
 #include <string>
 
 class Camera {
   private:
-    std::string name;
-    int countLines() const;
+    cv::VideoCapture cap;
+    int countLines();
   public:
-    Camera();
-    Camera(std::string name);
-    std::string getName() const;
-    bool onLine() const;
-    bool atIntersection() const;
+    Camera(int n);
+    bool onLine();
+    bool atIntersection();
     bool tokenSeen() const;
     Coord determineLocation() const;
 };

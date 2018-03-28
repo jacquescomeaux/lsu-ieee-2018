@@ -13,13 +13,13 @@ void setup() {
 
 void loop() {
   for(int i = 0; i < 4; i++) {
-    digitalWrite(trigPins[i], LOW);
+    digitalWrite(trigPins[i], LOW); // No output pulse initially.
     delayMicroseconds(2);
-    digitalWrite(trigPins[i], HIGH);
+    digitalWrite(trigPins[i], HIGH); // Output pulse.
     delayMicroseconds(10);
-    digitalWrite(trigPins[i], LOW);
-    duration = pulseIn(echoPins[i], HIGH);
-    Serial.print("Sensor ");
+    digitalWrite(trigPins[i], LOW);  // Disable output pulse.
+    duration = pulseIn(echoPins[i], HIGH);  // Receive incoming pulse signal. 
+    Serial.print("Sensor "); 
     Serial.print(i);
     Serial.print(": ");
     Serial.println(duration);

@@ -28,6 +28,8 @@ void receivePIDCommand(unsigned int var) {
   else if(param2 == '-') adjustment = Fixed(0.01);
   else if(param2 == '[') adjustment = Fixed(-0.0001); //tiny adjustments for i term
   else if(param2 == ']') adjustment = Fixed(0.0001);
+  else if(param2 == '{') adjustment = Fixed(-1);
+  else if(param2 == '}') adjustment = Fixed(1);
   else return;
   robot->adjustPID(var, term, adjustment); 
 }
@@ -59,7 +61,7 @@ void parseCommand() {
     case '<': robot->adjustBaseSpeed(Fixed(-10)); break;
     case '>': robot->adjustBaseSpeed(Fixed(10)); break;
     case 't': test(); break;
-    case 'g': robot->travel(Direction::FRONT, Fixed(11), Fixed(40)); break;
+    case 'g': robot->travel(Direction::FRONT, Fixed(10.5), Fixed(100)); break;
     case 'b': robot->travel(Direction::COUNTER_CLOCKWISE, Fixed(10)); break;
     case 'p': robot->pickUpToken(); break;
     case 'm': robot->storeToken(Color::RED); break;

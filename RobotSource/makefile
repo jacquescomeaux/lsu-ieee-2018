@@ -1,5 +1,5 @@
 CXX = g++
-CXX_FLAGS = -std=c++11 -Wall #-I/usr/local/include
+CXX_FLAGS = -std=c++11 -Wall -O3 -mcpu=cortex-a53 -mfloat-abi=hard -mfpu=neon-fp-armv8 -mneon-for-64bits -funsafe-math-optimizations #-I/usr/local/include
 LFLAGS = $(shell pkg-config --cflags --libs libserialport opencv)
 
 BIN = mybin

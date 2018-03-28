@@ -10,13 +10,13 @@ Robot::Robot() :
   flags(Flag::NONE),
   pid_terms {
     //Proportional //Integral    //Derivitave  //Accum.  //Last error
-    {Fixed(0.012), Fixed(0.0004), Fixed(0.060), Fixed(0), Fixed(0)}, //x terms  //P: 0.014 D: 0.0600
-    {Fixed(0.005), Fixed(0.0004), Fixed(0.050), Fixed(0), Fixed(0)}, //y terms  //P: 0.005 D: 0.0500
-    {Fixed(0.037), Fixed(0.0004), Fixed(0.100), Fixed(0), Fixed(0)}, //rot terms //best so far: P: 0.037 D: 0.1
+    {Fixed(0), Fixed(0), Fixed(0), Fixed(0), Fixed(0)}, //x terms  //P: 0.014 D: 0.0600
+    {Fixed(0), Fixed(0), Fixed(0), Fixed(0), Fixed(0)}, //y terms  //P: 0.005 D: 0.0500
+    {Fixed(0), Fixed(0), Fixed(0), Fixed(0), Fixed(0)}, //rot terms //best so far: P: 0.037 D: 0.1
   },
   base_speed(Fixed(90)),
   veer_amount(Fixed(10)),
-  acceleration(Fixed(10)),
+  acceleration(Fixed(20)), //previously set at 10
   current_direction(Direction::NONE),
   wheels {
     //Interrupt Pins: 2, 3, 18, 19, 20, 21
@@ -104,7 +104,7 @@ void Robot::correctErrors() {
   static unsigned long t = 0;
   static Fixed prev_errors[3][5] = {0};
   Fixed xerr, yerr, rerr;
-  line_sensor.getLineErrors(&xerr, &yerr, &rerr, current_direction, 2);
+  line_sensor.getLineErrors(&xerr, &yerr, &rerr, current_direction, 5);
   prev_errors[0][t] = xerr;
   prev_errors[1][t] = yerr;
   prev_errors[2][t] = rerr;
@@ -116,9 +116,9 @@ void Robot::correctErrors() {
   veer(
     //PID CONTROLLER
     //KP * current error        +  KI * accumulated error             +  KD * change in error
-    (pid_terms[0][0] * avgs[0]) + (pid_terms[0][1] * pid_terms[0][3]) + (pid_terms[0][2] * (avgs[0] - pid_terms[0][4])), //x correction
-    (pid_terms[1][0] * avgs[1]) + (pid_terms[1][1] * pid_terms[1][3]) + (pid_terms[1][2] * (avgs[1] - pid_terms[1][4])), //y correction
-    (pid_terms[2][0] * avgs[2]) + (pid_terms[2][1] * pid_terms[2][3]) + (pid_terms[2][2] * (avgs[2] - pid_terms[2][4]))  //rot correction
+    (pid_terms[0][0]  * avgs[0]) + (pid_terms[0][1] * pid_terms[0][3]) + (pid_terms[0][2] * (avgs[0] - pid_terms[0][4])), //x correction
+    (pid_terms[1][0]  * avgs[1]) + (pid_terms[1][1] * pid_terms[1][3]) + (pid_terms[1][2] * (avgs[1] - pid_terms[1][4])), //y correction
+    (pid_terms[2][0]  * avgs[2]) + (pid_terms[2][1] * pid_terms[2][3]) + (pid_terms[2][2] * (avgs[2] - pid_terms[2][4]))  //rot correction
   );
   pid_terms[0][3] += xerr;
   pid_terms[1][3] += yerr;
@@ -176,9 +176,9 @@ void Robot::update() {
     if((flags & Flag::PRINTING_LINE) != Flag::NONE) line_sensor.printReadings(); 
   }
   
-  if((dt[4] > 0) ? (last_ran[4] = time) : false) {
-    //if((flags & Flag::STOPPING_INT) != Flag::NONE) if(line_sensor.countLinePeaks(1) == 4) stop();
-    checkEdges();
+  if((dt[4] > 100) ? (last_ran[4] = time) : false) {
+    if((flags & Flag::STOPPING_INT) != Flag::NONE) if(line_sensor.countLinePeaks(1) == 4) stop();
+    //checkEdges();
   }
   
   if((dt[5] > 100) ? (last_ran[5] = time) : false) {

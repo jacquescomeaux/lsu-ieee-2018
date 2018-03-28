@@ -108,6 +108,7 @@ void LineSensor::getCrossIntersectionErrors(Fixed* x, Fixed* y, Fixed* rot, int 
 }
 
 void LineSensor::getCornerIntersectionErrors(Fixed* x, Fixed* y, Fixed* rot, int offset) {
+/*
   int bi = (offset + 16) % 32;
   int ri = (offset + 8) % 32;
   int di = (bi + 4) % 32;
@@ -115,19 +116,31 @@ void LineSensor::getCornerIntersectionErrors(Fixed* x, Fixed* y, Fixed* rot, int
   getLineErrors(&x_d, &y_d, &rot_d, di, 2);
   Serial.print("b:");
   Serial.println(bi);
-  Fixed b = getLinePosition((bi - 4 + 32) % 32, 3, true) - Fixed(4000);
-  Fixed r = getLinePosition(ri + 4 % 32, 3, true) + Fixed(4000);
-
-  Serial.print("value of b :");
-  Serial.println(b.getInt());
-  /*Serial.print("Cosines: ");
-  Serial.println(COSINES[di].getDouble());
-  Serial.print("Sines: ");
-  Serial.println(SINES[di].getDouble());
+  Fixed b = getLinePosition((bi - 4 + 32) % 32, 2, true) - Fixed(4000);
+  Fixed r = getLinePosition((ri + 4) % 32, 2, true) + Fixed(4000);
 */
-  *x = x_d + b * COSINES[di] + r * COSINES[(di + 16) % 32];
-  *y = y_d + b * SINES[di] + r * SINES[(di + 16) % 32];
-  *rot = rot_d;
+
+//begin test code
+ int front = 8;
+ int back = 8 + 16;
+ int backleft = back - 4;
+ int backright = back + 4;
+ Fixed xf, yf, rotf, xb, yb, rotb, xbl, ybl, rotbl, xbr, ybr, rotbr;
+
+ getLineErrors(&xf, &yf, &rotf, front, 2);
+ getLineErrors(&xb, &yb, &rotb, back, 0);
+ getLineErrors(&xbl, &ybl, &rotbl, backleft, 2);
+ getLineErrors(&xbr, &ybr, &rotbr, backright, 2); //Does larger range result in larger weight?
+
+ *x = xf + xbl + xbr;
+ *y = yf + ybl + ybr;
+ *rot = (rotf + rotbl + rotbr) * SINES[16] * SINES[24];
+
+//end test code
+
+  //*x = x_d + b * COSINES[di] + r * COSINES[(di + 16) % 32];
+  //*y = y_d + b * SINES[di] + r * SINES[(di + 16) % 32];
+  //*rot = rot_d;
 
   Serial.print("getCornerIntersectionErrors ");
   printErrors(*x, *y, *rot);
@@ -138,10 +151,24 @@ int LineSensor::countLinePeaks(int range) {
   int peak_count = 0;
   for(int i = 0; i < NUM_PINS; i++) if(sensor_values[i] > line_threshold) {
     int higher_values_in_range = 0;
-    for(int j = 0 - range; j <= range; j++) if(sensor_values[i] < sensor_values[(i + j) % NUM_PINS]) higher_values_in_range++;
+    for(int j = 0 - range; j <= range; j++) if(sensor_values[i] < sensor_values[(i + j + NUM_PINS) % NUM_PINS]) higher_values_in_range++;
     if(higher_values_in_range == 0) peak_count++;
   }
   return peak_count;
+}
+
+void LineSensor::precalibrate(int min = 280, int max = 4000) { //don't use this, it breaks things
+  unsigned int* front_mins = qtrrc1.calibratedMinimumOn;
+  unsigned int* back_mins = qtrrc2.calibratedMinimumOn;
+  unsigned int* front_maxs = qtrrc1.calibratedMinimumOn;
+  unsigned int* back_maxs = qtrrc2.calibratedMinimumOn;
+
+  for (int i = 0; i < 16; i++) {
+    front_mins[i] = min;
+    back_mins[i] = min;
+    front_maxs[i] = max;
+    back_maxs[i] = max;
+  }
 }
 
 void LineSensor::printReadings() {

@@ -8,7 +8,7 @@ import numpy as np
 
 # Grey: RGB Upper and Lower Limits
 lowerBoundG=np.array([0,0,0])
-upperBoundG=np.array([100,100,100])
+upperBoundG=np.array([40,40,40])
 
 # Cropping Boundaries
 Y1=165
@@ -16,7 +16,7 @@ Y2=410
 X1=195
 X2=440
 
-cam=cv2.VideoCapture(2)
+cam=cv2.VideoCapture(1)
 kernelOpen=np.ones((5,5))
 kernelClose=np.ones((20,20))
 
