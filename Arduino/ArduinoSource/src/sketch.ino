@@ -26,6 +26,8 @@ void receivePIDCommand(unsigned int var) {
   else if(param2 == '0') adjustment = Fixed(0.001);
   else if(param2 == '8') adjustment = Fixed(-0.01);
   else if(param2 == '-') adjustment = Fixed(0.01);
+  else if(param2 == '(') adjustment = Fixed(-0.1);
+  else if(param2 == ')') adjustment = Fixed(0.1);
   else if(param2 == '[') adjustment = Fixed(-0.0001); //tiny adjustments for i term
   else if(param2 == ']') adjustment = Fixed(0.0001);
   else if(param2 == '{') adjustment = Fixed(-1);
@@ -74,11 +76,11 @@ void parseCommand() {
 }
 
 void setup() {
+  Serial.begin(9600);
   robot = new SortBot();
   TWBR = ((F_CPU /400000l) - 16) / 2; //change i2c clock to 400KHz
   robot->stop();
   while(!robot->ready());
-  Serial.begin(9600);
   Serial.println("Robot ready");
   delay(500);
 }

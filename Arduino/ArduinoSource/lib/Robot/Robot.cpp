@@ -10,9 +10,16 @@ Robot::Robot() :
   flags(Flag::NONE),
   pid_terms {
     //Proportional //Integral    //Derivitave  //Accum.  //Last error
-    {Fixed(0), Fixed(0), Fixed(0), Fixed(0), Fixed(0)}, //x terms  //P: 0.014 D: 0.0600
-    {Fixed(0), Fixed(0), Fixed(0), Fixed(0), Fixed(0)}, //y terms  //P: 0.005 D: 0.0500
-    {Fixed(0), Fixed(0), Fixed(0), Fixed(0), Fixed(0)}, //rot terms //best so far: P: 0.037 D: 0.1
+    /*{Fixed(0.000), Fixed(0.000), Fixed(0.000), Fixed(0), Fixed(0)}, //x terms  //P: 0.014 D: 0.0600
+    {Fixed(0.000), Fixed(0.000), Fixed(0.000), Fixed(0), Fixed(0)}, //y terms  //P: 0.005 D: 0.0500
+    {Fixed(0.000), Fixed(0.000), Fixed(0.000), Fixed(0), Fixed(0)}, //rot terms //best so far: P: 0.037 D: 0.1
+   */
+    {Fixed(0.060), Fixed(0.010), Fixed(0.300), Fixed(0), Fixed(0)}, //x terms  //P: 0.014 D: 0.0600
+    {Fixed(0.060), Fixed(0.002), Fixed(0.100), Fixed(0), Fixed(0)}, //y terms  //P: 0.005 D: 0.0500
+    {Fixed(0.020), Fixed(0.0005), Fixed(0.070), Fixed(0), Fixed(0)}, //rot terms //best so far: P: 0.037 D: 0.1
+    ///{Fixed(0.012), Fixed(0.0004), Fixed(0.060), Fixed(0), Fixed(0)}, //x terms  //P: 0.014 D: 0.0600
+    //{Fixed(0.005), Fixed(0.0004), Fixed(0.050), Fixed(0), Fixed(0)}, //y terms  //P: 0.005 D: 0.0500
+    //{Fixed(0.037), Fixed(0.0004), Fixed(0.100), Fixed(0), Fixed(0)}, //rot terms //best so far: P: 0.037 D: 0.1
   },
   base_speed(Fixed(90)),
   veer_amount(Fixed(10)),
@@ -98,28 +105,37 @@ void Robot::correctWheelSpeeds(const Fixed* speeds) {
   for(int i = 0; i < 4; i++) wheels[i].correctSpeed(speeds[i]);
 }
 
-void Robot::correctErrors() {
+void Robot::correctErrors(int dir) {
   if(((flags & Flag::CENTERING_CORNER) != Flag::NONE) || ((flags & Flag::CENTERING_CROSS) != Flag::NONE)) for(int i = 0; i < 3; i++) pid_terms[i][3] = Fixed(0);
-  static const Fixed TENTH = 0.1;
+  static bool filled = false;
+  static const Fixed FIFTH = 0.2;
   static unsigned long t = 0;
   static Fixed prev_errors[3][5] = {0};
   Fixed xerr, yerr, rerr;
-  line_sensor.getLineErrors(&xerr, &yerr, &rerr, current_direction, 5);
+  line_sensor.getLineErrors(&xerr, &yerr, &rerr, current_direction, 7);
   prev_errors[0][t] = xerr;
   prev_errors[1][t] = yerr;
   prev_errors[2][t] = rerr;
   Fixed avgs[3];
   for(int i = 0; i < 3; i++) {
     for(Fixed f : prev_errors[i]) avgs[i] += f;
-    avgs[i] *= TENTH;
+    avgs[i] *= FIFTH;
   }
-  veer(
+  if(filled) veer(
     //PID CONTROLLER
     //KP * current error        +  KI * accumulated error             +  KD * change in error
     (pid_terms[0][0]  * avgs[0]) + (pid_terms[0][1] * pid_terms[0][3]) + (pid_terms[0][2] * (avgs[0] - pid_terms[0][4])), //x correction
     (pid_terms[1][0]  * avgs[1]) + (pid_terms[1][1] * pid_terms[1][3]) + (pid_terms[1][2] * (avgs[1] - pid_terms[1][4])), //y correction
     (pid_terms[2][0]  * avgs[2]) + (pid_terms[2][1] * pid_terms[2][3]) + (pid_terms[2][2] * (avgs[2] - pid_terms[2][4]))  //rot correction
   );
+  /*for(int i = 0; i < 3; i++) {
+    Serial.print("var: "); Serial.println(i);
+    Serial.print("avg: "); Serial.println(avgs[i].getDouble());
+    Serial.print("err: "); Serial.println(prev_errors[i][t].getDouble());
+    Serial.print("acc: "); Serial.println(pid_terms[i][3].getDouble());
+    Serial.print("dif: "); Serial.println((avgs[i] - pid_terms[i][4]).getDouble());
+    Serial.println();
+  }*/
   pid_terms[0][3] += xerr;
   pid_terms[1][3] += yerr;
   pid_terms[2][3] += rerr;
@@ -131,6 +147,7 @@ void Robot::correctErrors() {
     Serial.println(millis());
     reportWheelSpeeds();
   }
+  if(t == 4) filled = true;
   if(++t >= 5) t = 0;
 }
 
@@ -189,7 +206,7 @@ void Robot::update() {
     if((flags & Flag::CENTERING_CROSS) != Flag::NONE) centerCross(0);
   }
   
-  if((dt[7] > 0) ? (last_ran[7] = time) : false) {
+  if((dt[7] > 200) ? (last_ran[7] = time) : false) {
     if((flags & Flag::CENTERING_CORNER) != Flag::NONE) centerCorner(16);
   }
   
