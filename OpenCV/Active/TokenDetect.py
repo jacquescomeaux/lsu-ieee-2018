@@ -27,28 +27,30 @@ count = 0
 # OpenCV returns color as   G-B-R	(not RGB)
 
 # Green
-lowerBoundG=np.array([33,80,40])
-upperBoundG=np.array([102,255,255])
+lowerBoundG=np.array([105,50,25])
+upperBoundG=np.array([140,100,75])
 
 # Red
-lowerBoundR=np.array([0,100,100])
-upperBoundR=np.array([10,255,255])
+lowerBoundR=np.array([0,50,25])
+upperBoundR=np.array([15,100,75])
+lowerBoundRe=np.array([350,50,25])
+upperBoundRe=np.array([360,100,75])
 
 # Blue
-lowerBoundB=np.array([110,50,50])
-upperBoundB=np.array([130,255,255])
+lowerBoundB=np.array([85,30,70])
+upperBoundB=np.array([115,60,100])
 
 # Yellow
-lowerBoundY=np.array([20,100,100])
-upperBoundY=np.array([30,255,255])
+lowerBoundY=np.array([20,50,25])
+upperBoundY=np.array([30,100,75])
 
 # Purple
-lowerBoundP=np.array([120,50,50])
-upperBoundP=np.array([180,255,255])
+lowerBoundP=np.array([265,50,25])
+upperBoundP=np.array([345,100,75])
 
 # Cyan
-lowerBoundC=np.array([170,20,0])
-upperBoundC=np.array([200,150,200])
+lowerBoundC=np.array([160,100,0])
+upperBoundC=np.array([185,130,30])
 
 # Grey
 # lowerBoundGr=np.array([0,0,40])
@@ -88,6 +90,7 @@ while True:
 	# P = PRESENT
 	GREEN_P = trackSquare( lowerBoundG,  upperBoundG  )
         RED_P = trackSquare( lowerBoundR,  upperBoundR  )
+	#REDE_P = trackSquare( lowerBoundRe, upperBoundRe )
         YELLOW_P = trackSquare( lowerBoundY,  upperBoundY  )
         BLUE_P = trackSquare( lowerBoundB,  upperBoundB  )
 	PURPLE_P = trackSquare( lowerBoundP,  upperBoundP  )
@@ -118,8 +121,10 @@ while True:
 		break
 	elif (count<0):
 		print("No color detected")
+		break
 	elif (count>1):
 		print("Multiple colors detected")
+		break
 
 	# Show Image
 	# cv2.imshow("cam",img)

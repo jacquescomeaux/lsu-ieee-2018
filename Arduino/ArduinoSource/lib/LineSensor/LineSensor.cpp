@@ -17,7 +17,11 @@ LineSensor::LineSensor() :
   qtrrc2(&pins[NUM_PINS/2], NUM_PINS/2) {
     for(int i = 0; i < 32; i++) {
       SINES[i] = Fixed(sin(static_cast<double>(i) * OFFSET_TO_RAD.getDouble()));
+      Serial.print("sines ");
+      Serial.println(SINES[i].getDouble());
       COSINES[i] = Fixed(cos(static_cast<double>(i) * OFFSET_TO_RAD.getDouble()));
+      Serial.print("cosines ");
+      Serial.println(COSINES[i].getDouble());
     }
 }
 
@@ -71,15 +75,16 @@ void LineSensor::getLineErrors(Fixed* x, Fixed* y, Fixed* rot, int offset, int r
   Fixed r = getLinePosition(ri, range, true);
   *rot = (b + f) * SINES[fi] * SINES[fi]
        + (r + l) * COSINES[ri] * COSINES[ri];
-  f = getLinePosition(fi, range, true);
-  b = getLinePosition(bi, range, true);
-  l = getLinePosition(li, range, true);
-  r = getLinePosition(ri, range, true);
+  f = getLinePosition(fi, range, false);
+  b = getLinePosition(bi, range, false);
+  l = getLinePosition(li, range, false);
+  r = getLinePosition(ri, range, false);
   *x = (b - f) * SINES[fi];
   *y = (r - l)  * COSINES[ri];
 
-  Serial.print("getLineErrors() ");
+  /*Serial.print("getLineErrors() ");
   printErrors(*x, *y, *rot);
+  */
 }
 
 void LineSensor::getCrossIntersectionErrors(Fixed* x, Fixed* y, Fixed* rot, int offset) {
