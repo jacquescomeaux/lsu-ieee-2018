@@ -7,7 +7,7 @@ import cv2
 # webcam = Logitech c920
 
 #picam = cv2.VideoCapture(0)
-webcam = cv2.VideoCapture(0)
+webcam = cv2.VideoCapture(1)
 
 #480, 220-260
 #640, 360-520

@@ -17,11 +17,7 @@ LineSensor::LineSensor() :
   qtrrc2(&pins[NUM_PINS/2], NUM_PINS/2) {
     for(int i = 0; i < 32; i++) {
       SINES[i] = Fixed(sin(static_cast<double>(i) * OFFSET_TO_RAD.getDouble()));
-      Serial.print("sines ");
-      Serial.println(SINES[i].getDouble());
       COSINES[i] = Fixed(cos(static_cast<double>(i) * OFFSET_TO_RAD.getDouble()));
-      Serial.print("cosines ");
-      Serial.println(COSINES[i].getDouble());
     }
 }
 
