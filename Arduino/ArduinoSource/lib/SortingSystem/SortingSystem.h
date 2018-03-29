@@ -14,7 +14,7 @@
 class SortingSystem {
   private:
     const int NUM_COLORS;
-    const int COLOR_POSITIONS[8];
+    const int COLOR_POSITIONS[NUM_COLORS];
     std::queue<int> task_buffer;
     int state;
     MagnetArm token_arm;
