@@ -33,10 +33,12 @@ class Robot {
     void correctErrors(Fixed, Fixed, Fixed);
     void center(bool cross, int);
     void reportWheelSpeeds(); //print current wheel speeds for debugging
+    bool inMotion();
   public:
     Robot();
 
     bool ready();
+    bool atIntersection();
 
     bool debug;
 

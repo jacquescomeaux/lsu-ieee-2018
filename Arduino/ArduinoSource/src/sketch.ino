@@ -7,11 +7,6 @@
 
 SortBot* robot;
 
-void test() {
-  Serial.println("still alive");
-  while(true);
-}
-
 void receivePIDCommand(unsigned int var) {
   while(Serial.available() < 2);
   unsigned char param1 = Serial.read();
@@ -62,15 +57,14 @@ void parseCommand() {
     case '3': Serial.print("Adjusting rot"); receivePIDCommand(2); break;
     case '<': robot->adjustBaseSpeed(Fixed(-10)); break;
     case '>': robot->adjustBaseSpeed(Fixed(10)); break;
-    case 't': test(); break;
     case 'g': robot->travel(Direction::FRONT, Fixed(10.5), Fixed(100)); break;
     case 'b': robot->travel(Direction::COUNTER_CLOCKWISE, Fixed(10)); break;
     case 'p': robot->pickUpToken(); break;
     case 'm': robot->storeToken(Color::RED); break;
     case 'l': robot->dropNextTokenStack(); break;
-    //case '|': robot->center(0); break;
     case '|': robot->toggle(Flag::CENTERING_CROSS); break;
     case '\\': robot->toggle(Flag::CENTERING_CORNER); break;
+    case '?' : Serial.write(robot->atIntersection() ? 'y' : 'n'); break;
     default: robot->stop();
   }
 }
@@ -81,7 +75,7 @@ void setup() {
   TWBR = ((F_CPU /400000l) - 16) / 2; //change i2c clock to 400KHz
   robot->stop();
   while(!robot->ready());
-  Serial.println("Robot ready");
+  //Serial.println("Robot ready");
   delay(500);
 }
 

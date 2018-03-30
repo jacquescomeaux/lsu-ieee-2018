@@ -38,10 +38,18 @@ void Controller::coverLine(Direction dir, int num_tokens) const {
 void Controller::runAlgorithm() const {
   getchar();
   //for(int i = 0; i < 2; i++)
-  robot.move
-  robot.moveUntilLine(Direction::FRONT);
-  /*for(int i = 0; i < NUM_LINES; i++) {
-    robot.followUntilIntersection(follow_sequence[i]);
-    coverLine(cover_sequence[i], 4);
-  }*/
+  //robot.moveUntilLine(Direction::FRONT);
+  //robot.move(Direction::LEFT);
+  robot.followUntilIntersection(Direction::LEFT);
+  robot.center();
+  robot.followUntilIntersection(Direction::FRONT);
+  //robot.followUntilIntersection(Direction::FRONT);
+  //robot.followUntilIntersection(Direction::RIGHT);
+  //robot.followUntilIntersection(Direction::BACK);
+  //robot.followUntilIntersection(Direction::BACK);
+  //robot.followUntilIntersection(Direction::LEFT);
+  //for(int i = 0; i < NUM_LINES; i++) {
+    //robot.followUntilIntersection(follow_sequence[i]);
+    //coverLine(cover_sequence[i], 4);
+  //}
 }

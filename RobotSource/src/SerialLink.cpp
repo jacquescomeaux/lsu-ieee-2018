@@ -29,6 +29,13 @@ SerialLink::~SerialLink() {
   sp_blocking_read(port, buf, 1, 0);
 }*/
 
+char SerialLink::receiveChar() const {
+  char c;
+  receiveBuffer(&c, sizeof(char));
+  std::cout << "Receiving" << c << std::endl;
+  return c;
+}
+
 int SerialLink::receiveInt() const {
   int n;
   receiveBuffer(&n, sizeof(int));
@@ -36,12 +43,17 @@ int SerialLink::receiveInt() const {
 }
 
 float SerialLink::receiveFloat() const {
-  float n;
-  receiveBuffer(&n, sizeof(float));
-  return n;
+  float x;
+  receiveBuffer(&x, sizeof(float));
+  return x;
+}
+
+void SerialLink::receiveBuffer(void* buf, size_t size) const {
+  sp_blocking_read(port, buf, size, 0);
 }
 
 void SerialLink::transmitChar(char c) const {
+  std::cout << "Writing" << c << std::endl;
   transmitBuffer(&c, sizeof(char));
 }
 
@@ -49,15 +61,10 @@ void SerialLink::transmitInt(int n) const {
   transmitBuffer(&n, sizeof(int));
 }
 
-void SerialLink::transmitFloat(float n) const {
-  transmitBuffer(&n, sizeof(float));
-}
-
-void SerialLink::receiveBuffer(void* buf, size_t size) const {
-  sp_blocking_read(port, buf, size, 0);
+void SerialLink::transmitFloat(float x) const {
+  transmitBuffer(&x, sizeof(float));
 }
 
 void SerialLink::transmitBuffer(void* buf, size_t size) const {
-  std::cout << "Writing" << std::endl;
   sp_blocking_write(port, buf, size, 0);
 }

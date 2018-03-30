@@ -65,14 +65,14 @@ void Robot::checkEdges() {
   //for(ProximitySensor& s : edge_detectors) if(s.edgeDetected()) stop();
 
   //DEBUGGING CODE
-  for (int s = 0; s < 3; s++) {
+  /* for (int s = 0; s < 3; s++) {
 	Serial.print("S: ");
 	Serial.print(s);
 	Serial.print("  ");
 	if (edge_detectors[s].edgeDetected()) {}
 	Serial.print(" | ");
   }
-  Serial.println(" | ");
+  Serial.println(" | ");*/
 
   /* COMMENTED OUT WORKING CODE
   if(current_direction == Direction::FRONT) if(edge_detectors[1].edgeDetected()) stop();
@@ -137,9 +137,9 @@ void Robot::correctErrors(Fixed xerr, Fixed yerr, Fixed rerr) {
   pid_terms[1][4]  = avgs[1];
   pid_terms[2][4]  = avgs[2];
   if(debug) {
-    Serial.print("Time");
-    Serial.println(millis());
-    reportWheelSpeeds();
+    //Serial.print("Time");
+    //Serial.println(millis());
+    //reportWheelSpeeds();
   }
   if(t == 4) filled = true;
   if(++t >= 5) t = 0;
@@ -161,6 +161,15 @@ bool Robot::ready() {
   return !stopped;
 }
 
+bool Robot::atIntersection() {
+  return (flags & Flag::AT_INTERSECTION) != Flag::NONE;
+}
+
+bool Robot::inMotion() {
+  if(wheels[0].getSpeed() + wheels[1].getSpeed() + wheels[2].getSpeed() + wheels[3].getSpeed() == Fixed(0)) return false;
+  return true;
+}
+
 void Robot::update() {
   static const int NUM_TASKS = 8;
   static unsigned long last_ran[NUM_TASKS] = {0};
@@ -175,7 +184,8 @@ void Robot::update() {
   if((dt[1] > 0) ? (last_ran[1] = time) : false) {
     if((flags & Flag::FOLLOWING_LINE) != Flag::NONE) {
       Fixed xerr, yerr, rerr;
-      line_sensor.getLineErrors(&xerr, &yerr, &rerr, current_direction, 2);
+      if(!inMotion()) line_sensor.getLineErrors(&xerr, &yerr, &rerr, current_direction, 5); //snap to line
+      else line_sensor.getLineErrors(&xerr, &yerr, &rerr, current_direction, 2);
       correctErrors(xerr, yerr, rerr);
     }
   }
@@ -183,19 +193,24 @@ void Robot::update() {
   if((dt[2] > 10) ? (last_ran[2] = time) : false) {
     if((flags & Flag::CALIBRATING_LINE) != Flag::NONE) {
       line_sensor.calibrateSensors();
-      line_sensor.printCalibratedValues();
+      //line_sensor.printCalibratedValues();
     }
   }
   
   if((dt[3] > 1000) ? (last_ran[3] = time) : false) {
-    if((flags & Flag::PRINTING_LINE) != Flag::NONE) line_sensor.printReadings(); 
+    //if((flags & Flag::PRINTING_LINE) != Flag::NONE) line_sensor.printReadings(); 
   }
   
   if((dt[4] > 100) ? (last_ran[4] = time) : false) {
-    if((flags & Flag::STOPPING_INT) != Flag::NONE) if(line_sensor.countLinePeaks(1) == 4) stop();
-    //checkEdges();
+    if(line_sensor.countLinePeaks(1) == 4) flags |= Flag::AT_INTERSECTION;
+    else flags &= ~Flag::AT_INTERSECTION;
+    if((flags & Flag::STOPPING_INT) != Flag::NONE) {
+      if(atIntersection()) { 
+        stop();
+        flags &= ~Flag::STOPPING_INT;
+      }
+    }
   }
-  
   if((dt[5] > 100) ? (last_ran[5] = time) : false) {
     if((flags & Flag::TRAVEL_TO_DST) != Flag::NONE) checkDestination();
   }
@@ -279,45 +294,45 @@ void Robot::travel(Fixed x, Fixed y, Fixed rot, Fixed dist) {
 void Robot::toggle(Flag settings) {
   settings &= ~Flag::NONE;
   flags ^= settings;
-  if((flags & settings & Flag::CALIBRATING_LINE) != Flag::NONE) Serial.println("CALIBRATING_LINE set");  
-  if((~flags & settings & Flag::CALIBRATING_LINE) != Flag::NONE) Serial.println("CALIBRATING_LINE cleared");  
-  if((flags & settings & Flag::FOLLOWING_LINE) != Flag::NONE) Serial.println("FOLLOWING_LINE set"); 
-  if((~flags & settings & Flag::FOLLOWING_LINE) != Flag::NONE) Serial.println("FOLLOWING_LINE cleared"); 
-  if((flags & settings & Flag::PRINTING_LINE) != Flag::NONE) Serial.println("PRINTING_LINE set"); 
-  if((~flags & settings & Flag::PRINTING_LINE) != Flag::NONE) Serial.println("PRINTING_LINE cleared"); 
-  if((flags & settings & Flag::STOPPING_INT) != Flag::NONE) Serial.println("STOPPING_INT set"); 
-  if((~flags & settings & Flag::STOPPING_INT) != Flag::NONE) Serial.println("STOPPING_INT cleared"); 
-  if((flags & settings & Flag::CENTERING_CROSS) != Flag::NONE) Serial.println("CENTERING_CROSS set"); 
-  if((~flags & settings & Flag::CENTERING_CROSS) != Flag::NONE) Serial.println("CENTERING_CROSS cleared"); 
-  if((flags & settings & Flag::CENTERING_CORNER) != Flag::NONE) Serial.println("CENTERING_CORNER set"); 
-  if((~flags & settings & Flag::CENTERING_CORNER) != Flag::NONE) Serial.println("CENTERING_CORNER cleared"); 
+  if((flags & settings & Flag::CALIBRATING_LINE) != Flag::NONE); // Serial.println("CALIBRATING_LINE set");  
+  if((~flags & settings & Flag::CALIBRATING_LINE) != Flag::NONE); // Serial.println("CALIBRATING_LINE cleared");  
+  if((flags & settings & Flag::FOLLOWING_LINE) != Flag::NONE); // Serial.println("FOLLOWING_LINE set"); 
+  if((~flags & settings & Flag::FOLLOWING_LINE) != Flag::NONE); // Serial.println("FOLLOWING_LINE cleared"); 
+  if((flags & settings & Flag::PRINTING_LINE) != Flag::NONE); // Serial.println("PRINTING_LINE set"); 
+  if((~flags & settings & Flag::PRINTING_LINE) != Flag::NONE); // Serial.println("PRINTING_LINE cleared"); 
+  if((flags & settings & Flag::STOPPING_INT) != Flag::NONE); // Serial.println("STOPPING_INT set"); 
+  if((~flags & settings & Flag::STOPPING_INT) != Flag::NONE); // Serial.println("STOPPING_INT cleared"); 
+  if((flags & settings & Flag::CENTERING_CROSS) != Flag::NONE); // Serial.println("CENTERING_CROSS set"); 
+  if((~flags & settings & Flag::CENTERING_CROSS) != Flag::NONE); // Serial.println("CENTERING_CROSS cleared"); 
+  if((flags & settings & Flag::CENTERING_CORNER) != Flag::NONE); // Serial.println("CENTERING_CORNER set"); 
+  if((~flags & settings & Flag::CENTERING_CORNER) != Flag::NONE); // Serial.println("CENTERING_CORNER cleared"); 
 }
 
 void Robot::adjustPID(unsigned int var, unsigned int term, Fixed adjustment) {
   if(var > 2 || term > 2) return;
   pid_terms[var][term] += adjustment;
-  if(var == 0) Serial.print("X");
+  /* if(var == 0) Serial.print("X");
   if(var == 1) Serial.print("Y");
   if(var == 2) Serial.print("Rot");
   if(term == 0) Serial.print("P = ");
   if(term == 1) Serial.print("I = ");
   if(term == 2) Serial.print("D = ");
-  Serial.println(pid_terms[var][term].getDouble(), 4);
+  Serial.println(pid_terms[var][term].getDouble(), 4);*/
 }
 
 void Robot::adjustBaseSpeed(Fixed adjustment) {
   base_speed += adjustment;
-  Serial.print("Speed = ");
-  Serial.println(base_speed.getInt());
+  //Serial.print("Speed = ");
+  //Serial.println(base_speed.getInt());
 }
 
 void Robot::reportWheelSpeeds() {
   for(int i = 0; i < 4; i++) {
     Fixed report = wheels[i].getActualSpeed();
-    Serial.print("Wheel ");
+   /* Serial.print("Wheel ");
     Serial.print(i);
     Serial.print("-->");
-    Serial.println(report.getInt());
+    Serial.println(report.getInt());*/
   }
 }
 

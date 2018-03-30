@@ -22,10 +22,6 @@ MagnetArm::MagnetArm(Adafruit_StepperMotor* mot, Adafruit_DCMotor* mag) :
 }
 
 void MagnetArm::goToHeight(int s) {
-  Serial.print("Going to ");
-  Serial.println(s);
-  Serial.print("from ");
-  Serial.println(position);
   if(s < 0 || s >= total_steps) return;
   if(s - position > 0) motor->step(static_cast<uint16_t>(s-position), FORWARD, DOUBLE);
   else motor->step(static_cast<uint16_t>(-1*(s-position)), BACKWARD, DOUBLE);

@@ -12,12 +12,13 @@ class SerialLink {
   protected:
     SerialLink();
     ~SerialLink();
+    char receiveChar() const;
     int receiveInt() const;
     float receiveFloat() const;
+    void receiveBuffer(void*, size_t) const;
     void transmitChar(char) const;
     void transmitInt(int) const;
     void transmitFloat(float) const;
-    void receiveBuffer(void*, size_t) const;
     void transmitBuffer(void*, size_t) const;
 };
 

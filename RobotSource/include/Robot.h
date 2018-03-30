@@ -25,7 +25,6 @@ class Robot : public Drivetrain, public LineFollower {
     Coord getLocation() const;
     void moveUntilLine(Direction);
     void followUntilIntersection(Direction);
-    void center() const;
     bool tokenSeen() const;
 };
 

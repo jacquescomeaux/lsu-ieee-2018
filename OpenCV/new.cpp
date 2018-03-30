@@ -5,14 +5,26 @@
 #include <vector>
 
 int main(int argc, char* argv[]) {
-  cv::VideoCapture cap(0);
+  cv::VideoCapture cap(2);
   while(true) {
     cv::Mat src, img, eroded, temp, element;
     cap >> src;
     cv::cvtColor(src, src, CV_BGR2GRAY);
-    //src = src(cv::Rect(200,165,235,240));
-    cv::bilateralFilter(src, img, 10, 250, 250);
-    cv::threshold(img, img, 180, 255, cv::THRESH_BINARY_INV); 
+    img = src(cv::Rect(195,117,245,283));
+    //cv::bilateralFilter(src, img, 10, 250, 250);
+    cv::threshold(src, img, 180, 255, cv::THRESH_BINARY_INV); 
+    
+    std::vector<cv::Point2f> pts_src, pts_dst;
+    pts_src.push_back(cv::Point2f(92, 0));
+    pts_src.push_back(cv::Point2f(148, 0));
+    pts_src.push_back(cv::Point2f(74, 283));
+    pts_src.push_back(cv::Point2f(178, 283));
+    pts_dst.push_back(cv::Point2f(74, 0));
+    pts_dst.push_back(cv::Point2f(140, 0));
+    pts_dst.push_back(cv::Point2f(74, 283));
+    pts_dst.push_back(cv::Point2f(140, 283));
+    cv::Mat h = cv::getPerspectiveTransform(pts_src, pts_dst);
+    warpPerspective(src, img, h, src.size());
    /* cv::Mat skel(img.size(), CV_8UC1, cv::Scalar(0));
     element = cv::getStructuringElement(cv::MORPH_CROSS, cv::Size(3, 3));
     do {

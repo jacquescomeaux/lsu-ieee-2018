@@ -89,7 +89,7 @@ Fixed Wheel::getDistance() {
 }
 
 //converts encoder reading into inches/feet (inches by default)
-Fixed Wheel::convertDistance(Fixed pos, bool feet = false) const {
+  Fixed Wheel::convertDistance(Fixed pos, bool feet = false) const {
   Fixed dist = pos * ECV;
   if(feet) dist *= 12;
   return dist;

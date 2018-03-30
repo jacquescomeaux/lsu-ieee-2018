@@ -77,10 +77,6 @@ void LineSensor::getLineErrors(Fixed* x, Fixed* y, Fixed* rot, int offset, int r
   r = getLinePosition(ri, range, false);
   *x = (b - f) * SINES[fi];
   *y = (r - l)  * COSINES[ri];
-
-  /*Serial.print("getLineErrors() ");
-  printErrors(*x, *y, *rot);
-  */
 }
 
 void LineSensor::getCrossIntersectionErrors(Fixed* x, Fixed* y, Fixed* rot, int offset) {
@@ -90,9 +86,6 @@ void LineSensor::getCrossIntersectionErrors(Fixed* x, Fixed* y, Fixed* rot, int 
   *x = x_p + x_s;
   *y = y_p + y_s;
   *rot = SINES[4] * SINES[4] * (rot_p + rot_s);
-
-  //Serial.print("getCrossIntersectionErrors() ");
-  //printErrors(*x, *y, *rot);
 }
 
 void LineSensor::getCornerIntersectionErrors(Fixed* x, Fixed* y, Fixed* rot, int offset) {
@@ -100,34 +93,11 @@ void LineSensor::getCornerIntersectionErrors(Fixed* x, Fixed* y, Fixed* rot, int
   int di = (bi + 4) % 32;
   Fixed x_d, y_d, rot_d;
   getLineErrors(&x_d, &y_d, &rot_d, di, 2);
-  //Serial.print("b:");
-  //Serial.println(bi);
   Fixed b = getLinePosition(bi % 32, 2, true);
-
-//begin test code
- /*int front = 8;
- int back = 8 + 16;
- int backleft = back - 4;
- int backright = back + 4;
- Fixed xf, yf, rotf, xb, yb, rotb, xbl, ybl, rotbl, xbr, ybr, rotbr;
-
- getLineErrors(&xf, &yf, &rotf, front, 2);
- getLineErrors(&xb, &yb, &rotb, back, 0);
- getLineErrors(&xbl, &ybl, &rotbl, backleft, 2);
- getLineErrors(&xbr, &ybr, &rotbr, backright, 2); //Does larger range result in larger weight?
-
- *x = xf + xbl + xbr;
- *y = yf + ybl + ybr;
- *rot = (rotf + rotbl + rotbr) * SINES[16] * SINES[24];
-*/
-//end test code
 
   *x = x_d + b * COSINES[di];// + r * COSINES[(di + 16) % 32];
   *y = y_d + b * SINES[di];// + r * SINES[(di + 16) % 32];
   *rot = rot_d;
-
-  //Serial.print("getCornerIntersectionErrors ");
-  //printErrors(*x, *y, *rot);
 }
 
 int LineSensor::countLinePeaks(int range) {
@@ -156,6 +126,7 @@ void LineSensor::precalibrate(int min = 280, int max = 4000) { //don't use this,
 }
 
 void LineSensor::printReadings() {
+  /*
   readSensors();
   unsigned int total = 0;
   for(unsigned int v : sensor_values) total += v;
@@ -202,14 +173,18 @@ void LineSensor::printReadings() {
     Serial.println("");
   }
   Serial.println("\n------------------------------------------------------------------------------------------------");
+*/
 }
 
 void LineSensor::printLinePeaks() {
+  /*
   Serial.print("Lines Seen: ");
   Serial.println(countLinePeaks(3));
+  */
 }
 
 void LineSensor::printCalibratedValues() {
+  /*
   long min = 1000;
   long max = 0;
   long testval = 0;
@@ -231,9 +206,11 @@ void LineSensor::printCalibratedValues() {
   Serial.print(",");
   Serial.print(max);
   Serial.println(")");
+  */
 }
 
 void LineSensor::printErrors(Fixed x, Fixed y, Fixed rot) {
+  /*
   Serial.print("Errors (x, y, rot): (");
   Serial.print(x.getInt());
   Serial.print(" , ");
@@ -241,4 +218,5 @@ void LineSensor::printErrors(Fixed x, Fixed y, Fixed rot) {
   Serial.print(" , ");
   Serial.print(rot.getInt());
   Serial.println(" )");
+  */
 }

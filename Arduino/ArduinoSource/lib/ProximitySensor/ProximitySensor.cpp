@@ -22,10 +22,10 @@ void ProximitySensor::updateProximity() {
   digitalWrite(trig_pin, LOW);
   proximity = pulseIn(echo_pin, HIGH);
   
-  Serial.print("T: ");
+  /*Serial.print("T: ");
   Serial.print(millis());
   Serial.print(" P: ");
-  Serial.print(proximity);
+  Serial.print(proximity);*/
 
 if(proximity > range_min && proximity < range_max) count++;
   else count = 0;

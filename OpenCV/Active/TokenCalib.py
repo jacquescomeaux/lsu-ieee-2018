@@ -50,19 +50,20 @@ if (avB > 140) and (avB < 170):
 	print('RED')
 
 if (avB > 60) and (avB < 90):
-	if (avR > 90):
+	if (avR > 100):
 		print('CYAN')
-	else:
+	elif (avG > 55):
 		print('YELLOW')
+	else:
+		print('GREEN')
 
 
 
-
-print('B')
+print('H')
 print(avB)
-print('G')
+print('S')
 print(avG)
-print('R')
+print('V')
 print(avR)
 
 cv2.imwrite("ColorCalib.png", img)

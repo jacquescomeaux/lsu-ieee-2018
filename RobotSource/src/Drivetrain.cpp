@@ -1,4 +1,6 @@
 #include "../include/Drivetrain.h"
+#include <chrono>
+#include <thread>
 
 Drivetrain::Drivetrain() {}
 
@@ -21,4 +23,10 @@ void Drivetrain::move(Direction dir) const {
 
 void Drivetrain::stop() const {
   transmitChar('s');
+}
+
+void Drivetrain::center() const {
+  transmitChar('\\');
+  std::this_thread::sleep_for(std::chrono::seconds(3));
+  transmitChar('\\');
 }
