@@ -30,9 +30,8 @@ class Robot {
     void setWheelSpeeds(const Fixed*);
     void adjustWheelSpeeds(const Fixed*);
     void correctWheelSpeeds(const Fixed*);
-    void correctErrors();
-    void centerCross(int);
-    void centerCorner(int);
+    void correctErrors(Fixed, Fixed, Fixed);
+    void center(bool cross, int);
     void reportWheelSpeeds(); //print current wheel speeds for debugging
   public:
     Robot();

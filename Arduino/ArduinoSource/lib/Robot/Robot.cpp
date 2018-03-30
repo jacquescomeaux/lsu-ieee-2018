@@ -102,14 +102,19 @@ void Robot::correctWheelSpeeds(const Fixed* speeds) {
   for(int i = 0; i < 4; i++) wheels[i].correctSpeed(speeds[i]);
 }
 
-void Robot::correctErrors() {
+void Robot::center(bool cross, int offset) {
+  Fixed xerr, yerr, rerr;
+  if(cross) line_sensor.getCrossIntersectionErrors(&xerr, &yerr, &rerr, offset);
+  else line_sensor.getCornerIntersectionErrors(&xerr, &yerr, &rerr, offset);
+  correctErrors(xerr, yerr, rerr);
+}
+
+void Robot::correctErrors(Fixed xerr, Fixed yerr, Fixed rerr) {
   if(((flags & Flag::CENTERING_CORNER) != Flag::NONE) || ((flags & Flag::CENTERING_CROSS) != Flag::NONE)) for(int i = 0; i < 3; i++) pid_terms[i][3] = Fixed(0);
   static bool filled = false;
   static const Fixed FIFTH = 0.2;
   static unsigned long t = 0;
   static Fixed prev_errors[3][5] = {0};
-  Fixed xerr, yerr, rerr;
-  line_sensor.getLineErrors(&xerr, &yerr, &rerr, current_direction, 2);
   prev_errors[0][t] = xerr;
   prev_errors[1][t] = yerr;
   prev_errors[2][t] = rerr;
@@ -125,14 +130,6 @@ void Robot::correctErrors() {
     (pid_terms[1][0]  * avgs[1]) + (pid_terms[1][1] * pid_terms[1][3]) + (pid_terms[1][2] * (avgs[1] - pid_terms[1][4])), //y correction
     (pid_terms[2][0]  * avgs[2]) + (pid_terms[2][1] * pid_terms[2][3]) + (pid_terms[2][2] * (avgs[2] - pid_terms[2][4]))  //rot correction
   );
-  /*for(int i = 0; i < 3; i++) {
-    Serial.print("var: "); Serial.println(i);
-    Serial.print("avg: "); Serial.println(avgs[i].getDouble());
-    Serial.print("err: "); Serial.println(prev_errors[i][t].getDouble());
-    Serial.print("acc: "); Serial.println(pid_terms[i][3].getDouble());
-    Serial.print("dif: "); Serial.println((avgs[i] - pid_terms[i][4]).getDouble());
-    Serial.println();
-  }*/
   pid_terms[0][3] += xerr;
   pid_terms[1][3] += yerr;
   pid_terms[2][3] += rerr;
@@ -176,7 +173,11 @@ void Robot::update() {
   }
 
   if((dt[1] > 0) ? (last_ran[1] = time) : false) {
-    if((flags & Flag::FOLLOWING_LINE) != Flag::NONE) correctErrors();
+    if((flags & Flag::FOLLOWING_LINE) != Flag::NONE) {
+      Fixed xerr, yerr, rerr;
+      line_sensor.getLineErrors(&xerr, &yerr, &rerr, current_direction, 2);
+      correctErrors(xerr, yerr, rerr);
+    }
   }
   
   if((dt[2] > 10) ? (last_ran[2] = time) : false) {
@@ -200,90 +201,14 @@ void Robot::update() {
   }
   
   if((dt[6] > 0) ? (last_ran[6] = time) : false) {
-    if((flags & Flag::CENTERING_CROSS) != Flag::NONE) centerCross(0);
+    if((flags & Flag::CENTERING_CROSS) != Flag::NONE) center(true, 0);
   }
   
   if((dt[7] > 0) ? (last_ran[7] = time) : false) {
-    if((flags & Flag::CENTERING_CORNER) != Flag::NONE) centerCorner(16);
+    if((flags & Flag::CENTERING_CORNER) != Flag::NONE) center(false, 16);
   }
   
   if(!ready()) stop();
-}
-
-void Robot::centerCross(int offset) {
-  if(((flags & Flag::FOLLOWING_LINE) != Flag::NONE) || ((flags & Flag::CENTERING_CORNER) != Flag::NONE)) for(int i = 0; i < 3; i++) pid_terms[i][3] = Fixed(0);
-  flags &= ~Flag::FOLLOWING_LINE;
-  flags &= ~Flag::CENTERING_CORNER;
-  static const Fixed TENTH = 0.1;
-  static unsigned long t = 0;
-  static Fixed prev_errors[3][5] = {0};
-  Fixed xerr, yerr, rerr;
-  line_sensor.getCrossIntersectionErrors(&xerr, &yerr, &rerr, offset);
-  prev_errors[0][t] = xerr;
-  prev_errors[1][t] = yerr;
-  prev_errors[2][t] = rerr;
-  Fixed avgs[3];
-  for(int i = 0; i < 3; i++) {
-    for(Fixed f : prev_errors[i]) avgs[i] += f;
-    avgs[i] *= TENTH;
-  }
-  veer(
-    //PID CONTROLLER
-    //KP * current error        +  KI * accumulated error             +  KD * change in error
-    (pid_terms[0][0] * avgs[0]) + (pid_terms[0][1] * pid_terms[0][3]) + (pid_terms[0][2] * (avgs[0] - pid_terms[0][4])), //x correction
-    (pid_terms[1][0] * avgs[1]) + (pid_terms[1][1] * pid_terms[1][3]) + (pid_terms[1][2] * (avgs[1] - pid_terms[1][4])), //y correction
-    (pid_terms[2][0] * avgs[2]) + (pid_terms[2][1] * pid_terms[2][3]) + (pid_terms[2][2] * (avgs[2] - pid_terms[2][4]))  //rot correction
-  );
-  pid_terms[0][3] += xerr;
-  pid_terms[1][3] += yerr;
-  pid_terms[2][3] += rerr;
-  pid_terms[0][4]  = avgs[0];
-  pid_terms[1][4]  = avgs[1];
-  pid_terms[2][4]  = avgs[2];
-  if(debug) {
-    Serial.print("Time");
-    Serial.println(millis());
-    reportWheelSpeeds();
-  }
-  if(++t >= 5) t = 0;
-}
-
-void Robot::centerCorner(int offset) {
-  if(((flags & Flag::FOLLOWING_LINE) != Flag::NONE) || ((flags & Flag::CENTERING_CROSS) != Flag::NONE)) for(int i = 0; i < 3; i++) pid_terms[i][3] = Fixed(0);
-  flags &= ~Flag::FOLLOWING_LINE;
-  flags &= ~Flag::CENTERING_CROSS;
-  static const Fixed TENTH = 0.1;
-  static unsigned long t = 0;
-  static Fixed prev_errors[3][5] = {0};
-  Fixed xerr, yerr, rerr;
-  line_sensor.getCornerIntersectionErrors(&xerr, &yerr, &rerr, offset);
-  prev_errors[0][t] = xerr;
-  prev_errors[1][t] = yerr;
-  prev_errors[2][t] = rerr;
-  Fixed avgs[3];
-  for(int i = 0; i < 3; i++) {
-    for(Fixed f : prev_errors[i]) avgs[i] += f;
-    avgs[i] *= TENTH;
-  }
-  veer(
-    //PID CONTROLLER
-    //KP * current error        +  KI * accumulated error             +  KD * change in error
-    (pid_terms[0][0] * avgs[0]) + (pid_terms[0][1] * pid_terms[0][3]) + (pid_terms[0][2] * (avgs[0] - pid_terms[0][4])), //x correction
-    (pid_terms[1][0] * avgs[1]) + (pid_terms[1][1] * pid_terms[1][3]) + (pid_terms[1][2] * (avgs[1] - pid_terms[1][4])), //y correction
-    (pid_terms[2][0] * avgs[2]) + (pid_terms[2][1] * pid_terms[2][3]) + (pid_terms[2][2] * (avgs[2] - pid_terms[2][4]))  //rot correction
-  );
-  pid_terms[0][3] += xerr;
-  pid_terms[1][3] += yerr;
-  pid_terms[2][3] += rerr;
-  pid_terms[0][4]  = avgs[0];
-  pid_terms[1][4]  = avgs[1];
-  pid_terms[2][4]  = avgs[2];
-  if(debug) {
-    Serial.print("Time");
-    Serial.println(millis());
-    reportWheelSpeeds();
-  }
-  if(++t >= 5) t = 0;
 }
 
 void Robot::move(Direction dir) {
