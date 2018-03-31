@@ -10,7 +10,7 @@
 class Camera {
   private:
     cv::VideoCapture cap;
-    int countLines();
+    int countBlack();
   public:
     Camera(int n);
     bool onLine();

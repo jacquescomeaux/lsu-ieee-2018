@@ -22,8 +22,9 @@ void Robot::followUntilIntersection(Direction dir) {
   if(dir == Direction::NONE) return;
   if(dir == Direction::CLOCKWISE) return;
   if(dir == Direction::COUNTER_CLOCKWISE) return;
-  followLine(dir);
-  while(token_cam.onLine()) if(token_cam.atIntersection()) break;
+  //followLine(dir);
+  //while(token_cam.onLine()) if(token_cam.atIntersection()) break;
+  while(1 != 0) token_cam.onLine();
   //while(!atIntersection());
   stop();
 }
