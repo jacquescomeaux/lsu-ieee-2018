@@ -45,26 +45,27 @@ void Controller::runAlgorithm() const {
   //robot.travel(Direction::CLOCKWISE, 90, 24);
   robot.toggleCalibration();
   robot.snapToLine(Direction::LEFT);
+  robot.setSpeed(60);
   robot.followUntilIntersection(Direction::LEFT);
   robot.center(false, 16);
   
-  robot.travel(Direction::FRONT, 90, 4);
+  robot.travel(Direction::FRONT, 90, 3);
   robot.followUntilIntersection(Direction::FRONT);
   robot.center(true, 0);
   
-  robot.travel(Direction::FRONT, 90, 4);
+  robot.travel(Direction::FRONT, 90, 3);
   robot.followUntilIntersection(Direction::FRONT);
   robot.center(false, 8);
   
-  robot.travel(Direction::LEFT, 90, 4);
+  robot.travel(Direction::LEFT, 90, 3);
   robot.followUntilIntersection(Direction::FRONT);
   robot.center(false, 0);
   
-  robot.travel(Direction::BACK, 90, 4);
+  robot.travel(Direction::BACK, 90, 3);
   robot.followUntilIntersection(Direction::FRONT);
   robot.center(true, 0);
   
-  robot.travel(Direction::BACK, 90, 4);
+  robot.travel(Direction::BACK, 90, 3);
   robot.followUntilIntersection(Direction::FRONT);
   robot.center(false, 24);
 

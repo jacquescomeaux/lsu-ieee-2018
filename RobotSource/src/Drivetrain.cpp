@@ -29,6 +29,11 @@ void Drivetrain::move(Direction dir) const {
   }*/
 }
 
+void Drivetrain::setSpeed(int speed) const {
+  transmitChar(',');
+  transmitValue(speed);
+}
+
 void Drivetrain::move(Direction dir, int speed) const {
   transmitChar('M');
   transmitDirection(dir);

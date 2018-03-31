@@ -14,6 +14,7 @@ class Drivetrain : private SerialLink {
     Drivetrain();
   public:
     void stop() const;
+    void setSpeed(int) const;
     void move(Direction) const;
     void move(Direction, int) const;
     void travel(Direction, int, float) const;

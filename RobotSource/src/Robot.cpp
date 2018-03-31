@@ -2,13 +2,14 @@
 
 #include <iostream>
 
-Robot::Robot() : token_cam(1), location_cam(0) {}
+Robot::Robot() : token_cam(1), location_cam(2) {}
 
 Coord Robot::getLocation() const {
   return location_cam.determineLocation();
 }
 
 void Robot::moveUntilLine(Direction dir, int speed) {
+  for(int i = 0; i < 20; i++) token_cam.onLine();
   //for(int i = 0; i < 10; i++) token_cam.onLine();
   if(dir == Direction::NONE) return;
   if(dir == Direction::CLOCKWISE) return;
@@ -20,6 +21,7 @@ void Robot::moveUntilLine(Direction dir, int speed) {
 }
 
 void Robot::followUntilIntersection(Direction dir) {
+  for(int i = 0; i < 20; i++) token_cam.onLine();
   if(dir == Direction::NONE) return;
   if(dir == Direction::CLOCKWISE) return;
   if(dir == Direction::COUNTER_CLOCKWISE) return;

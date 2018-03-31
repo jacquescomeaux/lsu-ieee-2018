@@ -34,6 +34,7 @@ int main(int argc, char* argv[]) {
 	pts2.push_back(cv::Point2f(140,283));
 
 	while(true) {
+		double t = cv::getTickCount();
 		cv::Mat ret, image, img, dst, dst1;
 		cam >> image;
 		//cam >> ret;
@@ -48,7 +49,7 @@ int main(int argc, char* argv[]) {
 		cv::cvtColor(dst, dst1, CV_BGR2GRAY);
 		cv::bilateralFilter(dst1, dst, 5, 75, 75);
 
-		cv::Canny(dst, dst, 50, 100);
+		cv::Canny(dst, dst, 50, 60);
 
 		std::vector<cv::Vec3f> circles;
 		//HoughCircles(input, output, method, dp,
@@ -57,16 +58,16 @@ int main(int argc, char* argv[]) {
 		//param2 - accumlator threshold for the circle centers at detection stage
 		//minRadius - Minimum circle radius
 		//maxRadius - Maximum circle radius
-		cv::HoughCircles(dst, circles, CV_HOUGH_GRADIENT, 2, 300, 100, 65, 45, 100);
-		//cv::HoughCircles(dst, circles, CV_HOUGH_GRADIENT, 2, 50, 100, 25, 0, 100);
-		//std::cout << "Circle (x, y): " << circles[0][0] << ", " << circles[0][1] << std::endl;
+		cv::HoughCircles(dst, circles, CV_HOUGH_GRADIENT, 2, 300, 50, 65, 60, 70);
+		t = (cv::getTickCount() - t)/cv::getTickFrequency();
+		std::cout << "Time: " << t << std::endl;
 		try {
 			for(int i = 0; i < circles.size(); i++) {
 				int x = round(circles[i][0]);
 				int y = round(circles[i][1]);
 				int radius = round(circles[i][2]);
 				cv::Point center(x,y);
-				std::cout << "Drawing a Circle at (" << center.x << "," << center.y << ")" << std::endl; 
+				std::cout << "Drawing a Circle at (" << center.x << "," << center.y << ") radius: " << radius << std::endl; 
 				cv::circle(img, center, radius, cv::Scalar(0,255,0), 4);
 				//cv::circle(img, center, radius, cv::Scalar(0,0,255), 3, 8, 0); //circle outline
 				//cv::rectangle(img, (center.x, center.y), (center.x + 5, center.y + 5), cv::Scalar(0, 255, 0));

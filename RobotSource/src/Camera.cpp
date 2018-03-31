@@ -26,11 +26,11 @@ Camera::Camera(int n) : cap(n) {
   pts_src.push_back(cv::Point2f(69, 233));
   pts_src.push_back(cv::Point2f(173, 233));
   pts_dst.push_back(cv::Point2f(69, 0));
-  pts_dst.push_back(cv::Point2f(135, 0));
+  pts_dst.push_back(cv::Point2f(139, 0));
   pts_dst.push_back(cv::Point2f(69, 233));
-  pts_dst.push_back(cv::Point2f(135, 233));
+  pts_dst.push_back(cv::Point2f(139, 233));
   M = cv::getPerspectiveTransform(pts_src, pts_dst);
-  for(int i = 0; i < 50; i++) countBlack();
+  //for(int i = 0; i < 50; i++) countBlack();
 }
 
 int Camera::countBlack() {
@@ -40,9 +40,11 @@ int Camera::countBlack() {
   if(img.empty()) return -1;
   cv::cvtColor(img, img, cv::COLOR_BGR2GRAY);
   img = img(cv::Rect(200, 165, 235, 233));
-  cv::resize(img, img, cv::Size(), 0.5, 0.5);
-  cv::threshold(img, img, 100, 255, cv::THRESH_BINARY_INV);
+  cv::threshold(img, img, 130, 255, cv::THRESH_BINARY_INV);
   warpPerspective(img, img, M, img.size());
+  img = img(cv::Rect(10, 0, 180, 170));
+  //img = img(cv::Rect(200, 165, 220, 220));
+  cv::resize(img, img, cv::Size(), 0.5, 0.5);
   //cv::imshow("what the FUCK", img); 
   //cv::waitKey(0);
   int black = cv::countNonZero(img);
@@ -56,8 +58,8 @@ bool Camera::onLine() {
   int checkvals[2];
   for(int i = 0; i < 2; i++) checkvals[i] = countBlack();
   if(abs(checkvals[0]-checkvals[1]) > 4000) return false; //check for "trash frames"
-  if(checkvals[0] > 2000 || checkvals[1] > 2000) {
-    std::cout << "stopped at int with blackness "<< checkvals[0] << " or " << checkvals[1] << std::endl;
+  if(checkvals[0] > 2500 || checkvals[1] > 2500) {
+    std::cout << "stopped at line with blackness "<< checkvals[0] << " or " << checkvals[1] << std::endl;
     return true;
   }
   else return false;
@@ -67,7 +69,7 @@ bool Camera::atIntersection() {
   int checkvals[2];
   for(int i = 0; i < 2; i++) checkvals[i] = countBlack();
   if(abs(checkvals[0]-checkvals[1]) > 4000) return false;
-  if(checkvals[0] > 6000 || checkvals[1] > 6000) {
+  if(checkvals[0] > 5000 || checkvals[1] > 5000) {
     std::cout << "stopped at int with blackness "<< checkvals[0] << " or " << checkvals[1] << std::endl;
     return true; 
   }
