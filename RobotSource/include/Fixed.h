@@ -1,7 +1,6 @@
 #ifndef FIXED_H
 #define FIXED_H
 
-#include <ArduinoSTL.h>
 #include <stdint.h>
 #include <cstddef>
 
@@ -9,10 +8,9 @@ class Fixed {
   private:
     static const size_t shift;
     static const uint64_t factor;
-    int64_t internal;
+    uint64_t internal;
   public:
     Fixed();
-    Fixed(int);
     Fixed(int32_t);
     Fixed(uint64_t);
     Fixed(double);
@@ -27,7 +25,7 @@ class Fixed {
     Fixed& operator/=(const Fixed&);
     Fixed& operator/=(int32_t);
     Fixed mag() const;
-    int64_t getInternal() const;
+    uint64_t getInternal() const;
     double getDouble() const;
     int32_t getInt() const;
 };

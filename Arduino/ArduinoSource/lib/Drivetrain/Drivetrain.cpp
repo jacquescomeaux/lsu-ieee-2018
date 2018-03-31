@@ -39,6 +39,7 @@ void Drivetrain::checkDestination() {
     if((wheels[i].getSpeed() > Fixed(0)) != (wheels[i].getPosition() >= target_wheel_pos[i])) continue;
     travelDstReached = true;
     stop();
+    Serial.write('+');
   }
 }
 
@@ -87,7 +88,7 @@ void Drivetrain::travel(Direction dir, Fixed dist) {
   travel(dir, dist, base_speed);
 }
 
-void Drivetrain::travel(Direction dir, Fixed dist, Fixed speed) {
+void Drivetrain::travel(Direction dir, Fixed speed, Fixed dist) {
   Fixed x, y, rot;
   resolveDirection(dir, &x, &y, &rot);
   travel(speed * x, speed * y, speed * rot, dist);

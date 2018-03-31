@@ -36,7 +36,7 @@ Fixed receiveFixed() {
   union eight_byte_object x;
   while(Serial.available() < 8);
   Serial.readBytes(x.chars, 8);
-  return Fixed(static_cast<uint64_t>(x.number));
+  return Fixed(x.number);
 }
 
 void receivePIDCommand(unsigned int var) {
@@ -78,6 +78,13 @@ void parseCommand() {
 
     case 'm': robot->move(receiveDirection()); break;
     
+    case 'M': {
+      Direction dir = receiveDirection();
+      Fixed speed = receiveFixed();
+      robot->veer(dir, speed);
+      break;
+    }
+    
     case 't': {
       Direction dir = receiveDirection();
       Fixed speed = receiveFixed();
@@ -96,8 +103,8 @@ void parseCommand() {
     case 'v': {
       Direction dir = receiveDirection();
       Fixed speed = receiveFixed();
-      Fixed dist = receiveFixed();
-      robot->veer(receiveDirection(), speed, dist); break;
+      robot->veer(dir, speed);
+      break;
     }
     
     case 'V': {

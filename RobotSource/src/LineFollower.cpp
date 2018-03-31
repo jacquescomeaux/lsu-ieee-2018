@@ -1,9 +1,13 @@
 #include "../include/LineFollower.h"
+#include <chrono>
+#include <thread>
 
 LineFollower::LineFollower() {}
 
 void LineFollower::followLine(Direction dir) const {
-  switch(dir) {
+  transmitChar('m');
+  transmitDirection(dir);
+  /*switch(dir) {
     case Direction::NONE : transmitChar('s'); break;
     case Direction::FRONT : transmitChar('w'); break;
     case Direction::BACK : transmitChar('x'); break;
@@ -16,20 +20,36 @@ void LineFollower::followLine(Direction dir) const {
     case Direction::CLOCKWISE : transmitChar('s'); break;
     case Direction::COUNTER_CLOCKWISE : transmitChar('s'); break;
     default: transmitChar('s');
-  }
+  }*/
   transmitChar('f');
 }
 
 void LineFollower::snapToLine(Direction dir) const {
   followLine(dir);
-  transmitChar('s');
+  transmitChar(' ');
+  std::this_thread::sleep_for(std::chrono::seconds(3));
 }
 
-bool LineFollower::atIntersection() const {
+void LineFollower::toggleCalibration() const {
+  transmitChar('c');
+}
+
+void LineFollower::center(bool cross, int offset) const {
+  transmitChar('/');
+  transmitIndex(offset);
+  char centerChar = cross ? '|' : '\\';
+  transmitChar(centerChar);
+  std::this_thread::sleep_for(std::chrono::seconds(6));
+  transmitChar(centerChar);
+  transmitChar(' ');
+}
+
+
+/*bool LineFollower::atIntersection() const {
   static char last_char = 'y';
   transmitChar('?');
   char current_char = receiveChar();
   bool atInt = (current_char == 'y' && last_char == 'n');
   last_char = current_char;
   return atInt;
-}
+}*/

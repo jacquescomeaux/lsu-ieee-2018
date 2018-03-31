@@ -1,6 +1,8 @@
 #ifndef DIRECTION_H
 #define DIRECTION_H
 
+#include <stdint.h>
+
 enum class Direction : uint8_t {
   NONE = 0,
   FRONT = 1,

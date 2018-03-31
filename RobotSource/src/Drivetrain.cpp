@@ -2,10 +2,18 @@
 #include <chrono>
 #include <thread>
 
+#include <iostream>
+
 Drivetrain::Drivetrain() {}
 
+void Drivetrain::stop() const {
+  transmitChar(' ');
+}
+
 void Drivetrain::move(Direction dir) const {
-  switch(dir) {
+  transmitChar('m');
+  transmitDirection(dir);
+  /*switch(dir) {
     case Direction::NONE : transmitChar('s'); break;
     case Direction::FRONT : transmitChar('w'); break;
     case Direction::BACK : transmitChar('x'); break;
@@ -18,15 +26,19 @@ void Drivetrain::move(Direction dir) const {
     case Direction::CLOCKWISE : transmitChar('j'); break;
     case Direction::COUNTER_CLOCKWISE : transmitChar('k'); break;
     default: transmitChar('s');
-  }
+  }*/
 }
 
-void Drivetrain::stop() const {
-  transmitChar('s');
+void Drivetrain::move(Direction dir, int speed) const {
+  transmitChar('M');
+  transmitDirection(dir);
+  transmitValue(speed);
 }
 
-void Drivetrain::center() const {
-  transmitChar('\\');
-  std::this_thread::sleep_for(std::chrono::seconds(3));
-  transmitChar('\\');
+void Drivetrain::travel(Direction dir, int speed, float dist) const {
+  transmitChar('t');
+  transmitDirection(dir);
+  transmitValue(speed);
+  transmitValue(dist);
+  receiveChar();
 }

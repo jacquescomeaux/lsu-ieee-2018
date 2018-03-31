@@ -3,11 +3,13 @@
 
 #include <libserialport.h>
 
+#include "Direction.h"
+
 class SerialLink {
   private:
     static int object_count;
     static struct sp_port* port;
-    const char* PORTNAME;//, CONFIG;
+    const char* PORTNAME;
     const int BAUD;
   protected:
     SerialLink();
@@ -17,8 +19,10 @@ class SerialLink {
     float receiveFloat() const;
     void receiveBuffer(void*, size_t) const;
     void transmitChar(char) const;
-    void transmitInt(int) const;
-    void transmitFloat(float) const;
+    void transmitIndex(unsigned int) const;
+    void transmitDirection(Direction) const;
+    void transmitValue(int) const;
+    void transmitValue(float) const;
     void transmitBuffer(void*, size_t) const;
 };
 

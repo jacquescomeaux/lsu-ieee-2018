@@ -10,6 +10,7 @@
 class Camera {
   private:
     cv::VideoCapture cap;
+    cv::Mat M;
     int countBlack();
   public:
     Camera(int n);

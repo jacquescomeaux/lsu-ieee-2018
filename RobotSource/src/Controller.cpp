@@ -29,7 +29,7 @@ Controller::Controller(SortBot& r, Direction* f_seq, Direction* c_seq, int n) :
 
 void Controller::coverLine(Direction dir, int num_tokens) const {
   for(int i = 0; i < num_tokens; i++) {
-    robot.center();
+    //robot.center();
     if(robot.tokenSeen()) robot.sortToken();
     if(i < num_tokens - 1) robot.followUntilIntersection(dir);
   }
@@ -38,12 +38,40 @@ void Controller::coverLine(Direction dir, int num_tokens) const {
 void Controller::runAlgorithm() const {
   getchar();
   //for(int i = 0; i < 2; i++)
-  //for(int j = 0; j < 2; j++) robot.moveUntilLine(Direction::FRONT);
-  //robot.move(Direction::LEFT);
+  robot.toggleCalibration();
+  robot.moveUntilLine(Direction::FRONT, 30);
+  robot.travel(Direction::FRONT, 30, 6);
+  robot.moveUntilLine(Direction::FRONT, 30);
+  //robot.travel(Direction::CLOCKWISE, 90, 24);
+  robot.toggleCalibration();
+  robot.snapToLine(Direction::LEFT);
   robot.followUntilIntersection(Direction::LEFT);
- /* robot.center();
+  robot.center(false, 16);
+  
+  robot.travel(Direction::FRONT, 90, 4);
   robot.followUntilIntersection(Direction::FRONT);
- */ //robot.followUntilIntersection(Direction::FRONT);
+  robot.center(true, 0);
+  
+  robot.travel(Direction::FRONT, 90, 4);
+  robot.followUntilIntersection(Direction::FRONT);
+  robot.center(false, 8);
+  
+  robot.travel(Direction::LEFT, 90, 4);
+  robot.followUntilIntersection(Direction::FRONT);
+  robot.center(false, 0);
+  
+  robot.travel(Direction::BACK, 90, 4);
+  robot.followUntilIntersection(Direction::FRONT);
+  robot.center(true, 0);
+  
+  robot.travel(Direction::BACK, 90, 4);
+  robot.followUntilIntersection(Direction::FRONT);
+  robot.center(false, 24);
+
+  robot.travel(Direction::RIGHT, 90, 30);
+  
+  //robot.followUntilIntersection(Direction::FRONT);
+  //robot.followUntilIntersection(Direction::FRONT);
   //robot.followUntilIntersection(Direction::RIGHT);
   //robot.followUntilIntersection(Direction::BACK);
   //robot.followUntilIntersection(Direction::BACK);

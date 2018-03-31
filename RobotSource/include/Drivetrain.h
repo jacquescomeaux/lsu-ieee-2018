@@ -13,9 +13,10 @@ class Drivetrain : private SerialLink {
   protected:
     Drivetrain();
   public:
-    void move(Direction) const;
     void stop() const;
-    void center() const;
+    void move(Direction) const;
+    void move(Direction, int) const;
+    void travel(Direction, int, float) const;
 };
 
 #endif//DRIVETRAIN_H

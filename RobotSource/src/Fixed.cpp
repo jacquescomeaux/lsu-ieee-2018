@@ -1,11 +1,9 @@
-#include "Fixed.h"
+#include "../include/Fixed.h"
 
 const size_t Fixed::shift = 8 * sizeof(int32_t);
 const uint64_t Fixed::factor = static_cast<uint64_t>(1) << shift; 
 
 Fixed::Fixed() : Fixed(0) {}
-
-Fixed::Fixed(int i) : internal(static_cast<int64_t>(i) << shift) {}
 
 Fixed::Fixed(int32_t i) : internal(static_cast<int64_t>(i) << shift) {}
 
@@ -70,7 +68,7 @@ Fixed Fixed::mag() const {
   return *this;
 }
 
-int64_t Fixed::getInternal() const {
+uint64_t Fixed::getInternal() const {
   return internal;
 }
 

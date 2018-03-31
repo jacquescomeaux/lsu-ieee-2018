@@ -1,20 +1,21 @@
 #include "../include/Robot.h"
 
+#include <iostream>
+
 Robot::Robot() : token_cam(1), location_cam(0) {}
 
 Coord Robot::getLocation() const {
   return location_cam.determineLocation();
 }
 
-void Robot::moveUntilLine(Direction dir) {
+void Robot::moveUntilLine(Direction dir, int speed) {
   //for(int i = 0; i < 10; i++) token_cam.onLine();
   if(dir == Direction::NONE) return;
   if(dir == Direction::CLOCKWISE) return;
   if(dir == Direction::COUNTER_CLOCKWISE) return;
-  move(dir);
-  //move(Direction::CLOCKWISE);
+  move(dir, speed);
   while(!token_cam.onLine());
-  //while(true) token_cam.onLine();
+  //while(!token_cam.atIntersection());
   stop();
 }
 
@@ -22,10 +23,11 @@ void Robot::followUntilIntersection(Direction dir) {
   if(dir == Direction::NONE) return;
   if(dir == Direction::CLOCKWISE) return;
   if(dir == Direction::COUNTER_CLOCKWISE) return;
-  //followLine(dir);
+  followLine(dir);
   //while(token_cam.onLine()) if(token_cam.atIntersection()) break;
-  while(1 != 0) token_cam.onLine();
-  //while(!atIntersection());
+  //while(true) token_cam.atIntersection();
+  while(!token_cam.atIntersection());
+  //std::cout << "stopped at intersection" << std::endl;
   stop();
 }
 

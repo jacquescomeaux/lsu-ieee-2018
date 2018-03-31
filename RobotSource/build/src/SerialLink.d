@@ -1,1 +1,2 @@
-build/src/SerialLink.o: src/SerialLink.cpp src/../include/SerialLink.h
+build/src/SerialLink.o: src/SerialLink.cpp src/../include/SerialLink.h \
+ src/../include/Direction.h src/../include/Fixed.h

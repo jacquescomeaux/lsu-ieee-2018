@@ -4,7 +4,7 @@ import numpy as np
 import argparse
 import cv2
 
-cam = cv2.VideoCapture(2)
+cam = cv2.VideoCapture(1)
 
 kernel = np.ones((5,5),np.uint8)
 

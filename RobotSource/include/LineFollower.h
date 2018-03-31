@@ -10,8 +10,10 @@ class LineFollower : private SerialLink {
     LineFollower();
   public:
     void followLine(Direction) const;
+    void toggleCalibration() const;
     void snapToLine(Direction) const;
-    bool atIntersection() const;
+    void center(bool cross, int) const;
+    //bool atIntersection() const;
 };
 
 #endif//LINEFOLLOWER_H
