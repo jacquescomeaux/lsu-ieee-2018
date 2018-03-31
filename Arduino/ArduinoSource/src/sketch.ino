@@ -2,10 +2,42 @@
 #include <Arduino.h>
 
 #include <Fixed.h>
+#include <Direction.h>
 
 #define moveSetDstAmt 4 //how far the robot moves via moveSetDistance (in inches)
 
 SortBot* robot;
+
+union two_byte_object {
+  unsigned char bytes[2];
+  char chars[2];
+  unsigned int number;
+};
+
+union eight_byte_object {
+  unsigned char bytes[8];
+  char chars[8];
+  Fixed number;
+};
+
+unsigned int receiveIndex() {
+  union two_byte_object i;
+  while(Serial.available() < 2);
+  Serial.readBytes(i.chars, 2);
+  return i.number;
+}
+
+Direction receiveDirection() {
+  while(!Serial.available());
+  return static_cast<Direction>(Serial.read());
+}
+
+Fixed receiveFixed() {
+  union eight_byte_object x;
+  while(Serial.available() < 8);
+  Serial.readBytes(x.chars, 8);
+  return x.number;
+}
 
 void receivePIDCommand(unsigned int var) {
   while(Serial.available() < 2);
@@ -44,21 +76,59 @@ void parseCommand() {
     case 'c': robot->move(Direction::BACK_RIGHT); break;
     case 'k': robot->move(Direction::CLOCKWISE); break;
     case 'j': robot->move(Direction::COUNTER_CLOCKWISE); break;
+    
     case 'u': robot->steer(Direction::COUNTER_CLOCKWISE); break;
     case 'i': robot->steer(Direction::CLOCKWISE); break;
     case 'y': robot->steer(Direction::LEFT); break;
     case 'o': robot->steer(Direction::RIGHT); break;
+    
     case 'r': robot->toggle(Flag::CALIBRATING_LINE); break;
     case 'f': robot->toggle(Flag::FOLLOWING_LINE); break;
     case 'v': robot->toggle(Flag::PRINTING_LINE); break;
-    case 'h': robot->toggle(Flag::STOPPING_INT); break;
+    
     case '1': Serial.print("Adjusting x"); receivePIDCommand(0); break;
     case '2': Serial.print("Adjusting y"); receivePIDCommand(1); break;
     case '3': Serial.print("Adjusting rot"); receivePIDCommand(2); break;
+    
+    case ',': robot->setBaseSpeed(receiveFixed()); break; 
     case '<': robot->adjustBaseSpeed(Fixed(-10)); break;
     case '>': robot->adjustBaseSpeed(Fixed(10)); break;
-    case 'g': robot->travel(Direction::FRONT, Fixed(10.5), Fixed(100)); break;
-    case 'b': robot->travel(Direction::COUNTER_CLOCKWISE, Fixed(10)); break;
+   
+    case '/': robot->setCenterOffset(recieveIndex()) break;
+    case '.': robot->setFollowRange(recieveIndex()) break;
+
+    case 'm': robot->move(recieveDirection()); break;
+    
+    case 't': {
+      Direction dir = receiveDirection();
+      Fixed speed = receiveFixed();
+      Fixed dist = receiveFixed();
+      robot->travel(dir, speed, dist);
+      break;
+    }
+    
+    case 's': {
+      Direction dir = receiveDirection();
+      Fixed amount = receiveFixed();
+      robot->steer(dir, amount);
+      break;
+    }
+    
+    case 'v': {
+      Direction dir = receiveDirection();
+      Fixed speed = receiveFixed();
+      Fixed dist = receiveFixed();
+      robot->veer(recieveDirection(), speed, dist); break;
+    }
+    
+    case 'V': {
+      Fixed x = receiveFixed();
+      Fixed y = receiveFixed();
+      Fixed rot = receiveFixed();
+      robot->veer(x, y, rot);
+      break;
+    }
+    
     case 'p': robot->pickUpToken(); break;
     case 'm': robot->storeToken(Color::RED); break;
     case 'l': robot->dropNextTokenStack(); break;

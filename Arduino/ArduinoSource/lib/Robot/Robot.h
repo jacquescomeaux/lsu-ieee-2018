@@ -1,7 +1,6 @@
 #ifndef ROBOT_H
 #define ROBOT_H
 
-#include <Direction.h>
 #include <Fixed.h>
 #include <Flag.h>
 
@@ -32,6 +31,8 @@ class Robot : public Drivetrain, public LineFollower {
 
     //change robot state
     void toggle(Flag);
+    void setCenterOffset(unsigned int);
+    void setFollowRange(unsigned int);
 };
 
 class SortBot : public Robot, public SortingSystem {

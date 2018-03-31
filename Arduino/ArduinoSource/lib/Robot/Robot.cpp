@@ -2,7 +2,7 @@
 
 Robot::Robot() :
   stopped(true),
-  current_offset(8),
+  center_offset(8),
   follow_range(2),
   flags(Flag::NONE),
   edge_detectors {
@@ -89,7 +89,7 @@ void Robot::update() {
   if((dt[6] > 0) ? (last_ran[6] = time) : false) {
     if((flags & Flag::CENTERING_CROSS) != Flag::NONE) {
       Fixed xcrr, ycrr, rcrr;
-      getCenterCorrections(&xcrr, &ycrr, &rcrr, true, current_offset);
+      getCenterCorrections(&xcrr, &ycrr, &rcrr, true, center_offset);
       veer(xcrr, ycrr, rcrr);
     }
   }
@@ -97,7 +97,7 @@ void Robot::update() {
   if((dt[7] > 0) ? (last_ran[7] = time) : false) {
     if((flags & Flag::CENTERING_CORNER) != Flag::NONE) {
       Fixed xcrr, ycrr, rcrr;
-      getCenterCorrections(&xcrr, &ycrr, &rcrr, false, current_offset);
+      getCenterCorrections(&xcrr, &ycrr, &rcrr, false, center_offset);
       veer(xcrr, ycrr, rcrr);
     }
   }
@@ -122,6 +122,14 @@ void Robot::toggle(Flag settings) {
   if((~flags & settings & Flag::CENTERING_CROSS) != Flag::NONE); // Serial.println("CENTERING_CROSS cleared"); 
   if((flags & settings & Flag::CENTERING_CORNER) != Flag::NONE); // Serial.println("CENTERING_CORNER set"); 
   if((~flags & settings & Flag::CENTERING_CORNER) != Flag::NONE); // Serial.println("CENTERING_CORNER cleared"); 
+}
+
+void Robot::setCenterOffset(unsigned int offset) {
+  center_offset = offset;
+}
+
+void Robot::setFollowRange(unsigned int range) {
+  follow_range = offset;
 }
 
 SortBot::SortBot() {}

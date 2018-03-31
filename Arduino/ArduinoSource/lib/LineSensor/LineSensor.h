@@ -4,7 +4,6 @@
 #include <QTRSensors.h>
 
 #include <Fixed.h>
-#include <Direction.h>
 
 class LineSensor {
   private:

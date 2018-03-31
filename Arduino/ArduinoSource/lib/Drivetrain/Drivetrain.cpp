@@ -83,36 +83,6 @@ void Drivetrain::move(Fixed x, Fixed y, Fixed rot) {
   setWheelSpeeds(speeds);
 }
 
-void Drivetrain::veer(Direction dir) {
-  veer(dir, veer_amount);
-}
-
-void Drivetrain::veer(Direction dir, Fixed amount) {
-  Fixed x, y, rot;
-  resolveDirection(dir, &x, &y, &rot);
-  veer(amount * x, amount * y, amount * rot);
-}
-
-void Drivetrain::veer(Fixed x, Fixed y, Fixed rot) {
-  const Fixed adjustments[4] = {y + x - rot, y - x - rot, y + x + rot, y - x + rot};
-  correctWheelSpeeds(adjustments);
-}
-
-void Drivetrain::steer(Direction dir) {
-  steer(dir, veer_amount);
-}
-
-void Drivetrain::steer(Direction dir, Fixed amount) {
-  Fixed x, y, rot;
-  resolveDirection(dir, &x, &y, &rot);
-  steer(amount * x, amount * y, amount * rot);
-}
-
-void Drivetrain::steer(Fixed x, Fixed y, Fixed rot) {
-  const Fixed adjustments[4] = {y + x - rot, y - x - rot, y + x + rot, y - x + rot};
-  adjustWheelSpeeds(adjustments);
-}
-
 void Drivetrain::travel(Direction dir, Fixed dist) {
   travel(dir, dist, base_speed);
 }
@@ -132,14 +102,56 @@ void Drivetrain::travel(Fixed x, Fixed y, Fixed rot, Fixed dist) {
   setWheelSpeeds(speeds);
 }
 
+void Drivetrain::steer(Direction dir, Fixed amount) {
+  Fixed x, y, rot;
+  resolveDirection(dir, &x, &y, &rot);
+  steer(amount * x, amount * y, amount * rot);
+}
+
+void Drivetrain::veer(Direction dir) {
+  veer(dir, veer_amount);
+}
+
+void Drivetrain::veer(Direction dir, Fixed amount) {
+  Fixed x, y, rot;
+  resolveDirection(dir, &x, &y, &rot);
+  veer(amount * x, amount * y, amount * rot);
+}
+
+void Drivetrain::veer(Fixed x, Fixed y, Fixed rot) {
+  const Fixed adjustments[4] = {y + x - rot, y - x - rot, y + x + rot, y - x + rot};
+  correctWheelSpeeds(adjustments);
+}
+
+void Drivetrain::steer(Direction dir) {
+  steer(dir, veer_amount);
+}
+
+void Drivetrain::steer(Fixed x, Fixed y, Fixed rot) {
+  const Fixed adjustments[4] = {y + x - rot, y - x - rot, y + x + rot, y - x + rot};
+  adjustWheelSpeeds(adjustments);
+}
+
+void Drivetrain::setBaseSpeed(Fixed speed) {
+  base_speed = speed;
+}
+
 void Drivetrain::adjustBaseSpeed(Fixed adjustment) {
   base_speed += adjustment;
   //Serial.print("Speed = ");
   //Serial.println(base_speed.getInt());
 }
 
+void Drivetrain::setVeerAmount(Fixed amount) {
+  veer_amount = amount;
+}
+
 void Drivetrain::adjustVeerAmount(Fixed adjustment) {
   veer_amount += adjustment;
+}
+
+void Drivetrain::setAcceleration(Fixed acc) {
+  acceleration = acc;
 }
 
 void Drivetrain::adjustAcceleration(Fixed adjustment) {

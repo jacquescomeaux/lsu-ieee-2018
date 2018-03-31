@@ -36,24 +36,27 @@ class Drivetrain {
     void move(Direction, Fixed speed);
     void move(Fixed x, Fixed y, Fixed rot);
    
-    //temporarily adjust direction of movement
-    void veer(Direction);
-    void veer(Direction, Fixed amount);
-    void veer(Fixed x, Fixed y, Fixed rot);
-   
-    //permanently adjust direction of movement
-    void steer(Direction);
-    void steer(Direction, Fixed amount);
-    void steer(Fixed x, Fixed y, Fixed rot);
-   
     //move a set amount
     void travel(Direction, Fixed dist);
     void travel(Direction, Fixed speed, Fixed dist);
     void travel(Fixed x, Fixed y, Fixed rot, Fixed dist);
   
+    //permanently adjust direction of movement
+    void steer(Direction);
+    void steer(Direction, Fixed amount);
+    void steer(Fixed x, Fixed y, Fixed rot);
+   
+    //temporarily adjust direction of movement
+    void veer(Direction);
+    void veer(Direction, Fixed amount);
+    void veer(Fixed x, Fixed y, Fixed rot);
+   
     //change robot state
+    void setBaseSpeed(Fixed);
     void adjustBaseSpeed(Fixed);
+    void setVeerAmount(Fixed);
     void adjustVeerAmount(Fixed);
+    void setAcceleration(Fixed);
     void adjustAcceleration(Fixed);
 };
 
