@@ -14,7 +14,7 @@
 class Robot : public Drivetrain, public LineFollower {
   private:
     bool stopped;
-    unsigned int current_offset, follow_range;
+    unsigned int center_offset, follow_range;
     Flag flags;
     ProximitySensor edge_detectors[3];
     void checkEdges();

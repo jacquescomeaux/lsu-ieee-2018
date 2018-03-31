@@ -17,7 +17,7 @@ union two_byte_object {
 union eight_byte_object {
   unsigned char bytes[8];
   char chars[8];
-  Fixed number;
+  uint64_t number;
 };
 
 unsigned int receiveIndex() {
@@ -36,7 +36,7 @@ Fixed receiveFixed() {
   union eight_byte_object x;
   while(Serial.available() < 8);
   Serial.readBytes(x.chars, 8);
-  return x.number;
+  return Fixed(static_cast<uint64_t>(x.number));
 }
 
 void receivePIDCommand(unsigned int var) {
@@ -66,38 +66,17 @@ void receivePIDCommand(unsigned int var) {
 void parseCommand() {
   unsigned char command = Serial.read();
   switch(command) {
-    case 'w': robot->move(Direction::FRONT); break;
-    case 'a': robot->move(Direction::LEFT); break;
-    case 'x': robot->move(Direction::BACK); break;
-    case 'd': robot->move(Direction::RIGHT); break;
-    case 'q': robot->move(Direction::FRONT_LEFT); break;
-    case 'e': robot->move(Direction::FRONT_RIGHT); break;
-    case 'z': robot->move(Direction::BACK_LEFT); break;
-    case 'c': robot->move(Direction::BACK_RIGHT); break;
-    case 'k': robot->move(Direction::CLOCKWISE); break;
-    case 'j': robot->move(Direction::COUNTER_CLOCKWISE); break;
-    
-    case 'u': robot->steer(Direction::COUNTER_CLOCKWISE); break;
-    case 'i': robot->steer(Direction::CLOCKWISE); break;
-    case 'y': robot->steer(Direction::LEFT); break;
-    case 'o': robot->steer(Direction::RIGHT); break;
-    
-    case 'r': robot->toggle(Flag::CALIBRATING_LINE); break;
+    case 'c': robot->toggle(Flag::CALIBRATING_LINE); break;
     case 'f': robot->toggle(Flag::FOLLOWING_LINE); break;
-    case 'v': robot->toggle(Flag::PRINTING_LINE); break;
-    
-    case '1': Serial.print("Adjusting x"); receivePIDCommand(0); break;
-    case '2': Serial.print("Adjusting y"); receivePIDCommand(1); break;
-    case '3': Serial.print("Adjusting rot"); receivePIDCommand(2); break;
     
     case ',': robot->setBaseSpeed(receiveFixed()); break; 
     case '<': robot->adjustBaseSpeed(Fixed(-10)); break;
     case '>': robot->adjustBaseSpeed(Fixed(10)); break;
    
-    case '/': robot->setCenterOffset(recieveIndex()) break;
-    case '.': robot->setFollowRange(recieveIndex()) break;
+    case '/': robot->setCenterOffset(receiveIndex()); break;
+    case '.': robot->setFollowRange(receiveIndex()); break;
 
-    case 'm': robot->move(recieveDirection()); break;
+    case 'm': robot->move(receiveDirection()); break;
     
     case 't': {
       Direction dir = receiveDirection();
@@ -118,7 +97,7 @@ void parseCommand() {
       Direction dir = receiveDirection();
       Fixed speed = receiveFixed();
       Fixed dist = receiveFixed();
-      robot->veer(recieveDirection(), speed, dist); break;
+      robot->veer(receiveDirection(), speed, dist); break;
     }
     
     case 'V': {
@@ -130,11 +109,13 @@ void parseCommand() {
     }
     
     case 'p': robot->pickUpToken(); break;
-    case 'm': robot->storeToken(Color::RED); break;
-    case 'l': robot->dropNextTokenStack(); break;
+    case ' ': robot->stop(); break;
+    
+    case 'r': robot->storeToken(Color::RED); break;
+    case 'd': robot->dropNextTokenStack(); break;
     case '|': robot->toggle(Flag::CENTERING_CROSS); break;
     case '\\': robot->toggle(Flag::CENTERING_CORNER); break;
-    //case '?' : Serial.write(robot->atIntersection() ? 'y' : 'n'); break;
+
     default: robot->stop();
   }
 }

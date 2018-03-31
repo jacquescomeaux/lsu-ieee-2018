@@ -129,7 +129,7 @@ void Robot::setCenterOffset(unsigned int offset) {
 }
 
 void Robot::setFollowRange(unsigned int range) {
-  follow_range = offset;
+  follow_range = range;
 }
 
 SortBot::SortBot() {}
