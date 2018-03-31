@@ -42,23 +42,6 @@ void LineSensor::calibrateSensors() {
   qtrrc2.calibrate();
 }
 
-void LineSensor::getLineErrors(Fixed* x, Fixed* y, Fixed* rot, Direction dir, int range) {
-  switch(dir) {
-    case(Direction::NONE): break;
-    case(Direction::FRONT): getLineErrors(x, y, rot, 8, range); break;
-    case(Direction::BACK): getLineErrors(x, y, rot, 24, range); break;
-    case(Direction::LEFT): getLineErrors(x, y, rot, 16, range); break;
-    case(Direction::RIGHT): getLineErrors(x, y, rot, 0, range); break;
-    case(Direction::FRONT_LEFT): getLineErrors(x, y, rot, 12, range); break;
-    case(Direction::FRONT_RIGHT): getLineErrors(x, y, rot, 4, range); break;
-    case(Direction::BACK_LEFT): getLineErrors(x, y, rot, 20, range); break;
-    case(Direction::BACK_RIGHT): getLineErrors(x, y, rot, 28, range); break;
-    case(Direction::CLOCKWISE): break;
-    case(Direction::COUNTER_CLOCKWISE): break;
-    default: break; 
-  }
-}
-
 void LineSensor::getLineErrors(Fixed* x, Fixed* y, Fixed* rot, int offset, int range) {
   readSensors();
   int fi = offset % 16;
@@ -109,20 +92,6 @@ int LineSensor::countLinePeaks(int range) {
     if(higher_values_in_range == 0) peak_count++;
   }
   return peak_count;
-}
-
-void LineSensor::precalibrate(int min = 280, int max = 4000) { //don't use this, it breaks things
-  unsigned int* front_mins = qtrrc1.calibratedMinimumOn;
-  unsigned int* back_mins = qtrrc2.calibratedMinimumOn;
-  unsigned int* front_maxs = qtrrc1.calibratedMinimumOn;
-  unsigned int* back_maxs = qtrrc2.calibratedMinimumOn;
-
-  for (int i = 0; i < 16; i++) {
-    front_mins[i] = min;
-    back_mins[i] = min;
-    front_maxs[i] = max;
-    back_maxs[i] = max;
-  }
 }
 
 void LineSensor::printReadings() {
