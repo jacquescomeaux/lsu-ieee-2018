@@ -34,6 +34,7 @@ void SortingSystem::continueSorting() {
     task_buffer.pop();
   }
   else {
+    token_arm.goToTop();
     int pos = COLOR_POSITIONS[current_task];
     if(state == 0) {
       if(storage_plate.ready()) storage_plate.rotateCCW(pos);

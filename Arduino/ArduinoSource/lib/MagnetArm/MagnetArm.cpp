@@ -12,6 +12,7 @@ MagnetArm::MagnetArm(Adafruit_StepperMotor* mot, Adafruit_DCMotor* mag) :
   RPM(60),
   bot_target(0),
   top_target(455),
+  cam_target(280), // = (top_target - 175) for token color detection
   total_steps(460),
   position(460),
   motor(mot),
@@ -37,9 +38,13 @@ void MagnetArm::reset() {
 void MagnetArm::pickUpToken() {
   goToHeight(bot_target);
   magnetize();
-  goToHeight(top_target);
+  goToHeight(cam_target);
 }
 
 void MagnetArm::storeToken() {
   demagnetize();
+}
+
+void MagnetArm::goToTop() {
+  goToHeight(top_target);
 }

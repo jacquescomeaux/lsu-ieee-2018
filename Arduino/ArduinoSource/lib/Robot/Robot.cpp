@@ -327,13 +327,13 @@ void Robot::adjustBaseSpeed(Fixed adjustment) {
 }
 
 void Robot::reportWheelSpeeds() {
-  for(int i = 0; i < 4; i++) {
+ /* for(int i = 0; i < 4; i++) {
     Fixed report = wheels[i].getActualSpeed();
-   /* Serial.print("Wheel ");
+    Serial.print("Wheel ");
     Serial.print(i);
     Serial.print("-->");
-    Serial.println(report.getInt());*/
-  }
+    Serial.println(report.getInt());
+  } */
 }
 
 SortBot::SortBot() : SortingSystem(Robot::motor_shields[1].getStepper(200, 1), Robot::motor_shields[2].getMotor(1), Robot::motor_shields[1].getStepper(200, 2)) {}
