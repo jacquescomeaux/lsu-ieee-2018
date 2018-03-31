@@ -201,7 +201,7 @@ void Robot::update() {
     //if((flags & Flag::PRINTING_LINE) != Flag::NONE) line_sensor.printReadings(); 
   }
   
-  if((dt[4] > 100) ? (last_ran[4] = time) : false) {
+  if((dt[4] > 20) ? (last_ran[4] = time) : false) {
     if(line_sensor.countLinePeaks(1) == 4) flags |= Flag::AT_INTERSECTION;
     else flags &= ~Flag::AT_INTERSECTION;
     if((flags & Flag::STOPPING_INT) != Flag::NONE) {

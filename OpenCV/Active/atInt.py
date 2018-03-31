@@ -11,6 +11,7 @@ X1=195
 X2=440
 
 while True:
+	e1 = cv2.getTickCount() #for testing code efficiency
 	ret, img = cam.read()
 
 	img = img[Y1:Y2, X1:X2]
@@ -20,7 +21,10 @@ while True:
 	#img = cv2.resize(img, (340, 220, 1))
 
 	nW = cv2.countNonZero(img)
+        e2 = cv2.getTickCount()
+        t = (e2 - e1)/cv2.getTickFrequency() #calculates num secs to complete loop iteration
 
+	print (t)
 	print(nW)
 
 cam.release()
