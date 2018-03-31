@@ -17,11 +17,12 @@ class SortingSystem {
     const int COLOR_POSITIONS[8];
     std::queue<int> task_buffer;
     int state;
+    MotorShield sorting_shields[2];
     MagnetArm token_arm;
     LED token_light;
     SortingPlate storage_plate;
   public:
-    SortingSystem(Adafruit_StepperMotor*, Adafruit_DCMotor*, Adafruit_StepperMotor*);
+    SortingSystem();
     void pickUpToken();
     void storeToken(Color);
     void dropNextTokenStack();

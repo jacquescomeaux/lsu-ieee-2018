@@ -4,8 +4,12 @@ SortingSystem::SortingSystem(Adafruit_StepperMotor* arm_motor, Adafruit_DCMotor*
   NUM_COLORS(8),
   COLOR_POSITIONS {0, 4, 5, 6, 3, 2, 1, 7},
   state(0),
-  token_arm(arm_motor, magnet),
-  storage_plate(plate_motor) {
+  sorting_shields {
+    MotorShield(0x62),
+    MotorShield(0x60)
+  },
+  token_arm(sorting_shields[0].getStepper(1), sorting_shields[1].getMotor(1)),
+  storage_plate(sorting_shields[0].getStepper(2)) {
     token_arm.reset();
   }
 
