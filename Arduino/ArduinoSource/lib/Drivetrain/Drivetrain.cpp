@@ -2,17 +2,18 @@
 
 Drivetrain::Drivetrain() :
   wheel_shield(MotorShield(0x61)), //wheels
-  current_direction(Direction::NONE),
   base_speed(Fixed(90)),
   veer_amount(Fixed(10)),
   acceleration(Fixed(20)), //previously set at 10
   wheels {
     //Interrupt Pins: 2, 3, 18, 19, 20, 21
-    Wheel(motor_shields[0].getMotor(1),  2, 4), //FRONT_LEFT
-    Wheel(motor_shields[0].getMotor(2),  3, 5), //BACK_LEFT
-    Wheel(motor_shields[0].getMotor(3), 18, 16), //BACK_RIGHT
-    Wheel(motor_shields[0].getMotor(4), 19, 17)  //FRONT_RIGHT
-  } {}
+    Wheel(wheel_shield.getMotor(1),  2, 4), //FRONT_LEFT
+    Wheel(wheel_shield.getMotor(2),  3, 5), //BACK_LEFT
+    Wheel(wheel_shield.getMotor(3), 18, 16), //BACK_RIGHT
+    Wheel(wheel_shield.getMotor(4), 19, 17)  //FRONT_RIGHT
+  },
+  current_direction(Direction::NONE),
+  travelDstReached(true) {}
 
 void Drivetrain::resolveDirection(Direction dir, Fixed* x, Fixed* y, Fixed* rot) {
   static const Fixed ZERO = 0, POS_ONE = 1, NEG_ONE = -1, POS_SQRT_HALF = sqrt(0.5), NEG_SQRT_HALF = -1 * sqrt(0.5);
@@ -36,7 +37,7 @@ void Drivetrain::resolveDirection(Direction dir, Fixed* x, Fixed* y, Fixed* rot)
 void Drivetrain::checkDestination() {
   for(int i = 0; i < 2; i++) {
     if((wheels[i].getSpeed() > Fixed(0)) != (wheels[i].getPosition() >= target_wheel_pos[i])) continue;
-    flags &= ~Flag::TRAVEL_TO_DST;
+    travelDstReached = true;
     stop();
   }
 }
@@ -60,6 +61,10 @@ void Drivetrain::stop() {
 bool Drivetrain::inMotion() {
   if(wheels[0].getSpeed() + wheels[1].getSpeed() + wheels[2].getSpeed() + wheels[3].getSpeed() == Fixed(0)) return false;
   return true;
+}
+
+void Drivetrain::approachSpeed() {
+  for(Wheel& w : wheels) w.approachSpeed(acceleration);
 }
 
 void Drivetrain::move(Direction dir) {
@@ -123,7 +128,7 @@ void Drivetrain::travel(Fixed x, Fixed y, Fixed rot, Fixed dist) {
   Fixed steps_to_travel = dist * STEPS_PER_INCH;
   const Fixed speeds[4] = {y + x - rot, y - x - rot, y + x + rot, y - x + rot};
   for(int i = 0; i < 2; i++) target_wheel_pos[i] = wheels[i].getPosition() + steps_to_travel * ((speeds[i] > ZERO) ? POS_ONE : NEG_ONE);
-  flags |= Flag::TRAVEL_TO_DST;
+  travelDstReached = false;
   setWheelSpeeds(speeds);
 }
 
@@ -142,11 +147,11 @@ void Drivetrain::adjustAcceleration(Fixed adjustment) {
 }
 
 void Drivetrain::reportWheelSpeeds() {
-  for(int i = 0; i < 4; i++) {
+  /*for(int i = 0; i < 4; i++) {
     Fixed report = wheels[i].getActualSpeed();
-   /* Serial.print("Wheel ");
+    Serial.print("Wheel ");
     Serial.print(i);
     Serial.print("-->");
-    Serial.println(report.getInt());*/
-  }
+    Serial.println(report.getInt());
+  }*/
 }

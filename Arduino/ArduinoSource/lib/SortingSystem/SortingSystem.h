@@ -4,8 +4,9 @@
 #include <Color.h>
 
 #include <Adafruit_MotorShield.h>
+
+#include <MotorShield.h>
 #include <MagnetArm.h>
-#include <LED.h>
 #include <SortingPlate.h>
 
 #include <ArduinoSTL.h>
@@ -19,7 +20,6 @@ class SortingSystem {
     int state;
     MotorShield sorting_shields[2];
     MagnetArm token_arm;
-    LED token_light;
     SortingPlate storage_plate;
   public:
     SortingSystem();

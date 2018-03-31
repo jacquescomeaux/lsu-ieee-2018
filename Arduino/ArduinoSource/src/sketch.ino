@@ -64,7 +64,7 @@ void parseCommand() {
     case 'l': robot->dropNextTokenStack(); break;
     case '|': robot->toggle(Flag::CENTERING_CROSS); break;
     case '\\': robot->toggle(Flag::CENTERING_CORNER); break;
-    case '?' : Serial.write(robot->atIntersection() ? 'y' : 'n'); break;
+    //case '?' : Serial.write(robot->atIntersection() ? 'y' : 'n'); break;
     default: robot->stop();
   }
 }

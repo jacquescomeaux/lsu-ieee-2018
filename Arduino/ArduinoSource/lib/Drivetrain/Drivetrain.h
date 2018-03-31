@@ -10,10 +10,13 @@
 class Drivetrain {
   private:
     MotorShield wheel_shield; 
-    Direction current_direction;
     Fixed base_speed, veer_amount, acceleration;
     Wheel wheels[4];
     Fixed current_wheel_pos[4], target_wheel_pos[4];
+  protected:
+    Drivetrain();
+    Direction current_direction;
+    bool travelDstReached; //tracks if travel has been completed
     void resolveDirection(Direction, Fixed* x, Fixed* y, Fixed* rot);
     void checkDestination();	
     void setWheelSpeeds(const Fixed*);
@@ -22,10 +25,11 @@ class Drivetrain {
     void reportWheelSpeeds(); //print current wheel speeds for debugging
     bool inMotion();
   public:
-    Drivetrain();
-
     //stop immediately
     void stop();
+
+    //to be called in a loop
+    void approachSpeed();
 
     //move indefinitely
     void move(Direction);

@@ -1,6 +1,6 @@
 #include "SortingSystem.h"
 
-SortingSystem::SortingSystem(Adafruit_StepperMotor* arm_motor, Adafruit_DCMotor* magnet, Adafruit_StepperMotor* plate_motor) :
+SortingSystem::SortingSystem() :
   NUM_COLORS(8),
   COLOR_POSITIONS {0, 4, 5, 6, 3, 2, 1, 7},
   state(0),
@@ -8,8 +8,8 @@ SortingSystem::SortingSystem(Adafruit_StepperMotor* arm_motor, Adafruit_DCMotor*
     MotorShield(0x62),
     MotorShield(0x60)
   },
-  token_arm(sorting_shields[0].getStepper(1), sorting_shields[1].getMotor(1)),
-  storage_plate(sorting_shields[0].getStepper(2)) {
+  token_arm(sorting_shields[0].getStepper(200, 1), sorting_shields[1].getMotor(1)),
+  storage_plate(sorting_shields[0].getStepper(200, 2)) {
     token_arm.reset();
   }
 

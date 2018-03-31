@@ -10,7 +10,11 @@ LineFollower::LineFollower() :
   array_filled(false),
   line_sensor() {}
 
-unsigned int resolveOffset(Direction dir) {
+void LineFollower::calibrateSensors() {
+  line_sensor.calibrateSensors();
+}
+
+unsigned int LineFollower::resolveOffset(Direction dir) {
   unsigned int offset = 0;
   switch(dir) {
     case(Direction::NONE):  offset =  0; break;
@@ -47,6 +51,7 @@ void LineFollower::correctErrors(Fixed xerr, Fixed yerr, Fixed rerr, Fixed* xcrr
     *xcrr = (pid_terms[0][0]  * avgs[0]) + (pid_terms[0][1] * pid_terms[0][3]) + (pid_terms[0][2] * (avgs[0] - pid_terms[0][4])); //x correction
     *ycrr = (pid_terms[1][0]  * avgs[1]) + (pid_terms[1][1] * pid_terms[1][3]) + (pid_terms[1][2] * (avgs[1] - pid_terms[1][4])); //y correction
     *rcrr = (pid_terms[2][0]  * avgs[2]) + (pid_terms[2][1] * pid_terms[2][3]) + (pid_terms[2][2] * (avgs[2] - pid_terms[2][4]));  //rot correction
+  }
   pid_terms[0][3] += xerr;
   pid_terms[1][3] += yerr;
   pid_terms[2][3] += rerr;
@@ -63,13 +68,13 @@ void LineFollower::getCenterCorrections(Fixed* x, Fixed* y, Fixed* rot, bool cro
   Fixed xerr, yerr, rerr;
   if(cross) line_sensor.getCrossIntersectionErrors(&xerr, &yerr, &rerr, offset);
   else line_sensor.getCornerIntersectionErrors(&xerr, &yerr, &rerr, offset);
-  correctErrors(xerr, yerr, rerr, *x, *y, *rot);
+  correctErrors(xerr, yerr, rerr, x, y, rot);
 }
 
 void LineFollower::getLineCorrections(Fixed* x, Fixed* y, Fixed* rot, unsigned int offset, unsigned int range) {
   Fixed xerr, yerr, rerr;
   line_sensor.getLineErrors(&xerr, &yerr, &rerr, offset, range);
-  correctErrors(xerr, yerr, rerr, *x, *y, *rot);
+  correctErrors(xerr, yerr, rerr, x, y, rot);
 }
 
 void LineFollower::adjustPID(unsigned int var, unsigned int term, Fixed adjustment) {
@@ -85,6 +90,6 @@ void LineFollower::adjustPID(unsigned int var, unsigned int term, Fixed adjustme
 }
 
 void LineFollower::resetPIDData() {
-  for(int i = 0; i < 3; i++) for(int j = 3, j < 5, j++) pid_terms[i][j] = Fixed(0);
+  for(int i = 0; i < 3; i++) for(int j = 3; j < 5; j++) pid_terms[i][j] = Fixed(0);
   array_filled = false;
 }

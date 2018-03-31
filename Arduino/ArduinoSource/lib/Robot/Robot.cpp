@@ -3,7 +3,7 @@
 Robot::Robot() :
   stopped(true),
   current_offset(8),
-  current_range(2),
+  follow_range(2),
   flags(Flag::NONE),
   edge_detectors {
     ProximitySensor( 6,  7), //RIGHT(0)
@@ -59,49 +59,37 @@ void Robot::update() {
   unsigned long time = millis();
   for(int i = 0; i < NUM_TASKS; i++)  dt[i] = time - last_ran[i];
   
-  if((dt[0] > 100) ? (last_ran[0] = time) : false) {
-    for(Wheel& w : wheels) w.approachSpeed(acceleration);
-  }
+  if((dt[0] > 100) ? (last_ran[0] = time) : false) approachSpeed();
 
   if((dt[1] > 0) ? (last_ran[1] = time) : false) {
     if((flags & Flag::FOLLOWING_LINE) != Flag::NONE) {
       Fixed xcrr, ycrr, rcrr;
-      //if(!inMotion()) getLineCorrections(&xcrr, &ycrr, &rcrr, current_direction, 5); //snap to line
-      //else
-      line_sensor.getLineCorrections(&xcrr, &ycrr, &rcrr, resolveOffset(current_direction), follow_range);
+      getLineCorrections(&xcrr, &ycrr, &rcrr, resolveOffset(current_direction), follow_range);
       veer(xcrr, ycrr, rcrr);
     }
   }
   
   if((dt[2] > 10) ? (last_ran[2] = time) : false) {
     if((flags & Flag::CALIBRATING_LINE) != Flag::NONE) {
-      line_sensor.calibrateSensors();
-      //line_sensor.printCalibratedValues();
+      calibrateSensors();
+      //printCalibratedValues();
     }
   }
   
   if((dt[3] > 1000) ? (last_ran[3] = time) : false) {
-    //if((flags & Flag::PRINTING_LINE) != Flag::NONE) line_sensor.printReadings(); 
+    //if((flags & Flag::PRINTING_LINE) != Flag::NONE) printReadings();
   }
   
-  if((dt[4] > 20) ? (last_ran[4] = time) : false) {
-    if(line_sensor.countLinePeaks(1) == 4) flags |= Flag::AT_INTERSECTION;
-    else flags &= ~Flag::AT_INTERSECTION;
-    if((flags & Flag::STOPPING_INT) != Flag::NONE) {
-      if(atIntersection()) { 
-        stop();
-        flags &= ~Flag::STOPPING_INT;
-      }
-    }
-  }
+  if((dt[4] > 20) ? (last_ran[4] = time) : false) {}
+  
   if((dt[5] > 100) ? (last_ran[5] = time) : false) {
-    if((flags & Flag::TRAVEL_TO_DST) != Flag::NONE) checkDestination();
+    if(!travelDstReached) Drivetrain::checkDestination();
   }
   
   if((dt[6] > 0) ? (last_ran[6] = time) : false) {
     if((flags & Flag::CENTERING_CROSS) != Flag::NONE) {
       Fixed xcrr, ycrr, rcrr;
-      line_sensor.getCenterCorrections(&xcrr, &ycrr, &rcrr, true, current_offset);
+      getCenterCorrections(&xcrr, &ycrr, &rcrr, true, current_offset);
       veer(xcrr, ycrr, rcrr);
     }
   }
@@ -109,7 +97,7 @@ void Robot::update() {
   if((dt[7] > 0) ? (last_ran[7] = time) : false) {
     if((flags & Flag::CENTERING_CORNER) != Flag::NONE) {
       Fixed xcrr, ycrr, rcrr;
-      line_sensor.getCenterCorrections(&xcrr, &ycrr, &rcrr, false, current_offset);
+      getCenterCorrections(&xcrr, &ycrr, &rcrr, false, current_offset);
       veer(xcrr, ycrr, rcrr);
     }
   }

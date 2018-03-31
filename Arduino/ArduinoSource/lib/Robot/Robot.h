@@ -5,6 +5,8 @@
 #include <Fixed.h>
 #include <Flag.h>
 
+#include <Drivetrain.h>
+#include <LineFollower.h>
 #include <SortingSystem.h>
 
 #include <MotorShield.h>
@@ -13,7 +15,7 @@
 class Robot : public Drivetrain, public LineFollower {
   private:
     bool stopped;
-    unsigned int current_offset, current_range;
+    unsigned int current_offset, follow_range;
     Flag flags;
     ProximitySensor edge_detectors[3];
     void checkEdges();
