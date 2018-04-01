@@ -161,13 +161,15 @@ bool Camera::tokenCentered() {
 void Camera::getTokenErrors(int* x, int*y, int att = 1) {
   std::vector<cv:Vec3f> *center;
     if(intersectionInFrame()) {
-      center = checkCircle(att); //if multiple reads are needed to avoid trash values
       const int xtarget; = 150;
       const int ytarget; = 130;
+      int tolerance = 5; //allowable number of pixels to be off target, needs testing
+
+      center = checkCircle(att); //if multiple reads are needed to avoid trash values
       int currentx = center[center.size() - 1][0];
       int currenty = center[center.size() - 1][1];
 
-      int tolerance = 5; //allowable number of pixels to be off target, needs testing
+
       currentx = xtarget - currentx;
       currenty = ytarget - currenty;
       if(abs(currentx) <= tolerance && abs(currenty) <= tolerance) *x = *y = 0;
