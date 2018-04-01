@@ -42,6 +42,7 @@ void Robot::stop() {
   flags &= ~Flag::CENTERING_CROSS;
   flags &= ~Flag::CENTERING_CORNER;
   Drivetrain::stop();
+  resetPIDData();
 }
 
 bool Robot::ready() {
@@ -103,6 +104,14 @@ void Robot::update() {
   }
   
   if(!ready()) stop();
+}
+
+void Robot::setFlags(Flag settings) {
+  flags |= settings;
+}
+
+void Robot::clearFlags(Flag settings) {
+  flags &= ~settings;
 }
 
 void Robot::toggle(Flag settings) {

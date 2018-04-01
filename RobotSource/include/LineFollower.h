@@ -13,7 +13,6 @@ class LineFollower : private SerialLink {
     void toggleCalibration() const;
     void snapToLine(Direction) const;
     void center(bool cross, int) const;
-    //bool atIntersection() const;
 };
 
 #endif//LINEFOLLOWER_H

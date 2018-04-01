@@ -5,6 +5,8 @@
 LineFollower::LineFollower() {}
 
 void LineFollower::followLine(Direction dir) const {
+  transmitChar('.');
+  transmitIndex(2);
   transmitChar('m');
   transmitDirection(dir);
   /*switch(dir) {
@@ -26,8 +28,11 @@ void LineFollower::followLine(Direction dir) const {
 
 void LineFollower::snapToLine(Direction dir) const {
   followLine(dir);
+  transmitChar('.');
+  transmitIndex(6);
   transmitChar(' ');
-  std::this_thread::sleep_for(std::chrono::seconds(3));
+  transmitChar('f');
+  std::this_thread::sleep_for(std::chrono::seconds(2));
 }
 
 void LineFollower::toggleCalibration() const {

@@ -67,13 +67,15 @@ void parseCommand() {
   unsigned char command = Serial.read();
   switch(command) {
     case 'c': robot->toggle(Flag::CALIBRATING_LINE); break;
-    case 'f': robot->toggle(Flag::FOLLOWING_LINE); break;
+    case 'f': robot->setFlags(Flag::FOLLOWING_LINE); break;
+    case 'F': robot->clearFlags(Flag::FOLLOWING_LINE); break;
     
     case ',': robot->setBaseSpeed(receiveFixed()); break; 
     case '<': robot->adjustBaseSpeed(Fixed(-10)); break;
     case '>': robot->adjustBaseSpeed(Fixed(10)); break;
    
     case '/': robot->setCenterOffset(receiveIndex()); break;
+    case 'T': robot->setCenterOffset(8); break;
     case '.': robot->setFollowRange(receiveIndex()); break;
 
     case 'm': robot->move(receiveDirection()); break;
