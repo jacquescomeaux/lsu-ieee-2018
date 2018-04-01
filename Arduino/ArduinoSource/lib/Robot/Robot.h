@@ -30,6 +30,8 @@ class Robot : public Drivetrain, public LineFollower {
     void update();
 
     //change robot state
+    void setFlags(Flag);
+    void clearFlags(Flag);
     void toggle(Flag);
     void setCenterOffset(unsigned int);
     void setFollowRange(unsigned int);
