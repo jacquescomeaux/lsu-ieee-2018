@@ -13,8 +13,10 @@ class Controller : private SerialLink {
     SortBot& robot;
     const int NUM_LINES;
     const std::vector<Direction> follow_sequence, cover_sequence;
+    const std::vector<bool> type_sequence;
+    const std::vector<int> offset_sequence;
     //void init(Direction*, Direction*, int)
-    void coverLine(Direction, int) const;
+    void coverLine(Direction, bool, int, int) const;
   public:
     Controller(SortBot&);
     Controller(SortBot&, Direction*, Direction*, int);

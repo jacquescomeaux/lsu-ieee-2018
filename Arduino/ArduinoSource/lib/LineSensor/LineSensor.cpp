@@ -78,8 +78,8 @@ void LineSensor::getCornerIntersectionErrors(Fixed* x, Fixed* y, Fixed* rot, int
   getLineErrors(&x_d, &y_d, &rot_d, di, 2);
   Fixed b = getLinePosition(bi % 32, 2, false);
 
-  *x = x_d + b * COSINES[di];// + r * COSINES[(di + 16) % 32];
-  *y = y_d + b * SINES[di];// + r * SINES[(di + 16) % 32];
+  *x = x_d + b * COSINES[di];
+  *y = y_d + b * SINES[di];
   *rot = rot_d;
 }
 

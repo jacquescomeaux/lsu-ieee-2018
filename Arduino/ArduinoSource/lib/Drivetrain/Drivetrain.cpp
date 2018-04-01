@@ -38,7 +38,7 @@ void Drivetrain::checkDestination() {
   for(int i = 0; i < 2; i++) {
     if((wheels[i].getSpeed() > Fixed(0)) != (wheels[i].getPosition() >= target_wheel_pos[i])) continue;
     travelDstReached = true;
-    stop();
+    //stop();
     Serial.write('+');
   }
 }
