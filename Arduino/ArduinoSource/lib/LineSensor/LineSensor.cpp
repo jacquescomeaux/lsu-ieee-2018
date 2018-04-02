@@ -78,10 +78,10 @@ void LineSensor::getCornerIntersectionErrors(Fixed* x, Fixed* y, Fixed* rot, int
   readSensors();
   //Serial.print("offset: ");
   //Serial.println(offset);
-  int bi = (offset + 16) % 32;
-  int ri = (bi + 8) % 32;
-  Fixed b = getLinePosition(bi % 32, 2, false);
-  Fixed r = getLinePosition(ri % 32, 2, false);
+  //int bi = (offset + 16) % 32;
+  //int ri = (bi + 8) % 32;
+  //Fixed b = getLinePosition(bi % 32, 2, false);
+  //Fixed r = getLinePosition(ri % 32, 2, false);
   //Serial.print("bi: ");
   //Serial.println(bi);
   //Serial.print("ri: ");
@@ -92,18 +92,18 @@ void LineSensor::getCornerIntersectionErrors(Fixed* x, Fixed* y, Fixed* rot, int
   //Serial.println(r.getInt());
   //*x = r * COSINES[offset] + b * SINES[offset];
   //*y = r * SINES[offset] - b * COSINES[offset];
-  *x = Fixed(0) - r;
-  *y = b;
-  *rot = Fixed(0);
+  //*x = Fixed(0) - r;
+  //*y = b;
+  //*rot = Fixed(0);
   //*/
-  /*int bi = (offset + 16) % 32;
+  int bi = (offset + 16) % 32;
   int di = (bi + 4) % 32;
   Fixed x_d, y_d, rot_d;
   getLineErrors(&x_d, &y_d, &rot_d, di, 2);
   //Fixed b = getLinePosition(bi % 32, 2, false);
   *x = x_d;// + b * COSINES[di];
   *y = y_d;// + b * SINES[di];
-  *rot = rot_d; */
+  *rot = rot_d;
 }
 
 int LineSensor::countLinePeaks(int range) {

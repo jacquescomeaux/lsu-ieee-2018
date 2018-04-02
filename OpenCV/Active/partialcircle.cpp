@@ -8,13 +8,13 @@
 #include <iostream>
 
 
-int main()
+int main(int argc, char* argv[])
 {
   cv::VideoCapture cam(2);
   while(true) {
     cv::Mat color;
     cam >> color;
-    cv::namedWindow("input"); cv::imshow("input", color);
+    //cv::namedWindow("input"); cv::imshow("input", color);
 
     cv::Mat canny;
 
@@ -23,7 +23,7 @@ int main()
     cv::cvtColor( color, gray, CV_BGR2GRAY );
 
     // compute canny (don't blur with that image quality!!)
-    cv::Canny(gray, canny, 200,20);
+    cv::Canny(gray, canny, 50,60); //prev 200, 20
     cv::namedWindow("canny2"); cv::imshow("canny2", canny>0);
 
     std::vector<cv::Vec3f> circles;

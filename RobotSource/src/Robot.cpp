@@ -36,7 +36,7 @@ bool Robot::tokenSeen() const {
 }
 
 void Robot::center(bool cross, int offset) {
-  int reset = 10; //number of times to try to reset robot on intersection before we need to handle it
+/*  int reset = 10; //number of times to try to reset robot on intersection before we need to handle it
   int fix = 0;
   while(!token_cam.intersectionInFrame()) {
     LineFollower::center(cross, offset);
@@ -55,7 +55,8 @@ void Robot::center(bool cross, int offset) {
     }
   if(fix >= 3) fix = 0;
   }
-
+*/
+  LineFollower::center(cross, offset); //do a line following center before we leave to straighten out. Token pickup needs to happen before this tho
   float x = 0;
   float y = 0;
   while(token_cam.intersectionInFrame() && !token_cam.tokenCentered()) {
@@ -65,8 +66,16 @@ void Robot::center(bool cross, int offset) {
     if(y > 0) nudge(Direction::FRONT, y);
     else if(y < 0) nudge(Direction::BACK, -y);
   }
-  //LineFollower::center(cross, offset); //do a line following center before we leave to straighten out. Token pickup needs to happen before this tho
-  //stop();
+  
+ // LineFollower::center(cross, offset); //do a line following center before we leave to straighten out. Token pickup needs to happen before this tho
+  /*while(token_cam.intersectionInFrame() && !token_cam.tokenCentered()) {
+    token_cam.getTokenErrors(&x, &y);
+    if(x > 0 ) nudge(Direction::RIGHT, x);
+    else if(x < 0) nudge(Direction::LEFT, -x);
+    if(y > 0) nudge(Direction::FRONT, y);
+    else if(y < 0) nudge(Direction::BACK, -y);
+  }*/
+  stop();
   std::cout << "Robot.center() Done" << std::endl;
 }
 
