@@ -41,7 +41,7 @@ void Robot::center(bool cross, int offset) {
   while(!token_cam.intersectionInFrame()) {
     LineFollower::center(cross, offset);
     reset--;
-    if(reset == 0 && !cross) {
+    if(reset == 0 && !cross) { //this is sort of a failed hail-mary attempt at getting back where we need to be. We can make it smarter but I'd rather not need it.
       Direction dir;
       if(fix == 0) dir = Direction::FRONT;
       else if (fix == 1) dir = Direction::LEFT;
