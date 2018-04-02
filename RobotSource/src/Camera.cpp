@@ -159,17 +159,18 @@ bool Camera::intersectionInFrame() {
 }
 
 bool Camera::tokenCentered() {
-  float checkx = 0;
-  float checky = 0;
-  getTokenErrors(&checkx, &checky);
-  if(checkx == 0 && checky == 0) {
-  std::cout << "tokenCentered(): Robot is centered!" << std::endl;
-  return true;
+  int certainty = 0; //counter to make sure centered value is correct;
+
+  for(int i = 0; i < 5; i++) {
+    float checkx = 0;
+    float checky = 0;
+    getTokenErrors(&checkx, &checky);
+    if(checkx == 0 && checky == 0) certainty++;
+    else certainty--;
   }
-  else {
-  std::cout << "tokenCentered(): Robot not centered..." << std::endl;
-  return false;
-  }
+
+  if(certainty > 0) return true;
+  else return false;
 }
 
 void Camera::getTokenErrors(float* x, float* y) {
@@ -177,20 +178,18 @@ void Camera::getTokenErrors(float* x, float* y) {
 }
 
 void Camera::getTokenErrors(float* x, float*y, int att) {
-  static const int xtarget = 150;
-  static const int ytarget = 130;
+  static const int xtarget = 105;
+  static const int ytarget = 120;
   std::vector<cv::Vec3f> center;
   center = checkCircle(att); //if multiple reads are needed to avoid trash values
   if(!center.empty() && intersectionInFrame()) {
-    std::cout << "getTokenErrors(): Circle Found" << std::endl;
-    int tolerance = 1; //allowable number of pixels to be off target, needs testing
-    float currentx = center[center.size() - 1][0] - xtarget;
+    int tolerance = 20; //allowable number of pixels to be off target, needs testing
+    float currentx = xtarget - center[center.size() - 1][0];
     float currenty = center[center.size() - 1][1] - ytarget;
     std::cout << "getTokenErrors Corrections: x=" << currentx << " y=" << currenty << std::endl;
-    if(abs(currentx) <= tolerance && abs(currenty) <= tolerance) *x = *y = 0;
-    else {
-	*x = currentx * INCHES_PER_PIXEL;
-	*y = currenty * INCHES_PER_PIXEL;
-    }
+    *x = currentx * INCHES_PER_PIXEL;
+    *y = currenty * INCHES_PER_PIXEL;
+    if(std::abs(currentx) <= tolerance) *x = 0;
+    if(std::abs(currenty) <= tolerance) *y = 0;
   }
 }

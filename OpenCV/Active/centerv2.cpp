@@ -18,7 +18,7 @@ int main(int argc, char* argv[]) { //argument for num times to check for token. 
   int X1 = 195;
   int X2 = 440;
   
-  cv::VideoCapture cam(1);
+  cv::VideoCapture cam(2);
   if(!cam.isOpened()) return -1;
   
   std::vector<cv::Point2f> pts1, pts2;

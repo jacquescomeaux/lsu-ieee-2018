@@ -90,7 +90,11 @@ void Drivetrain::move(Fixed x, Fixed y, Fixed rot) {
 void Drivetrain::nudge(Direction dir, Fixed dist) {
   Fixed x, y, rot;
   resolveDirection(dir, &x, &y, &rot);
-  nudge(Fixed(200) * x, Fixed(200) * y, Fixed(200) * rot, dist);
+  if(x < 15) x = x*Fixed(200);
+  else x = x*Fixed(100);
+  if(y < 15) y = y*Fixed(25);
+  else y = y*Fixed(15);
+  nudge(x, y, Fixed(40) * rot, dist);
 }
 
 void Drivetrain::nudge(Fixed x, Fixed y, Fixed rot, Fixed dist) {
