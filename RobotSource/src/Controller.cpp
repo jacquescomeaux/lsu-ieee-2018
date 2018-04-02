@@ -37,7 +37,7 @@ void Controller::coverLine(Direction dir, bool cross, int offset, int num_tokens
     if(robot.tokenSeen()) robot.sortToken();
     if(i == num_tokens - 1) break;
     //robot.followLine(dir);
-    robot.travel(dir, 70, 3, false);
+    robot.travel(dir, 70, 2.15, false);
     robot.followUntilIntersection(dir);
   }
 }
@@ -52,7 +52,7 @@ void Controller::runAlgorithm() const {
   robot.toggleCalibration();
   robot.travel(Direction::FRONT, 30, 12, true);
   //robot.stop();
-  robot.travel(Direction::CLOCKWISE, 90, 52, true);
+  robot.travel(Direction::CLOCKWISE, 90, 52, true); //prev dist 52
   robot.toggleCalibration();
   robot.setSpeed(70);
   robot.snapToLine(Direction::LEFT);
