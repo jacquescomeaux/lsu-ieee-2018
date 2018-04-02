@@ -10,17 +10,35 @@
 
 int main()
 {
+  int Y1 = 150;
+  int X1 = 195;
+  int X2 = 440;
+  
+  std::vector<cv::Point2f> pts1, pts2;
+  
+  pts1.push_back(cv::Point2f(92,0));
+  pts1.push_back(cv::Point2f(148,0));
+  pts1.push_back(cv::Point2f(74,283));
+  pts1.push_back(cv::Point2f(178,283));
+  
+  pts2.push_back(cv::Point2f(74,0));
+  pts2.push_back(cv::Point2f(140,0));
+  pts2.push_back(cv::Point2f(74,283));
+  pts2.push_back(cv::Point2f(140,283));
+  
   cv::VideoCapture cam(2);
   while(true) {
-    cv::Mat color;
-    cam >> color;
-    cv::namedWindow("input"); cv::imshow("input", color);
+    cv::Mat image, img;
+    cam >> image;
+    img = image(cv::Rect(X1, Y1, X2-X1, 283)); //crop
+    cv::Mat M = cv::getPerspectiveTransform(pts1, pts2);
+    cv::warpPerspective(img, img, M, img.size());
 
     cv::Mat canny;
 
     cv::Mat gray;
     /// Convert it to gray
-    cv::cvtColor( color, gray, CV_BGR2GRAY );
+    cv::cvtColor(img, gray, CV_BGR2GRAY );
 
     // compute canny (don't blur with that image quality!!)
     cv::Canny(gray, canny, 200,20);
@@ -43,7 +61,7 @@ int main()
     //compute distance transform:
     cv::Mat dt;
     cv::distanceTransform(255-(canny>0), dt, CV_DIST_L2 ,3);
-    cv::namedWindow("distance transform"); cv::imshow("distance transform", dt/255.0f);
+    //cv::namedWindow("distance transform"); cv::imshow("distance transform", dt/255.0f);
 
     // test for semi-circles:
     float minInlierDist = 2.0f;
