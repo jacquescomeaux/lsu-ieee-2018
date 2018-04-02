@@ -36,10 +36,29 @@ bool Robot::tokenSeen() const {
 }
 
 void Robot::center(bool cross, int offset) {
-  while(!token_cam.intersectionInFrame()) LineFollower::center(cross, offset);
-  while(!token_cam.tokenCentered()) {
-    float x = 0;
-    float y = 0;
+  int reset = 10; //number of times to try to reset robot on intersection before we need to handle it
+  int fix = 0;
+  while(!token_cam.intersectionInFrame()) {
+    LineFollower::center(cross, offset);
+    reset--;
+    if(reset == 0 && !cross) { //this is sort of a failed hail-mary attempt at getting back where we need to be. We can make it smarter but I'd rather not need it.
+      Direction dir;
+      if(fix == 0) dir = Direction::FRONT;
+      else if (fix == 1) dir = Direction::LEFT;
+      else if (fix == 2) dir = Direction::BACK;
+      else if (fix == 3) dir = Direction::RIGHT;
+
+     if(fix < 2) travel(dir, 70, 1, false);
+     else travel(dir, 70, 2, false); //move twice as much in the reverse directions to compensate
+      reset = 10; //number of times to look for intersection after attempting a fix
+      fix++;
+    }
+  if(fix >= 3) fix = 0;
+  }
+
+  float x = 0;
+  float y = 0;
+  while(token_cam.intersectionInFrame() && !token_cam.tokenCentered()) {
     token_cam.getTokenErrors(&x, &y);
     if(x > 0 ) nudge(Direction::RIGHT, x);
     else if(x < 0) nudge(Direction::LEFT, -x);
