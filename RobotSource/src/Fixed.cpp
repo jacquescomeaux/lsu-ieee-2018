@@ -68,7 +68,7 @@ Fixed Fixed::mag() const {
   return *this;
 }
 
-uint64_t Fixed::getInternal() const {
+int64_t Fixed::getInternal() const {
   return internal;
 }
 

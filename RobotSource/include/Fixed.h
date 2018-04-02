@@ -8,7 +8,7 @@ class Fixed {
   private:
     static const size_t shift;
     static const uint64_t factor;
-    uint64_t internal;
+    int64_t internal;
   public:
     Fixed();
     Fixed(int32_t);
@@ -25,7 +25,7 @@ class Fixed {
     Fixed& operator/=(const Fixed&);
     Fixed& operator/=(int32_t);
     Fixed mag() const;
-    uint64_t getInternal() const;
+    int64_t getInternal() const;
     double getDouble() const;
     int32_t getInt() const;
 };

@@ -71,14 +71,15 @@ void SerialLink::transmitDirection(Direction d) const {
 
 void SerialLink::transmitValue(int n) const {
   Fixed f = n;
-  uint64_t i = f.getInternal();
-  transmitBuffer(&i, sizeof(uint64_t));
+  int64_t i = f.getInternal();
+  transmitBuffer(&i, sizeof(int64_t));
 }
 
 void SerialLink::transmitValue(float x) const {
   Fixed f = static_cast<double>(x);
-  uint64_t i = f.getInternal();
-  transmitBuffer(&i, sizeof(uint64_t));
+  std::cout << f.getDouble() << std::endl;
+  int64_t i = f.getInternal();
+  transmitBuffer(&i, sizeof(int64_t));
 }
 
 void SerialLink::transmitBuffer(void* buf, size_t size) const {

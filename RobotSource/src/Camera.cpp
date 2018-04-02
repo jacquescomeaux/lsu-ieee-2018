@@ -1,5 +1,5 @@
 #include "../include/Camera.h"
-#include "math.h"
+#include <cmath>
 #include <iostream>
 #include <exception>
 #include <vector>
@@ -18,7 +18,7 @@ Lines
 	Perpendicular: 11,950 (MAX)
 */
 
-Camera::Camera(int n) : cap(n) {
+Camera::Camera(int n) : INCHES_PER_PIXEL(0.00839223), cap(n) {
   //cap.set(CV_CAP_PROP_FRAME_WIDTH, 320);
   //cap.set(CV_CAP_PROP_FRAME_HEIGHT, 240);
   std::vector<cv::Point2f> pts_src, pts_dst;
@@ -71,7 +71,7 @@ bool Camera::atIntersection() {
   //if(checkvals[0] > 5000 || checkvals[1] > 5000) {
   if(countBlack() > 160) {
   //std::cout << "stopped at int with blackness "<< checkvals[0] << " or " << checkvals[1] << std::endl;
-    return true; 
+    return true;
   }
   else return false;
 }
@@ -84,12 +84,9 @@ Coord Camera::determineLocation() const {return Coord(0,0);}
 
 std::vector<cv::Vec3f> Camera::checkCircle(int attempts = 1) { //argument for num times to check for token. Can run ~5-8 times per second.
   int Y1 = 150;
-  int Y2 = 400;
+  //int Y2 = 400;
   int X1 = 195;
   int X2 = 440;
-  
-  cv::VideoCapture cam(1);
-  if(!cam.isOpened()) return -1;
   
   std::vector<cv::Point2f> pts1, pts2;
   
@@ -103,10 +100,11 @@ std::vector<cv::Vec3f> Camera::checkCircle(int attempts = 1) { //argument for nu
   pts2.push_back(cv::Point2f(74,283));
   pts2.push_back(cv::Point2f(140,283));
   
+  std::vector<cv::Vec3f> circles;
   for(int a = 0; a < attempts; a++) {
     cv::Mat image, img, dst, dst1;
-    cam >> image;
-    if(image.empty()) return -1;
+    cap >> image;
+    //if(image.empty()) return -1;
     
     img = image(cv::Rect(X1, Y1, X2-X1, 283));
     cv::Mat M = cv::getPerspectiveTransform(pts1, pts2);
@@ -115,7 +113,6 @@ std::vector<cv::Vec3f> Camera::checkCircle(int attempts = 1) { //argument for nu
     cv::cvtColor(dst, dst1, CV_BGR2GRAY);
     cv::bilateralFilter(dst1, dst, 5, 75, 75);
     cv::Canny(dst, dst, 50, 60);
-    std::vector<cv::Vec3f> circles;
     
     //HoughCircles(input, output, method, dp,
     //minDist - min dist between centers
@@ -124,58 +121,76 @@ std::vector<cv::Vec3f> Camera::checkCircle(int attempts = 1) { //argument for nu
     //minRadius - Minimum circle radius
     //maxRadius - Maximum circle radius
     cv::HoughCircles(dst, circles, CV_HOUGH_GRADIENT, 2, 300, 50, 65, 60, 70);
+    if (!circles.empty()) std::cout << "Circle Detected: (" << circles[0][0] << "," << circles[0][1] << ")" << std::endl;
     //t = (cv::getTickCount() - t)/cv::getTickFrequency(); //Run Time Per Loop(ms): 120(BEST) - 200(WORST)
     //std::cout << "Time: " << t << std::endl;
-    try {
+    
+    if(!circles.empty()) break;
+    /*try {
       if(!circles.empty()) {
-	return &circles[0];
-	/*int x = round(circles[i][0]);
+	return circles;
+	*//*int x = round(circles[i][0]);
 	int y = round(circles[i][1]);
 	int radius = round(circles[i][2]);
 	cv::Point center(x,y);
-	std::cout << "Drawing a Circle at (" << center.x << "," << center.y << ") radius: " << radius << std::endl; 
+	std::cout << "Circle Detected: (" << center.x << "," << center.y << ") radius: " << radius << std::endl; 
 	cv::circle(img, center, radius, cv::Scalar(0,255,0), 4); */
-      }
-      else return 0;
+      /*}
+      //else return 0;
     }
     catch(std::exception& e) {
       std::cout << "Exception Thrown" << e.what() << std::endl;
-    }
+    }*/
     //cv::imshow("output", img); //for debugging
     //cv::imshow("dst", dst);
   }//end while(true)
+  return circles;
 }
 
 bool Camera::intersectionInFrame() {
-  if(checkCircle() > 0) return true;
-  else return false;
+  if(checkCircle(10).size() > 0) {
+  std::cout << "intersectionInFrame(): Intersection Found" << std::endl;
+  return true;
+  }
+  else {
+  std::cout << "intersectionInFrame(): No intersection found..." << std::endl;
+  return false;
+  }
 }
 
 bool Camera::tokenCentered() {
-  int checkx, checky;
+  float checkx = 0;
+  float checky = 0;
   getTokenErrors(&checkx, &checky);
-  if(checkx == 0 && checky == 0) return true;
-  else return false;
+  if(checkx == 0 && checky == 0) {
+  std::cout << "tokenCentered(): Robot is centered!" << std::endl;
+  return true;
+  }
+  else {
+  std::cout << "tokenCentered(): Robot not centered..." << std::endl;
+  return false;
+  }
 }
 
-void Camera::getTokenErrors(int* x, int*y, int att = 1) {
-  std::vector<cv:Vec3f> *center;
-    if(intersectionInFrame()) {
-      const int xtarget; = 150;
-      const int ytarget; = 130;
-      int tolerance = 5; //allowable number of pixels to be off target, needs testing
+void Camera::getTokenErrors(float* x, float* y) {
+  getTokenErrors(x, y, 1);
+}
 
-      center = checkCircle(att); //if multiple reads are needed to avoid trash values
-      int currentx = center[center.size() - 1][0];
-      int currenty = center[center.size() - 1][1];
-
-
-      currentx = xtarget - currentx;
-      currenty = ytarget - currenty;
-      if(abs(currentx) <= tolerance && abs(currenty) <= tolerance) *x = *y = 0;
-      else {
-	*x = currentx;
-	*y = currenty;
-      }
+void Camera::getTokenErrors(float* x, float*y, int att) {
+  static const int xtarget = 150;
+  static const int ytarget = 130;
+  std::vector<cv::Vec3f> center;
+  center = checkCircle(att); //if multiple reads are needed to avoid trash values
+  if(!center.empty() && intersectionInFrame()) {
+    std::cout << "getTokenErrors(): Circle Found" << std::endl;
+    int tolerance = 1; //allowable number of pixels to be off target, needs testing
+    float currentx = center[center.size() - 1][0] - xtarget;
+    float currenty = center[center.size() - 1][1] - ytarget;
+    std::cout << "getTokenErrors Corrections: x=" << currentx << " y=" << currenty << std::endl;
+    if(abs(currentx) <= tolerance && abs(currenty) <= tolerance) *x = *y = 0;
+    else {
+	*x = currentx * INCHES_PER_PIXEL;
+	*y = currenty * INCHES_PER_PIXEL;
     }
+  }
 }

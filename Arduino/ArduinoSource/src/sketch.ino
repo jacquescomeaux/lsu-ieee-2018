@@ -75,7 +75,7 @@ void parseCommand() {
     case '>': robot->adjustBaseSpeed(Fixed(10)); break;
    
     case '/': robot->setCenterOffset(receiveIndex()); break;
-    case 'T': robot->setCenterOffset(8); break;
+    //case 'T': robot->setCenterOffset(8); break;
     case '.': robot->setFollowRange(receiveIndex()); break;
 
     case 'm': robot->move(receiveDirection()); break;
@@ -87,11 +87,27 @@ void parseCommand() {
       break;
     }
     
+    case 'n': {
+      Direction dir = receiveDirection();
+      Fixed dist = receiveFixed();
+      robot->nudge(dir, dist);
+      break;
+    }
+    
     case 't': {
       Direction dir = receiveDirection();
       Fixed speed = receiveFixed();
       Fixed dist = receiveFixed();
       robot->travel(dir, speed, dist);
+      break;
+    }
+    
+    case 'T': {
+      Fixed x = receiveFixed();
+      Fixed y = receiveFixed();
+      Fixed rot  = receiveFixed();
+      Fixed dist = receiveFixed();
+      robot->travel(x, y, rot, dist);
       break;
     }
     

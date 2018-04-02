@@ -35,4 +35,20 @@ bool Robot::tokenSeen() const {
   return token_cam.tokenSeen();
 }
 
+void Robot::center(bool cross, int offset) {
+  //LineFollower::center(cross, offset);
+  float x = 0;
+  float y = 0;
+  while(token_cam.intersectionInFrame() && !token_cam.tokenCentered()) {
+    token_cam.getTokenErrors(&x, &y);
+    std::cout << "travelling by " << x << "in x direction" << std::endl;
+    if(x > 0) nudge(Direction::RIGHT, x);
+    else nudge(Direction::LEFT, abs(x));
+    std::cout << "travelling by " << y << "in y direction" << std::endl; 
+    if(y > 0) nudge(Direction::FRONT, y);
+    else nudge(Direction::BACK, abs(y));
+  }
+  std::cout << "Robot is done trying to center on intersection" << std::endl;
+}
+
 SortBot::SortBot() : control(*this) {}

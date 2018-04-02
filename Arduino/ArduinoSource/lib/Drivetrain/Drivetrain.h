@@ -37,6 +37,9 @@ class Drivetrain {
     void move(Fixed x, Fixed y, Fixed rot);
    
     //move a set amount
+    void nudge(Direction, Fixed dist);
+    void nudge(Fixed x, Fixed y, Fixed rot, Fixed dist);
+    
     void travel(Direction, Fixed dist);
     void travel(Direction, Fixed speed, Fixed dist);
     void travel(Fixed x, Fixed y, Fixed rot, Fixed dist);

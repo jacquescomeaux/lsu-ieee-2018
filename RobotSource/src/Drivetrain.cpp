@@ -40,6 +40,13 @@ void Drivetrain::move(Direction dir, int speed) const {
   transmitValue(speed);
 }
 
+void Drivetrain::nudge(Direction dir, float dist) const {
+  transmitChar('n');
+  transmitDirection(dir);
+  transmitValue(dist);
+  receiveChar();
+}
+
 void Drivetrain::travel(Direction dir, int speed, float dist, bool stopping) const {
   transmitChar('t');
   transmitDirection(dir);
@@ -47,4 +54,14 @@ void Drivetrain::travel(Direction dir, int speed, float dist, bool stopping) con
   transmitValue(dist);
   receiveChar();
   if(stopping) stop();
+}
+
+void Drivetrain::travel(float x, float y, float rot, float dist) const {
+  transmitChar('T');
+  transmitValue(x);
+  transmitValue(y);
+  transmitValue(rot);
+  transmitValue(dist);
+  receiveChar();
+  stop();
 }

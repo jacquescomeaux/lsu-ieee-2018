@@ -10,10 +10,11 @@
 
 class Camera {
   private:
+    const double INCHES_PER_PIXEL;
     cv::VideoCapture cap;
     cv::Mat M;
     int countBlack();
-    std::vector<cv::vec3f> checkCircle(int); //looks for a circle in current frame. Argument is optional (default 1) and tells function how many times to check for a circle
+    std::vector<cv::Vec3f> checkCircle(int); //looks for a circle in current frame. Argument is optional (default 1) and tells function how many times to check for a circle
   public:
     Camera(int n);
     bool onLine();
@@ -23,7 +24,8 @@ class Camera {
     
     bool intersectionInFrame(); //true if circle can be detected
     bool tokenCentered();//true if token arm is cleared
-    void getTokenErrors(int*, int*, int); //errors given in pixels, might need some conversion to real world units
+    void getTokenErrors(float*, float*); //errors given in pixels, might need some conversion to real world units
+    void getTokenErrors(float*, float*, int); //errors given in pixels, might need some conversion to real world units
 };
 
 #endif//CAMERA_H
