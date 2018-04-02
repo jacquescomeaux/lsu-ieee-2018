@@ -4,17 +4,20 @@
 #include "opencv2/highgui/highgui.hpp"
 #include "opencv2/imgproc/imgproc.hpp"
 
+#include <vector>
+#include <iostream>
+
 
 int main()
 {
   cv::VideoCapture cam(2);
   while(true) {
-    cam >> color; 
-    cv::Mat color = cv::imread("../houghCircles.png");
+    cv::Mat color;
+    cam >> color;
     cv::namedWindow("input"); cv::imshow("input", color);
-    
+
     cv::Mat canny;
-    
+
     cv::Mat gray;
     /// Convert it to gray
     cv::cvtColor( color, gray, CV_BGR2GRAY );
@@ -31,10 +34,10 @@ int main()
     /// Draw the circles detected
     for( size_t i = 0; i < circles.size(); i++ ) 
     {
-        Point center(cvRound(circles[i][0]), cvRound(circles[i][1]));
+        cv::Point center(cvRound(circles[i][0]), cvRound(circles[i][1]));
         int radius = cvRound(circles[i][2]);
-        cv::circle( color, center, 3, Scalar(0,255,255), -1);
-        cv::circle( color, center, radius, Scalar(0,0,255), 1 );
+        cv::circle( color, center, 3, cv::Scalar(0,255,255), -1);
+        cv::circle( color, center, radius, cv::Scalar(0,0,255), 1 );
     }
 
     //compute distance transform:
