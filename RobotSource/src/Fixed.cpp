@@ -7,7 +7,7 @@ Fixed::Fixed() : Fixed(0) {}
 
 Fixed::Fixed(int32_t i) : internal(static_cast<int64_t>(i) << shift) {}
 
-Fixed::Fixed(uint64_t i) : internal(i) {}
+Fixed::Fixed(int64_t i) : internal(i) {}
 
 Fixed::Fixed(double d) {
   internal = static_cast<int64_t>(d * static_cast<double>(factor));

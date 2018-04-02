@@ -17,7 +17,7 @@ union two_byte_object {
 union eight_byte_object {
   unsigned char bytes[8];
   char chars[8];
-  uint64_t number;
+  int64_t number;
 };
 
 unsigned int receiveIndex() {
@@ -75,6 +75,7 @@ void parseCommand() {
     case '>': robot->adjustBaseSpeed(Fixed(10)); break;
    
     case '/': robot->setCenterOffset(receiveIndex()); break;
+    case '"': robot->setCenterOffset(16); break;
     //case 'T': robot->setCenterOffset(8); break;
     case '.': robot->setFollowRange(receiveIndex()); break;
 

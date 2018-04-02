@@ -26,10 +26,10 @@ void LineFollower::followLine(Direction dir) const {
   transmitChar('f');
 }
 
-void LineFollower::snapToLine(Direction dir) const {
+void LineFollower::snapToLine(Direction dir, int range) const {
   followLine(dir);
   transmitChar('.');
-  transmitIndex(6);
+  transmitIndex(range);
   transmitChar(' ');
   transmitChar('f');
   std::this_thread::sleep_for(std::chrono::seconds(2));
@@ -44,7 +44,7 @@ void LineFollower::center(bool cross, int offset) const {
   transmitIndex(offset);
   char centerChar = cross ? '|' : '\\';
   transmitChar(centerChar);
-  std::this_thread::sleep_for(std::chrono::seconds(2)); //prev 6 secs
+  std::this_thread::sleep_for(std::chrono::seconds(6)); //prev 6 secs
   transmitChar(centerChar);
   transmitChar(' ');
 }

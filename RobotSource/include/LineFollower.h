@@ -11,7 +11,7 @@ class LineFollower : private SerialLink {
   public:
     void followLine(Direction) const;
     void toggleCalibration() const;
-    void snapToLine(Direction) const;
+    void snapToLine(Direction, int) const;
     void center(bool cross, int) const;
 };
 

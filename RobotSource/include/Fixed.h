@@ -12,7 +12,7 @@ class Fixed {
   public:
     Fixed();
     Fixed(int32_t);
-    Fixed(uint64_t);
+    Fixed(int64_t);
     Fixed(double);
     Fixed& operator=(int32_t);
     Fixed& operator=(double);
