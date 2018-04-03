@@ -48,7 +48,7 @@ void Robot::center(bool cross, int offset) {
   float x = 0;
   float y = 0;
   LineFollower::startCentering(cross, offset);
-  while(!int_cam.intersectionInFrame());
+  while(!int_cam.intersectionInFrame()) LineFollower::startCentering(cross, offset);
   stop();
   while(!int_cam.tokenCentered()) {
     int_cam.getTokenErrors(&x, &y);
