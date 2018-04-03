@@ -4,6 +4,10 @@
 #include <exception>
 #include <vector>
 
+//adding these trying to get ryan's color detection to work...
+#include "opencv2/core/core.hpp"
+#include "opencv2/imgproc.hpp"
+
 /* Approximate values of Blackness for countBlack(Threshold: 120,255)
 Corner Intersection (with token)
 	Centered: 20,500 +/- 250
@@ -168,7 +172,7 @@ void Camera::getTokenErrors(float* x, float*y, int att) {
   if(intersectionInFrame()) center = checkCircle(att);
   else center = checkPartialCircle(att);
   if(!center.empty() && intersectionInFrame()) {
-    int tolerance = 20; //allowable number of pixels to be off target, needs testing
+    int tolerance = 10; //allowable number of pixels to be off target, needs testing
     float currentx = xtarget - center[center.size() - 1][0];
     float currenty = center[center.size() - 1][1] - ytarget;
     std::cout << "getTokenErrors Corrections: x=" << currentx << " y=" << currenty << std::endl;
@@ -260,9 +264,8 @@ std::vector<double> Camera::readToken() {
   cv::Mat img = src(roi);
   cv::Mat hsv;
   cv::cvtColor(img, hsv, cv::COLOR_BGR2HSV);
-
-  for (int i = 0; i<roi.width; i++) {
-    for (int j = 0; j<roi.height; j++) {
+  for (int i = 0; i < roi.width; i++) {
+    for (int j = 0; j < roi.height; j++) {
       h = h + hsv.at<cv::Vec3b>(j,i)[0];
       s = s + hsv.at<cv::Vec3b>(j,i)[1];
       v = v + hsv.at<cv::Vec3b>(j,i)[2];
@@ -271,9 +274,9 @@ std::vector<double> Camera::readToken() {
   }
 
   std::vector<double> hvs;
-  hvs[0] = h/sum;
-  hvs[1] = v/sum;
-  hvs[2] = s/sum;
+  hvs.push_back(h/sum);
+  hvs.push_back(v/sum);
+  hvs.push_back(s/sum);
 
   return hvs;
 }

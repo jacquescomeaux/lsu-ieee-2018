@@ -14,7 +14,6 @@ SortingSystem::SortingSystem() :
   }
 
 void SortingSystem::pickUpToken() {
-  //Serial.println("picking up token my man");
   task_buffer.push(9);
   Serial.write('+');
 }
@@ -32,6 +31,7 @@ void SortingSystem::continueSorting() {
   int current_task = task_buffer.front(); 
   if(current_task == 9) {
     token_arm.pickUpToken();
+    delay(500); //temporary...putting in a delay so that the camera has time to read the color
     task_buffer.pop();
   }
   else if(current_task == 10) {

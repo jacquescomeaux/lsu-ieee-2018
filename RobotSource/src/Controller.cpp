@@ -34,8 +34,7 @@ Controller::Controller(SortBot& r, Direction* f_seq, Direction* c_seq, int n) :
 void Controller::coverLine(Direction dir, bool cross, int offset, int num_tokens) const {
   for(int i = 0; i < num_tokens; i++) {
     robot.center(cross, offset);
-    if(robot.tokenSeen())
-    robot.sortToken();
+    if(robot.tokenSeen()) robot.sortToken();
     if(i == num_tokens - 1) break;
     robot.snapToLine(dir, 2);
     robot.followLine(dir);
