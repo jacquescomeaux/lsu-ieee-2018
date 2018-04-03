@@ -5,7 +5,7 @@ SortingSystem::SortingSystem() : token_cam(0) {}
 
 void SortingSystem::pickUpToken() {
   transmitChar('p');
-  receiveChar();
+  waitForChar('p');//receiveChar();
 }
 
 Color SortingSystem::checkTokenColor() {

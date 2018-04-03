@@ -40,6 +40,7 @@ void MagnetArm::pickUpToken() {
   goToHeight(bot_target);
   delay(500);
   goToHeight(cam_target);
+  Serial.write('p');
 }
 
 void MagnetArm::storeToken() {

@@ -11,9 +11,7 @@ struct sp_port* SerialLink::port;
 
 SerialLink::SerialLink() : PORTNAME("/dev/ttyACM0"), BAUD(9600) {
   object_count++;
-  //std::cout << "Constructing object " << object_count << std::endl;
   if(object_count == 1) {
-    //std::cout << "Initializing serial link " << object_count << std::endl;
     sp_get_port_by_name(PORTNAME, &port);
     sp_open(port, SP_MODE_READ_WRITE);	
     sp_set_baudrate(port, BAUD);
@@ -21,10 +19,7 @@ SerialLink::SerialLink() : PORTNAME("/dev/ttyACM0"), BAUD(9600) {
 }
 
 SerialLink::~SerialLink() {
-  //std::cout << "Destructing object " << object_count << std::endl;
-  if(object_count == 1) {sp_close(port);
-  //std::cout << "Freeing serial link " << object_count << std::endl;
-  }
+  if(object_count == 1) sp_close(port);
   object_count--;
 }
 
@@ -34,6 +29,11 @@ char SerialLink::receiveChar() const {
   receiveBuffer(&c, sizeof(char));
   std::cout << "Receiving " << c << std::endl;
   return c;
+}
+
+void SerialLink::waitForChar(char c) const {
+  if(response_buffer.find(c) != response_buffer.end()) response_buffer.erase(response_buffer.find(c));
+  else for(char r = receiveChar(); r != c; r = receiveChar()) response_buffer.insert(r);
 }
 
 int SerialLink::receiveInt() const {

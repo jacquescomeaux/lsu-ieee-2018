@@ -15,7 +15,6 @@ SortingSystem::SortingSystem() :
 
 void SortingSystem::pickUpToken() {
   task_buffer.push(9);
-  Serial.write('+');
 }
 
 void SortingSystem::storeToken(Color c) {
