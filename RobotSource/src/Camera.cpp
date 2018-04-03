@@ -104,8 +104,8 @@ std::vector<cv::Vec3f> Camera::checkCircle(int attempts = 1) { //argument for nu
     cap >> image;
 
     img = image(cv::Rect(X1, Y1, X2-X1, 283));
-    cv::warpPerspective(img, dst, M, img.size());
-    //cv::warpPerspective(img, img, M, img.size());
+    cv::warpPerspective(img, dst, M2, img.size());
+    //cv::warpPerspective(img, img, M2, img.size());
     cv::cvtColor(dst, dst1, CV_BGR2GRAY);
     cv::bilateralFilter(dst1, dst, 5, 75, 75);
     cv::Canny(dst, dst, 50, 60);
@@ -130,7 +130,7 @@ bool Camera::intersectionInFrame() {
   }
   else if(checkPartialCircle(5).size() > 0) {
     std::vector<cv::Vec3f> center = checkPartialCircle(5);
-    for(int i = 0; i < center.size(); i++) {
+    for(unsigned int i = 0; i < center.size(); i++) {
       if(center[i][2] > 60 || center[i][2] < 90) {
 	std::cout << "Partial intersection found" << std::endl;
 	return true;
@@ -138,10 +138,8 @@ bool Camera::intersectionInFrame() {
       else return false;
     }
   }
-  else {
-  std::cout << "intersectionInFrame(): No intersection found..." << std::endl;
   return false;
-  }
+  //std::cout << "intersectionInFrame(): No intersection found..." << std::endl;
 }
 
 bool Camera::tokenCentered() {
@@ -168,9 +166,9 @@ void Camera::getTokenErrors(float* x, float*y, int att) {
   static const int ytarget = 120;
   std::vector<cv::Vec3f> center;
   if(intersectionInFrame()) center = checkCircle(att);
-  else center = checkPartialCircle();
-  if(!center.empty() && (intersectionInFrame() || partialIntersectionInFrame())) {
-    int tolerance = 10; //allowable number of pixels to be off target, needs testing
+  else center = checkPartialCircle(att);
+  if(!center.empty() && intersectionInFrame()) {
+    int tolerance = 20; //allowable number of pixels to be off target, needs testing
     float currentx = xtarget - center[center.size() - 1][0];
     float currenty = center[center.size() - 1][1] - ytarget;
     std::cout << "getTokenErrors Corrections: x=" << currentx << " y=" << currenty << std::endl;
@@ -195,7 +193,9 @@ std::vector<cv::Vec3f> Camera::checkPartialCircle(int attempts = 1) { //NOTE: AL
   pts2.push_back(cv::Point2f(140,0));
   pts2.push_back(cv::Point2f(74,283));
   pts2.push_back(cv::Point2f(140,283));
-  while(int i = 0; i < attempts; i++) {
+  
+  std::vector<cv::Vec3f> circles;
+  for(int i = 0; i < attempts; i++) {
     cv::Mat image, img;
     cap >> image;
     img = image(cv::Rect(X1, Y1, X2-X1, 283)); //crop
@@ -206,7 +206,6 @@ std::vector<cv::Vec3f> Camera::checkPartialCircle(int attempts = 1) { //NOTE: AL
     cv::cvtColor(img, gray, CV_BGR2GRAY );
     cv::bilateralFilter(gray, grayBI, 5, 75, 75);
     cv::Canny(grayBI, canny, 200,20); //prev 200, 20
-    std::vector<cv::Vec3f> circles;
     cv::HoughCircles( gray, circles, CV_HOUGH_GRADIENT, 2, 300, 50, 100, 50, 90 );
     
     //compute distance transform:
