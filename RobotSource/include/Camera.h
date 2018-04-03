@@ -24,8 +24,8 @@ class Camera {
     Coord determineLocation() const;
     
     bool intersectionInFrame(); //true if circle can be detected
-    bool tokenCentered();//true if token arm is cleared
-    void getTokenErrors(float*, float*); //errors given in pixels, might need some conversion to real world units
+    bool tokenCentered(); //true if token arm is cleared
+    void getTokenErrors(float*, float*);
     void getTokenErrors(float*, float*, int); //errors given in pixels, might need some conversion to real world units
     std::vector<double> readToken(); //returns vector of hsv values to detect color
 };

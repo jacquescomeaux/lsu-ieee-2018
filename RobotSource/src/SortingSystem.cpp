@@ -26,13 +26,15 @@ Color SortingSystem::checkTokenColor() {
   else if (avH < 68) tokenColor = Color::GREEN;
   else tokenColor = Color::BLUE;
   
-  if(tokenColor == Color::GRAY) std::cout << "Gray Token Detected" << std::endl;
-  else if(tokenColor == Color::RED) std::cout << "Red Token Detected" << std::endl;
-  else if(tokenColor == Color::MAGENTA) std::cout << "Magenta Token Detected" << std::endl;
-  else if(tokenColor == Color::CYAN) std::cout << "Cyan Token Detected" << std::endl;
-  else if(tokenColor == Color::GREEN) std::cout << "Green Token Detected" << std::endl;
-  else if(tokenColor == Color::BLUE) std::cout << "Blue Token Detected" << std::endl;
-
+  switch(tokenColor) {
+    case Color::GRAY : std::cout << "Gray Token Detected" << std::endl;
+    case Color::RED : std::cout << "Red Token Detected" << std::endl;
+    case Color::MAGENTA : std::cout << "Magenta Token Detected" << std::endl;
+    case Color::CYAN : std::cout << "Cyan Token Detected" << std::endl;
+    case Color::GREEN : std::cout << "Green Token Detected" << std::endl;
+    case Color::BLUE : std::cout << "Blue Token Detected" << std::endl;
+    default : std::cout << "Color not recognized" << std::endl;
+  }
   return tokenColor;
 
   /* static int c = 0;

@@ -188,23 +188,12 @@ std::vector<cv::Vec3f> Camera::checkPartialCircle(int attempts = 1) { //NOTE: AL
   int X1 = 195;
   int X2 = 440;
   
-  std::vector<cv::Point2f> pts1, pts2;
-  pts1.push_back(cv::Point2f(92,0));
-  pts1.push_back(cv::Point2f(148,0));
-  pts1.push_back(cv::Point2f(74,283));
-  pts1.push_back(cv::Point2f(178,283));
-  pts2.push_back(cv::Point2f(74,0));
-  pts2.push_back(cv::Point2f(140,0));
-  pts2.push_back(cv::Point2f(74,283));
-  pts2.push_back(cv::Point2f(140,283));
-  
   std::vector<cv::Vec3f> circles;
   for(int i = 0; i < attempts; i++) {
     cv::Mat image, img;
     cap >> image;
     img = image(cv::Rect(X1, Y1, X2-X1, 283)); //crop
-    cv::Mat M = cv::getPerspectiveTransform(pts1, pts2);
-    cv::warpPerspective(img, img, M, img.size());
+    cv::warpPerspective(img, img, M2, img.size());
     
     cv::Mat canny, gray, grayBI;
     cv::cvtColor(img, gray, CV_BGR2GRAY );
@@ -232,7 +221,8 @@ std::vector<cv::Vec3f> Camera::checkPartialCircle(int attempts = 1) { //NOTE: AL
       float maxInlierDist = radius/25.0f;
       if(maxInlierDist<minInlierDist) maxInlierDist = minInlierDist;
       
-      //TODO: maybe paramter incrementation might depend on circle size!
+      //TODO: maybe parameter incrementation might depend on circle size!
+      //wow
       for(float t =0; t<2*3.14159265359f; t+= 0.1f) {
 	counter++;
 	float cX = radius*cos(t) + circles[i][0];
