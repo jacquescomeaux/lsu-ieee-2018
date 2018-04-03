@@ -31,7 +31,7 @@ char SerialLink::receiveChar() const {
   return c;
 }
 
-void SerialLink::waitForChar(char c) const {
+void SerialLink::waitForChar(char c) {
   if(response_buffer.find(c) != response_buffer.end()) response_buffer.erase(response_buffer.find(c));
   else for(char r = receiveChar(); r != c; r = receiveChar()) response_buffer.insert(r);
 }

@@ -19,7 +19,7 @@ class SerialLink {
     SerialLink();
     ~SerialLink();
     char receiveChar() const;
-    void waitForChar(char) const;
+    void waitForChar(char);
     int receiveInt() const;
     float receiveFloat() const;
     void receiveBuffer(void*, size_t) const;

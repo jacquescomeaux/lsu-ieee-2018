@@ -13,6 +13,7 @@ set backspace=2
 set expandtab
 set fileencodings=ucs-bom,utf-8,default,latin1
 set helplang=en
+set imsearch=0
 set modelines=0
 set shiftwidth=2
 set shortmess=aoO
@@ -23,7 +24,7 @@ set winwidth=1
 let s:so_save = &so | let s:siso_save = &siso | set so=0 siso=0
 let v:this_session=expand("<sfile>:p")
 silent only
-cd ~/Desktop/classes/EE\ 4820/IEEE2018/RobotSource
+cd ~/WorkingDirectory/RobotSource
 if expand('%') == '' && !&modified && line('$') <= 1 && getline(1) == ''
   let s:wipebuf = bufnr('%')
 endif
@@ -100,9 +101,12 @@ exe 'vert 1resize ' . ((&columns * 79 + 79) / 158)
 exe 'vert 2resize ' . ((&columns * 78 + 79) / 158)
 argglobal
 3argu
-edit include/Direction.h
+if bufexists('include/Direction.h') | buffer include/Direction.h | else | edit include/Direction.h | endif
+setlocal keymap=
+setlocal noarabic
 setlocal autoindent
 setlocal backupcopy=
+setlocal balloonexpr=
 setlocal nobinary
 setlocal nobreakindent
 setlocal breakindentopt=
@@ -117,6 +121,8 @@ setlocal colorcolumn=
 setlocal comments=s1:/*,mb:*,ex:*/,://,b:#,:%,:XCOMM,n:>,fb:-
 setlocal commentstring=/*%s*/
 setlocal complete=.,w,b,u,t,i
+setlocal concealcursor=
+setlocal conceallevel=0
 setlocal completefunc=
 setlocal nocopyindent
 setlocal cryptmethod=
@@ -177,6 +183,8 @@ setlocal nopreviewwindow
 setlocal quoteescape=\\
 setlocal noreadonly
 setlocal norelativenumber
+setlocal norightleft
+setlocal rightleftcmd=search
 setlocal noscrollbind
 setlocal shiftwidth=2
 setlocal noshortname
@@ -197,6 +205,8 @@ endif
 setlocal tabstop=8
 setlocal tagcase=
 setlocal tags=
+setlocal termkey=
+setlocal termsize=
 setlocal textwidth=0
 setlocal thesaurus=
 setlocal noundofile
@@ -215,9 +225,12 @@ normal! 02|
 wincmd w
 argglobal
 3argu
-edit include/Color.h
+if bufexists('include/Color.h') | buffer include/Color.h | else | edit include/Color.h | endif
+setlocal keymap=
+setlocal noarabic
 setlocal autoindent
 setlocal backupcopy=
+setlocal balloonexpr=
 setlocal nobinary
 setlocal nobreakindent
 setlocal breakindentopt=
@@ -232,6 +245,8 @@ setlocal colorcolumn=
 setlocal comments=s1:/*,mb:*,ex:*/,://,b:#,:%,:XCOMM,n:>,fb:-
 setlocal commentstring=/*%s*/
 setlocal complete=.,w,b,u,t,i
+setlocal concealcursor=
+setlocal conceallevel=0
 setlocal completefunc=
 setlocal nocopyindent
 setlocal cryptmethod=
@@ -292,6 +307,8 @@ setlocal nopreviewwindow
 setlocal quoteescape=\\
 setlocal noreadonly
 setlocal norelativenumber
+setlocal norightleft
+setlocal rightleftcmd=search
 setlocal noscrollbind
 setlocal shiftwidth=2
 setlocal noshortname
@@ -312,6 +329,8 @@ endif
 setlocal tabstop=8
 setlocal tagcase=
 setlocal tags=
+setlocal termkey=
+setlocal termsize=
 setlocal textwidth=0
 setlocal thesaurus=
 setlocal noundofile
@@ -338,8 +357,11 @@ wincmd t
 set winminheight=1 winheight=1 winminwidth=1 winwidth=1
 argglobal
 1argu
+setlocal keymap=
+setlocal noarabic
 setlocal autoindent
 setlocal backupcopy=
+setlocal balloonexpr=
 setlocal nobinary
 setlocal nobreakindent
 setlocal breakindentopt=
@@ -354,6 +376,8 @@ setlocal colorcolumn=
 setlocal comments=s1:/*,mb:*,ex:*/,://,b:#,:%,:XCOMM,n:>,fb:-
 setlocal commentstring=/*%s*/
 setlocal complete=.,w,b,u,t,i
+setlocal concealcursor=
+setlocal conceallevel=0
 setlocal completefunc=
 setlocal nocopyindent
 setlocal cryptmethod=
@@ -414,6 +438,8 @@ setlocal nopreviewwindow
 setlocal quoteescape=\\
 setlocal noreadonly
 setlocal norelativenumber
+setlocal norightleft
+setlocal rightleftcmd=search
 setlocal noscrollbind
 setlocal shiftwidth=2
 setlocal noshortname
@@ -434,6 +460,8 @@ endif
 setlocal tabstop=8
 setlocal tagcase=
 setlocal tags=
+setlocal termkey=
+setlocal termsize=
 setlocal textwidth=0
 setlocal thesaurus=
 setlocal noundofile
@@ -463,9 +491,12 @@ exe 'vert 1resize ' . ((&columns * 79 + 79) / 158)
 exe 'vert 2resize ' . ((&columns * 78 + 79) / 158)
 argglobal
 10argu
-edit include/SerialLink.h
+if bufexists('include/SerialLink.h') | buffer include/SerialLink.h | else | edit include/SerialLink.h | endif
+setlocal keymap=
+setlocal noarabic
 setlocal autoindent
 setlocal backupcopy=
+setlocal balloonexpr=
 setlocal nobinary
 setlocal nobreakindent
 setlocal breakindentopt=
@@ -480,6 +511,8 @@ setlocal colorcolumn=
 setlocal comments=s1:/*,mb:*,ex:*/,://,b:#,:%,:XCOMM,n:>,fb:-
 setlocal commentstring=/*%s*/
 setlocal complete=.,w,b,u,t,i
+setlocal concealcursor=
+setlocal conceallevel=0
 setlocal completefunc=
 setlocal nocopyindent
 setlocal cryptmethod=
@@ -540,6 +573,8 @@ setlocal nopreviewwindow
 setlocal quoteescape=\\
 setlocal noreadonly
 setlocal norelativenumber
+setlocal norightleft
+setlocal rightleftcmd=search
 setlocal noscrollbind
 setlocal shiftwidth=2
 setlocal noshortname
@@ -560,6 +595,8 @@ endif
 setlocal tabstop=8
 setlocal tagcase=
 setlocal tags=
+setlocal termkey=
+setlocal termsize=
 setlocal textwidth=0
 setlocal thesaurus=
 setlocal noundofile
@@ -578,9 +615,12 @@ normal! 012|
 wincmd w
 argglobal
 10argu
-edit src/SerialLink.cpp
+if bufexists('src/SerialLink.cpp') | buffer src/SerialLink.cpp | else | edit src/SerialLink.cpp | endif
+setlocal keymap=
+setlocal noarabic
 setlocal autoindent
 setlocal backupcopy=
+setlocal balloonexpr=
 setlocal nobinary
 setlocal nobreakindent
 setlocal breakindentopt=
@@ -595,6 +635,8 @@ setlocal colorcolumn=
 setlocal comments=s1:/*,mb:*,ex:*/,://,b:#,:%,:XCOMM,n:>,fb:-
 setlocal commentstring=/*%s*/
 setlocal complete=.,w,b,u,t,i
+setlocal concealcursor=
+setlocal conceallevel=0
 setlocal completefunc=
 setlocal nocopyindent
 setlocal cryptmethod=
@@ -655,6 +697,8 @@ setlocal nopreviewwindow
 setlocal quoteescape=\\
 setlocal noreadonly
 setlocal norelativenumber
+setlocal norightleft
+setlocal rightleftcmd=search
 setlocal noscrollbind
 setlocal shiftwidth=2
 setlocal noshortname
@@ -675,6 +719,8 @@ endif
 setlocal tabstop=8
 setlocal tagcase=
 setlocal tags=
+setlocal termkey=
+setlocal termsize=
 setlocal textwidth=0
 setlocal thesaurus=
 setlocal noundofile
@@ -707,9 +753,12 @@ set winminheight=1 winheight=1 winminwidth=1 winwidth=1
 exe 'vert 1resize ' . ((&columns * 79 + 79) / 158)
 exe 'vert 2resize ' . ((&columns * 78 + 79) / 158)
 argglobal
-edit include/Robot.h
+if bufexists('include/Robot.h') | buffer include/Robot.h | else | edit include/Robot.h | endif
+setlocal keymap=
+setlocal noarabic
 setlocal autoindent
 setlocal backupcopy=
+setlocal balloonexpr=
 setlocal nobinary
 setlocal nobreakindent
 setlocal breakindentopt=
@@ -724,6 +773,8 @@ setlocal colorcolumn=
 setlocal comments=s1:/*,mb:*,ex:*/,://,b:#,:%,:XCOMM,n:>,fb:-
 setlocal commentstring=/*%s*/
 setlocal complete=.,w,b,u,t,i
+setlocal concealcursor=
+setlocal conceallevel=0
 setlocal completefunc=
 setlocal nocopyindent
 setlocal cryptmethod=
@@ -784,6 +835,8 @@ setlocal nopreviewwindow
 setlocal quoteescape=\\
 setlocal noreadonly
 setlocal norelativenumber
+setlocal norightleft
+setlocal rightleftcmd=search
 setlocal noscrollbind
 setlocal shiftwidth=2
 setlocal noshortname
@@ -804,6 +857,8 @@ endif
 setlocal tabstop=8
 setlocal tagcase=
 setlocal tags=
+setlocal termkey=
+setlocal termsize=
 setlocal textwidth=0
 setlocal thesaurus=
 setlocal noundofile
@@ -821,9 +876,12 @@ normal! zt
 normal! 06|
 wincmd w
 argglobal
-edit src/Robot.cpp
+if bufexists('src/Robot.cpp') | buffer src/Robot.cpp | else | edit src/Robot.cpp | endif
+setlocal keymap=
+setlocal noarabic
 setlocal autoindent
 setlocal backupcopy=
+setlocal balloonexpr=
 setlocal nobinary
 setlocal nobreakindent
 setlocal breakindentopt=
@@ -838,6 +896,8 @@ setlocal colorcolumn=
 setlocal comments=s1:/*,mb:*,ex:*/,://,b:#,:%,:XCOMM,n:>,fb:-
 setlocal commentstring=/*%s*/
 setlocal complete=.,w,b,u,t,i
+setlocal concealcursor=
+setlocal conceallevel=0
 setlocal completefunc=
 setlocal nocopyindent
 setlocal cryptmethod=
@@ -898,6 +958,8 @@ setlocal nopreviewwindow
 setlocal quoteescape=\\
 setlocal noreadonly
 setlocal norelativenumber
+setlocal norightleft
+setlocal rightleftcmd=search
 setlocal noscrollbind
 setlocal shiftwidth=2
 setlocal noshortname
@@ -918,6 +980,8 @@ endif
 setlocal tabstop=8
 setlocal tagcase=
 setlocal tags=
+setlocal termkey=
+setlocal termsize=
 setlocal textwidth=0
 setlocal thesaurus=
 setlocal noundofile
@@ -950,9 +1014,12 @@ exe 'vert 1resize ' . ((&columns * 79 + 79) / 158)
 exe 'vert 2resize ' . ((&columns * 78 + 79) / 158)
 argglobal
 4argu
-edit include/Controller.h
+if bufexists('include/Controller.h') | buffer include/Controller.h | else | edit include/Controller.h | endif
+setlocal keymap=
+setlocal noarabic
 setlocal autoindent
 setlocal backupcopy=
+setlocal balloonexpr=
 setlocal nobinary
 setlocal nobreakindent
 setlocal breakindentopt=
@@ -967,6 +1034,8 @@ setlocal colorcolumn=
 setlocal comments=s1:/*,mb:*,ex:*/,://,b:#,:%,:XCOMM,n:>,fb:-
 setlocal commentstring=/*%s*/
 setlocal complete=.,w,b,u,t,i
+setlocal concealcursor=
+setlocal conceallevel=0
 setlocal completefunc=
 setlocal nocopyindent
 setlocal cryptmethod=
@@ -1027,6 +1096,8 @@ setlocal nopreviewwindow
 setlocal quoteescape=\\
 setlocal noreadonly
 setlocal norelativenumber
+setlocal norightleft
+setlocal rightleftcmd=search
 setlocal noscrollbind
 setlocal shiftwidth=2
 setlocal noshortname
@@ -1047,6 +1118,8 @@ endif
 setlocal tabstop=8
 setlocal tagcase=
 setlocal tags=
+setlocal termkey=
+setlocal termsize=
 setlocal textwidth=0
 setlocal thesaurus=
 setlocal noundofile
@@ -1065,8 +1138,11 @@ normal! 0
 wincmd w
 argglobal
 4argu
+setlocal keymap=
+setlocal noarabic
 setlocal autoindent
 setlocal backupcopy=
+setlocal balloonexpr=
 setlocal nobinary
 setlocal nobreakindent
 setlocal breakindentopt=
@@ -1081,6 +1157,8 @@ setlocal colorcolumn=
 setlocal comments=s1:/*,mb:*,ex:*/,://,b:#,:%,:XCOMM,n:>,fb:-
 setlocal commentstring=/*%s*/
 setlocal complete=.,w,b,u,t,i
+setlocal concealcursor=
+setlocal conceallevel=0
 setlocal completefunc=
 setlocal nocopyindent
 setlocal cryptmethod=
@@ -1141,6 +1219,8 @@ setlocal nopreviewwindow
 setlocal quoteescape=\\
 setlocal noreadonly
 setlocal norelativenumber
+setlocal norightleft
+setlocal rightleftcmd=search
 setlocal noscrollbind
 setlocal shiftwidth=2
 setlocal noshortname
@@ -1161,6 +1241,8 @@ endif
 setlocal tabstop=8
 setlocal tagcase=
 setlocal tags=
+setlocal termkey=
+setlocal termsize=
 setlocal textwidth=0
 setlocal thesaurus=
 setlocal noundofile
@@ -1193,9 +1275,12 @@ exe 'vert 1resize ' . ((&columns * 79 + 79) / 158)
 exe 'vert 2resize ' . ((&columns * 78 + 79) / 158)
 argglobal
 6argu
-edit include/Drivetrain.h
+if bufexists('include/Drivetrain.h') | buffer include/Drivetrain.h | else | edit include/Drivetrain.h | endif
+setlocal keymap=
+setlocal noarabic
 setlocal autoindent
 setlocal backupcopy=
+setlocal balloonexpr=
 setlocal nobinary
 setlocal nobreakindent
 setlocal breakindentopt=
@@ -1210,6 +1295,8 @@ setlocal colorcolumn=
 setlocal comments=s1:/*,mb:*,ex:*/,://,b:#,:%,:XCOMM,n:>,fb:-
 setlocal commentstring=/*%s*/
 setlocal complete=.,w,b,u,t,i
+setlocal concealcursor=
+setlocal conceallevel=0
 setlocal completefunc=
 setlocal nocopyindent
 setlocal cryptmethod=
@@ -1270,6 +1357,8 @@ setlocal nopreviewwindow
 setlocal quoteescape=\\
 setlocal noreadonly
 setlocal norelativenumber
+setlocal norightleft
+setlocal rightleftcmd=search
 setlocal noscrollbind
 setlocal shiftwidth=2
 setlocal noshortname
@@ -1290,6 +1379,8 @@ endif
 setlocal tabstop=8
 setlocal tagcase=
 setlocal tags=
+setlocal termkey=
+setlocal termsize=
 setlocal textwidth=0
 setlocal thesaurus=
 setlocal noundofile
@@ -1308,8 +1399,11 @@ normal! 0
 wincmd w
 argglobal
 6argu
+setlocal keymap=
+setlocal noarabic
 setlocal autoindent
 setlocal backupcopy=
+setlocal balloonexpr=
 setlocal nobinary
 setlocal nobreakindent
 setlocal breakindentopt=
@@ -1324,6 +1418,8 @@ setlocal colorcolumn=
 setlocal comments=s1:/*,mb:*,ex:*/,://,b:#,:%,:XCOMM,n:>,fb:-
 setlocal commentstring=/*%s*/
 setlocal complete=.,w,b,u,t,i
+setlocal concealcursor=
+setlocal conceallevel=0
 setlocal completefunc=
 setlocal nocopyindent
 setlocal cryptmethod=
@@ -1384,6 +1480,8 @@ setlocal nopreviewwindow
 setlocal quoteescape=\\
 setlocal noreadonly
 setlocal norelativenumber
+setlocal norightleft
+setlocal rightleftcmd=search
 setlocal noscrollbind
 setlocal shiftwidth=2
 setlocal noshortname
@@ -1404,6 +1502,8 @@ endif
 setlocal tabstop=8
 setlocal tagcase=
 setlocal tags=
+setlocal termkey=
+setlocal termsize=
 setlocal textwidth=0
 setlocal thesaurus=
 setlocal noundofile
@@ -1436,9 +1536,12 @@ exe 'vert 1resize ' . ((&columns * 79 + 79) / 158)
 exe 'vert 2resize ' . ((&columns * 78 + 79) / 158)
 argglobal
 8argu
-edit include/LineFollower.h
+if bufexists('include/LineFollower.h') | buffer include/LineFollower.h | else | edit include/LineFollower.h | endif
+setlocal keymap=
+setlocal noarabic
 setlocal autoindent
 setlocal backupcopy=
+setlocal balloonexpr=
 setlocal nobinary
 setlocal nobreakindent
 setlocal breakindentopt=
@@ -1453,6 +1556,8 @@ setlocal colorcolumn=
 setlocal comments=s1:/*,mb:*,ex:*/,://,b:#,:%,:XCOMM,n:>,fb:-
 setlocal commentstring=/*%s*/
 setlocal complete=.,w,b,u,t,i
+setlocal concealcursor=
+setlocal conceallevel=0
 setlocal completefunc=
 setlocal nocopyindent
 setlocal cryptmethod=
@@ -1513,6 +1618,8 @@ setlocal nopreviewwindow
 setlocal quoteescape=\\
 setlocal noreadonly
 setlocal norelativenumber
+setlocal norightleft
+setlocal rightleftcmd=search
 setlocal noscrollbind
 setlocal shiftwidth=2
 setlocal noshortname
@@ -1533,6 +1640,8 @@ endif
 setlocal tabstop=8
 setlocal tagcase=
 setlocal tags=
+setlocal termkey=
+setlocal termsize=
 setlocal textwidth=0
 setlocal thesaurus=
 setlocal noundofile
@@ -1551,8 +1660,11 @@ normal! 029|
 wincmd w
 argglobal
 8argu
+setlocal keymap=
+setlocal noarabic
 setlocal autoindent
 setlocal backupcopy=
+setlocal balloonexpr=
 setlocal nobinary
 setlocal nobreakindent
 setlocal breakindentopt=
@@ -1567,6 +1679,8 @@ setlocal colorcolumn=
 setlocal comments=s1:/*,mb:*,ex:*/,://,b:#,:%,:XCOMM,n:>,fb:-
 setlocal commentstring=/*%s*/
 setlocal complete=.,w,b,u,t,i
+setlocal concealcursor=
+setlocal conceallevel=0
 setlocal completefunc=
 setlocal nocopyindent
 setlocal cryptmethod=
@@ -1627,6 +1741,8 @@ setlocal nopreviewwindow
 setlocal quoteescape=\\
 setlocal noreadonly
 setlocal norelativenumber
+setlocal norightleft
+setlocal rightleftcmd=search
 setlocal noscrollbind
 setlocal shiftwidth=2
 setlocal noshortname
@@ -1647,6 +1763,8 @@ endif
 setlocal tabstop=8
 setlocal tagcase=
 setlocal tags=
+setlocal termkey=
+setlocal termsize=
 setlocal textwidth=0
 setlocal thesaurus=
 setlocal noundofile
@@ -1679,9 +1797,12 @@ exe 'vert 1resize ' . ((&columns * 79 + 79) / 158)
 exe 'vert 2resize ' . ((&columns * 78 + 79) / 158)
 argglobal
 2argu
-edit include/Board.h
+if bufexists('include/Board.h') | buffer include/Board.h | else | edit include/Board.h | endif
+setlocal keymap=
+setlocal noarabic
 setlocal autoindent
 setlocal backupcopy=
+setlocal balloonexpr=
 setlocal nobinary
 setlocal nobreakindent
 setlocal breakindentopt=
@@ -1696,6 +1817,8 @@ setlocal colorcolumn=
 setlocal comments=s1:/*,mb:*,ex:*/,://,b:#,:%,:XCOMM,n:>,fb:-
 setlocal commentstring=/*%s*/
 setlocal complete=.,w,b,u,t,i
+setlocal concealcursor=
+setlocal conceallevel=0
 setlocal completefunc=
 setlocal nocopyindent
 setlocal cryptmethod=
@@ -1756,6 +1879,8 @@ setlocal nopreviewwindow
 setlocal quoteescape=\\
 setlocal noreadonly
 setlocal norelativenumber
+setlocal norightleft
+setlocal rightleftcmd=search
 setlocal noscrollbind
 setlocal shiftwidth=2
 setlocal noshortname
@@ -1776,6 +1901,8 @@ endif
 setlocal tabstop=8
 setlocal tagcase=
 setlocal tags=
+setlocal termkey=
+setlocal termsize=
 setlocal textwidth=0
 setlocal thesaurus=
 setlocal noundofile
@@ -1794,8 +1921,11 @@ normal! 0
 wincmd w
 argglobal
 2argu
+setlocal keymap=
+setlocal noarabic
 setlocal autoindent
 setlocal backupcopy=
+setlocal balloonexpr=
 setlocal nobinary
 setlocal nobreakindent
 setlocal breakindentopt=
@@ -1810,6 +1940,8 @@ setlocal colorcolumn=
 setlocal comments=s1:/*,mb:*,ex:*/,://,b:#,:%,:XCOMM,n:>,fb:-
 setlocal commentstring=/*%s*/
 setlocal complete=.,w,b,u,t,i
+setlocal concealcursor=
+setlocal conceallevel=0
 setlocal completefunc=
 setlocal nocopyindent
 setlocal cryptmethod=
@@ -1870,6 +2002,8 @@ setlocal nopreviewwindow
 setlocal quoteescape=\\
 setlocal noreadonly
 setlocal norelativenumber
+setlocal norightleft
+setlocal rightleftcmd=search
 setlocal noscrollbind
 setlocal shiftwidth=2
 setlocal noshortname
@@ -1890,6 +2024,8 @@ endif
 setlocal tabstop=8
 setlocal tagcase=
 setlocal tags=
+setlocal termkey=
+setlocal termsize=
 setlocal textwidth=0
 setlocal thesaurus=
 setlocal noundofile
@@ -1922,9 +2058,12 @@ exe 'vert 1resize ' . ((&columns * 79 + 79) / 158)
 exe 'vert 2resize ' . ((&columns * 78 + 79) / 158)
 argglobal
 3argu
-edit include/Camera.h
+if bufexists('include/Camera.h') | buffer include/Camera.h | else | edit include/Camera.h | endif
+setlocal keymap=
+setlocal noarabic
 setlocal autoindent
 setlocal backupcopy=
+setlocal balloonexpr=
 setlocal nobinary
 setlocal nobreakindent
 setlocal breakindentopt=
@@ -1939,6 +2078,8 @@ setlocal colorcolumn=
 setlocal comments=s1:/*,mb:*,ex:*/,://,b:#,:%,:XCOMM,n:>,fb:-
 setlocal commentstring=/*%s*/
 setlocal complete=.,w,b,u,t,i
+setlocal concealcursor=
+setlocal conceallevel=0
 setlocal completefunc=
 setlocal nocopyindent
 setlocal cryptmethod=
@@ -1999,6 +2140,8 @@ setlocal nopreviewwindow
 setlocal quoteescape=\\
 setlocal noreadonly
 setlocal norelativenumber
+setlocal norightleft
+setlocal rightleftcmd=search
 setlocal noscrollbind
 setlocal shiftwidth=2
 setlocal noshortname
@@ -2019,6 +2162,8 @@ endif
 setlocal tabstop=8
 setlocal tagcase=
 setlocal tags=
+setlocal termkey=
+setlocal termsize=
 setlocal textwidth=0
 setlocal thesaurus=
 setlocal noundofile
@@ -2037,8 +2182,11 @@ normal! 0
 wincmd w
 argglobal
 3argu
+setlocal keymap=
+setlocal noarabic
 setlocal autoindent
 setlocal backupcopy=
+setlocal balloonexpr=
 setlocal nobinary
 setlocal nobreakindent
 setlocal breakindentopt=
@@ -2053,6 +2201,8 @@ setlocal colorcolumn=
 setlocal comments=s1:/*,mb:*,ex:*/,://,b:#,:%,:XCOMM,n:>,fb:-
 setlocal commentstring=/*%s*/
 setlocal complete=.,w,b,u,t,i
+setlocal concealcursor=
+setlocal conceallevel=0
 setlocal completefunc=
 setlocal nocopyindent
 setlocal cryptmethod=
@@ -2113,6 +2263,8 @@ setlocal nopreviewwindow
 setlocal quoteescape=\\
 setlocal noreadonly
 setlocal norelativenumber
+setlocal norightleft
+setlocal rightleftcmd=search
 setlocal noscrollbind
 setlocal shiftwidth=2
 setlocal noshortname
@@ -2133,6 +2285,8 @@ endif
 setlocal tabstop=8
 setlocal tagcase=
 setlocal tags=
+setlocal termkey=
+setlocal termsize=
 setlocal textwidth=0
 setlocal thesaurus=
 setlocal noundofile
@@ -2165,9 +2319,12 @@ exe 'vert 1resize ' . ((&columns * 79 + 79) / 158)
 exe 'vert 2resize ' . ((&columns * 78 + 79) / 158)
 argglobal
 5argu
-edit include/Coord.h
+if bufexists('include/Coord.h') | buffer include/Coord.h | else | edit include/Coord.h | endif
+setlocal keymap=
+setlocal noarabic
 setlocal autoindent
 setlocal backupcopy=
+setlocal balloonexpr=
 setlocal nobinary
 setlocal nobreakindent
 setlocal breakindentopt=
@@ -2182,6 +2339,8 @@ setlocal colorcolumn=
 setlocal comments=s1:/*,mb:*,ex:*/,://,b:#,:%,:XCOMM,n:>,fb:-
 setlocal commentstring=/*%s*/
 setlocal complete=.,w,b,u,t,i
+setlocal concealcursor=
+setlocal conceallevel=0
 setlocal completefunc=
 setlocal nocopyindent
 setlocal cryptmethod=
@@ -2242,6 +2401,8 @@ setlocal nopreviewwindow
 setlocal quoteescape=\\
 setlocal noreadonly
 setlocal norelativenumber
+setlocal norightleft
+setlocal rightleftcmd=search
 setlocal noscrollbind
 setlocal shiftwidth=2
 setlocal noshortname
@@ -2262,6 +2423,8 @@ endif
 setlocal tabstop=8
 setlocal tagcase=
 setlocal tags=
+setlocal termkey=
+setlocal termsize=
 setlocal textwidth=0
 setlocal thesaurus=
 setlocal noundofile
@@ -2280,8 +2443,11 @@ normal! 07|
 wincmd w
 argglobal
 5argu
+setlocal keymap=
+setlocal noarabic
 setlocal autoindent
 setlocal backupcopy=
+setlocal balloonexpr=
 setlocal nobinary
 setlocal nobreakindent
 setlocal breakindentopt=
@@ -2296,6 +2462,8 @@ setlocal colorcolumn=
 setlocal comments=s1:/*,mb:*,ex:*/,://,b:#,:%,:XCOMM,n:>,fb:-
 setlocal commentstring=/*%s*/
 setlocal complete=.,w,b,u,t,i
+setlocal concealcursor=
+setlocal conceallevel=0
 setlocal completefunc=
 setlocal nocopyindent
 setlocal cryptmethod=
@@ -2356,6 +2524,8 @@ setlocal nopreviewwindow
 setlocal quoteescape=\\
 setlocal noreadonly
 setlocal norelativenumber
+setlocal norightleft
+setlocal rightleftcmd=search
 setlocal noscrollbind
 setlocal shiftwidth=2
 setlocal noshortname
@@ -2376,6 +2546,8 @@ endif
 setlocal tabstop=8
 setlocal tagcase=
 setlocal tags=
+setlocal termkey=
+setlocal termsize=
 setlocal textwidth=0
 setlocal thesaurus=
 setlocal noundofile
@@ -2408,9 +2580,12 @@ exe 'vert 1resize ' . ((&columns * 79 + 79) / 158)
 exe 'vert 2resize ' . ((&columns * 78 + 79) / 158)
 argglobal
 10argu
-edit include/SortingSystem.h
+if bufexists('include/SortingSystem.h') | buffer include/SortingSystem.h | else | edit include/SortingSystem.h | endif
+setlocal keymap=
+setlocal noarabic
 setlocal autoindent
 setlocal backupcopy=
+setlocal balloonexpr=
 setlocal nobinary
 setlocal nobreakindent
 setlocal breakindentopt=
@@ -2425,6 +2600,8 @@ setlocal colorcolumn=
 setlocal comments=s1:/*,mb:*,ex:*/,://,b:#,:%,:XCOMM,n:>,fb:-
 setlocal commentstring=/*%s*/
 setlocal complete=.,w,b,u,t,i
+setlocal concealcursor=
+setlocal conceallevel=0
 setlocal completefunc=
 setlocal nocopyindent
 setlocal cryptmethod=
@@ -2485,6 +2662,8 @@ setlocal nopreviewwindow
 setlocal quoteescape=\\
 setlocal noreadonly
 setlocal norelativenumber
+setlocal norightleft
+setlocal rightleftcmd=search
 setlocal noscrollbind
 setlocal shiftwidth=2
 setlocal noshortname
@@ -2505,6 +2684,8 @@ endif
 setlocal tabstop=8
 setlocal tagcase=
 setlocal tags=
+setlocal termkey=
+setlocal termsize=
 setlocal textwidth=0
 setlocal thesaurus=
 setlocal noundofile
@@ -2523,9 +2704,12 @@ normal! 023|
 wincmd w
 argglobal
 10argu
-edit src/SortingSystem.cpp
+if bufexists('src/SortingSystem.cpp') | buffer src/SortingSystem.cpp | else | edit src/SortingSystem.cpp | endif
+setlocal keymap=
+setlocal noarabic
 setlocal autoindent
 setlocal backupcopy=
+setlocal balloonexpr=
 setlocal nobinary
 setlocal nobreakindent
 setlocal breakindentopt=
@@ -2540,6 +2724,8 @@ setlocal colorcolumn=
 setlocal comments=s1:/*,mb:*,ex:*/,://,b:#,:%,:XCOMM,n:>,fb:-
 setlocal commentstring=/*%s*/
 setlocal complete=.,w,b,u,t,i
+setlocal concealcursor=
+setlocal conceallevel=0
 setlocal completefunc=
 setlocal nocopyindent
 setlocal cryptmethod=
@@ -2600,6 +2786,8 @@ setlocal nopreviewwindow
 setlocal quoteescape=\\
 setlocal noreadonly
 setlocal norelativenumber
+setlocal norightleft
+setlocal rightleftcmd=search
 setlocal noscrollbind
 setlocal shiftwidth=2
 setlocal noshortname
@@ -2620,6 +2808,8 @@ endif
 setlocal tabstop=8
 setlocal tagcase=
 setlocal tags=
+setlocal termkey=
+setlocal termsize=
 setlocal textwidth=0
 setlocal thesaurus=
 setlocal noundofile
