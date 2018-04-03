@@ -1,9 +1,10 @@
 #include "../include/SortingSystem.h"
 
-SortingSystem::SortingSystem() {}
+SortingSystem::SortingSystem() : token_cam(0) {}
 
 void SortingSystem::pickUpToken() {
-  token_arm.pickUpToken();
+  transmitChar('p');
+  receiveChar();
 }
 
 Color SortingSystem::checkTokenColor() const {
@@ -12,9 +13,14 @@ Color SortingSystem::checkTokenColor() const {
   return static_cast<Color>(c);//color_sensor.getColor();
 }
 
-void SortingSystem::sortToken(Color c) {
+void SortingSystem::storeToken(Color c) const {
   transmitChar('r');
   transmitColor(c);
+}
+
+void SortingSystem::sortToken() {
+  pickUpToken();
+  storeToken(checkTokenColor());
 }
 
 void SortingSystem::dropTokenStack(Color c) {}

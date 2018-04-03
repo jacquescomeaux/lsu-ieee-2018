@@ -26,9 +26,9 @@ int main(int argc, char* argv[])
   pts2.push_back(cv::Point2f(74,283));
   pts2.push_back(cv::Point2f(140,283));
   
-  cv::VideoCapture cam(2);
+  cv::VideoCapture cam(1);
   while(true) {
-
+    double t = cv::getTickCount();
     cv::Mat image, img;
     cam >> image;
     img = image(cv::Rect(X1, Y1, X2-X1, 283)); //crop
@@ -38,17 +38,21 @@ int main(int argc, char* argv[])
     cv::Mat canny;
 
     cv::Mat gray;
+    cv::Mat grayBI;
     /// Convert it to gray
     cv::cvtColor(img, gray, CV_BGR2GRAY );
 
+    cv::bilateralFilter(gray, grayBI, 5, 75, 75);
+
     // compute canny (don't blur with that image quality!!)
-    cv::Canny(gray, canny, 50,60); //prev 200, 20
+    cv::Canny(grayBI, canny, 200,20); //prev 200, 20
     cv::namedWindow("canny2"); cv::imshow("canny2", canny>0);
+    cv::namedWindow("BLUR"); cv::imshow("BLUR", grayBI>0);
 
     std::vector<cv::Vec3f> circles;
 
     /// Apply the Hough Transform to find the circles
-    cv::HoughCircles( gray, circles, CV_HOUGH_GRADIENT, 1, 60, 200, 20, 0, 0 );
+    cv::HoughCircles( gray, circles, CV_HOUGH_GRADIENT, 2, 300, 50, 100, 50, 90 );
 
     /// Draw the circles detected
     for( size_t i = 0; i < circles.size(); i++ ) 
@@ -97,11 +101,14 @@ int main(int argc, char* argv[])
         }
         std::cout << 100.0f*(float)inlier/(float)counter << " % of a circle with radius " << radius << " detected" << std::endl;
     }
+    
+    t = (cv::getTickCount() - t)/cv::getTickFrequency();
+    std::cout << "Time: " << t << std::endl;
 
     cv::namedWindow("output"); cv::imshow("output", img);
     //cv::imwrite("houghLinesComputed.png", color);
 
-    cv::waitKey(0);
+    cv::waitKey(25);
     //return 0;
   }
 }

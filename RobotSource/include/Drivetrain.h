@@ -5,11 +5,7 @@
 
 #include "SerialLink.h"
 
-#include "Wheel.h"
-
 class Drivetrain : private SerialLink {
-  private:
-    const Wheel wheels[4];
   protected:
     Drivetrain();
   public:
