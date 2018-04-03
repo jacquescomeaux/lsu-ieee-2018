@@ -243,3 +243,37 @@ std::vector<cv::Vec3f> Camera::checkPartialCircle(int attempts = 1) { //NOTE: AL
   }
   return circles;
 }
+
+std::vector<double> readToken() {
+  cv::Mat src;
+  cv::Rect roi;
+  cap >> src;
+  cv::roi.x = 220;
+  cv::roi.y = 290;
+  cv::roi.width = 220;
+  cv::roi.height = 120;
+  int h = 0;
+  int s = 0;
+  int v = 0;
+  int sum = 0;
+
+  cv::Mat img = src(roi);
+  cv::Mat hsv;
+  cv::cvtColor(img, hsv, cv::COLOR_BGR2HSV);
+
+  for (int i = 0; i<roi.width; i++) {
+    for (int j = 0; j<roi.height; j++) {
+      h = h + hsv.at<cv::Vec3b>(j,i)[0];
+      s = s + hsv.at<cv::Vec3b>(j,i)[1];
+      v = v + hsv.at<cv::Vec3b>(j,i)[2];
+      sum = sum + 1;
+    }
+  }
+
+  std::vector<double> hvs;
+  hvs[0] = h/sum;
+  hvs[1] = v/sum;
+  hvs[2] = s/sum;
+
+  return hvs;
+}

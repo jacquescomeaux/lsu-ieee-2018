@@ -27,6 +27,7 @@ class Camera {
     bool tokenCentered();//true if token arm is cleared
     void getTokenErrors(float*, float*); //errors given in pixels, might need some conversion to real world units
     void getTokenErrors(float*, float*, int); //errors given in pixels, might need some conversion to real world units
+    std::vector<double> readToken(); //returns vector of hsv values to detect color
 };
 
 #endif//CAMERA_H
