@@ -161,7 +161,7 @@ void Camera::getTokenErrors(float* x, float*y, int att) {
   std::vector<cv::Vec3f> center;
   center = checkCircle(att); //if multiple reads are needed to avoid trash values
   if(!center.empty() && intersectionInFrame()) {
-    int tolerance = 28; //allowable number of pixels to be off target, needs testing
+    int tolerance = 10; //allowable number of pixels to be off target, needs testing
     float currentx = xtarget - center[center.size() - 1][0];
     float currenty = center[center.size() - 1][1] - ytarget;
     std::cout << "getTokenErrors Corrections: x=" << currentx << " y=" << currenty << std::endl;
@@ -173,14 +173,18 @@ void Camera::getTokenErrors(float* x, float*y, int att) {
 }
 
 void Camera::getTokenPicture() {
-  cv::Mat img;
+/*  cv::Mat img;
   cap >> img;
-  std::string imagename = "../../OpenCV/Tokens/token_color_";
+  std::ostringstream imagename;
+  imagename << "../../OpenCV/Tokens/token_color_";
   for(int i = 0; i < 24; i++) {
-    ifstream infile(imagename + i);
+    std::ostringstream s;
+    s << imagename << i;
+    std::ifstream infile(s.str());
     if(infile.good()) {
-    cv::imwrite(imagename + i, img);
+    imagename << i;
+    cv::imwrite(imagename.str() , img);
     break;
     }
-  }
+  } */
 }

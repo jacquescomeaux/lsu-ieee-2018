@@ -12,14 +12,14 @@ MagnetArm::MagnetArm(Adafruit_StepperMotor* mot, Adafruit_DCMotor* mag) :
   RPM(60),
   bot_target(0),
   top_target(455),
-  cam_target(280), // = (top_target - 175) for token color detection
+  cam_target(300),
   total_steps(460),
   position(460),
   motor(mot),
   magnet(mag) {
     motor->setSpeed(RPM);
     magnet->run(RELEASE);
-    magnet->setSpeed(200);
+    magnet->setSpeed(255);
 }
 
 void MagnetArm::goToHeight(int s) {

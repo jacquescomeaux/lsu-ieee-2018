@@ -4,7 +4,7 @@
 ProximitySensor::ProximitySensor(int t, int e, int min, int max) : 
   range_min(min),
   range_max(max),
-  certainty_threshold(1),
+  certainty_threshold(2),
   trig_pin(t),
   echo_pin(e),
   proximity(0),
@@ -21,11 +21,6 @@ void ProximitySensor::updateProximity() {
   delayMicroseconds(10);
   digitalWrite(trig_pin, LOW);
   proximity = pulseIn(echo_pin, HIGH);
-  
-  /*Serial.print("T: ");
-  Serial.print(millis());
-  Serial.print(" P: ");
-  Serial.print(proximity);*/
 
 if(proximity > range_min && proximity < range_max) count++;
   else count = 0;

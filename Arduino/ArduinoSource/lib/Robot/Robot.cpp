@@ -9,7 +9,7 @@ Robot::Robot() :
     ProximitySensor( 6,  7, 600, 750), //RIGHT(0)
     ProximitySensor( 8,  9, 500, 750), //FRONT(1)
     ProximitySensor(10, 11, 500, 800), //LEFT(2)
-    ProximitySensor(12, 14, 500, 750)  //BACK(3)
+    ProximitySensor(12, 13, 500, 750)  //BACK(3)
   } {
     stop();
     pinMode(A8, INPUT);
@@ -19,24 +19,11 @@ Robot::Robot() :
 void Robot::checkEdges() {
   //for(ProximitySensor& s : edge_detectors) if(s.edgeDetected()) stop();
 
-
-
-  //DEBUGGING CODE
-  /* for (int s = 0; s < 4; s++) {
-	Serial.print("S: ");
-	Serial.print(s);
-	Serial.print("  ");
-	if (edge_detectors[s].edgeDetected()) {}
-	Serial.print(" | ");
-  }
-  Serial.println(" | ");*/
-
-  /* COMMENTED OUT WORKING CODE
-  if(current_direction == Direction::FRONT) if(edge_detectors[1].edgeDetected()) stop();
+  /* COMMENTED OUT WORKING CODE */
+  /*if(current_direction == Direction::FRONT) if(edge_detectors[1].edgeDetected()) stop();
   if(current_direction == Direction::BACK) if(edge_detectors[3].edgeDetected()) stop();
   if(current_direction == Direction::LEFT) if(edge_detectors[2].edgeDetected()) stop();
-  if(current_direction == Direction::RIGHT) if(edge_detectors[0].edgeDetected()) stop();
-  */
+  if(current_direction == Direction::RIGHT) if(edge_detectors[0].edgeDetected()) stop();*/
 }
 
 void Robot::stop() {
@@ -83,7 +70,9 @@ void Robot::update() {
     //if((flags & Flag::PRINTING_LINE) != Flag::NONE) printReadings();
   }
   
-  if((dt[4] > 20) ? (last_ran[4] = time) : false) {}
+  if((dt[4] > 0) ? (last_ran[4] = time) : false) {
+  checkEdges();
+  }
   
   if((dt[5] > 100) ? (last_ran[5] = time) : false) {
     if(!travelDstReached) Drivetrain::checkDestination();

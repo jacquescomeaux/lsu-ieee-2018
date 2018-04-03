@@ -46,15 +46,14 @@ void Robot::center(bool cross, int offset) {
 */
   float x = 0;
   float y = 0;
-  //while(!int_cam.intersectionInFrame())
-  LineFollower::center(cross, offset);
-  /*while(!int_cam.tokenCentered()) {
+  while(!int_cam.intersectionInFrame()) LineFollower::center(cross, offset);
+  while(!int_cam.tokenCentered()) {
     int_cam.getTokenErrors(&x, &y);
     if(x > 0 ) nudge(Direction::RIGHT, x);
     else if(x < 0) nudge(Direction::LEFT, -x);
     if(y > 0) nudge(Direction::FRONT, y);
     else if(y < 0) nudge(Direction::BACK, -y);
-  }*/
+  }
   std::cout << "Robot.center() Done" << std::endl;
 }
 
