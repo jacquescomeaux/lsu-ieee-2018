@@ -68,22 +68,11 @@ int Camera::countBlack() {
 }
 
 bool Camera::onLine() {
-  //int checkvals[2];
-  //for(int i = 0; i < 2; i++) checkvals[i] = countBlack();
-  //if(abs(checkvals[0]-checkvals[1]) > 2000) return false; //check for "trash frames"
-  //if(checkvals[0] > 2500 || checkvals[1] > 2500) {
-    if(countBlack() > 100) {
-    //std::cout << "stopped at line with blackness "<< checkvals[0] << " or " << checkvals[1] << std::endl;
-    return true;
-  }
+  if(countBlack() > 100) return true;
   else return false;
 }
 
 bool Camera::atIntersection() {
-  //int checkvals[2];
-  //for(int i = 0; i < 2; i++) checkvals[i] = countBlack();
-  //if(abs(checkvals[0]-checkvals[1]) > 2000) return false;
-  //if(checkvals[0] > 5000 || checkvals[1] > 5000) {
   if(countBlack() > 160) {
   //std::cout << "stopped at int with blackness "<< checkvals[0] << " or " << checkvals[1] << std::endl;
     return true;
@@ -92,12 +81,22 @@ bool Camera::atIntersection() {
 }
 
 bool Camera::tokenSeen() const {
-  return true;
+  //if(intersectionInFrame() && !checkCircle(5).empty()) return true;
+
+  if(intersectionInFrame()) {
+    std::cout << "tokenSeen(): Intersection found...looking for token" << std::endl;
+    if (!checkCircle(5).empty()) {
+      std::cout << "tokenSeen(): Token Detected" << std::endl;
+      return true;
+    }
+  }
+  std::cout << "tokenSeen(): Token not detected" << std::endl;
+  return false;
 }
 
 Coord Camera::determineLocation() const {return Coord(0,0);}
 
-std::vector<cv::Vec3f> Camera::checkCircle(int attempts = 1) { //argument for num times to check for token. Can run ~5-8 times per second.
+std::vector<cv::Vec3f> Camera::checkCircle(int attempts = 1) { //Only detects token circles
   int Y1 = 150;
   int X1 = 195;
   int X2 = 440;
@@ -109,7 +108,6 @@ std::vector<cv::Vec3f> Camera::checkCircle(int attempts = 1) { //argument for nu
 
     img = image(cv::Rect(X1, Y1, X2-X1, 283));
     cv::warpPerspective(img, dst, M2, img.size());
-    //cv::warpPerspective(img, img, M2, img.size());
     cv::cvtColor(dst, dst1, CV_BGR2GRAY);
     cv::bilateralFilter(dst1, dst, 5, 75, 75);
     cv::Canny(dst, dst, 50, 60);
@@ -169,13 +167,13 @@ void Camera::getTokenErrors(float* x, float*y, int att) {
   static const int xtarget = 105;
   static const int ytarget = 120;
   std::vector<cv::Vec3f> center;
-  if(intersectionInFrame()) center = checkCircle(att);
+  if(intersectionInFrame() && tokenSeen()) center = checkCircle(att);
   else center = checkPartialCircle(att);
   if(!center.empty() && intersectionInFrame()) {
     int tolerance = 10; //allowable number of pixels to be off target, needs testing
     float currentx = xtarget - center[center.size() - 1][0];
     float currenty = center[center.size() - 1][1] - ytarget;
-    std::cout << "getTokenErrors Corrections: x=" << currentx << " y=" << currenty << std::endl;
+    std::cout << "getTokenErrors(): x=" << currentx << " y=" << currenty << std::endl;
     *x = currentx * INCHES_PER_PIXEL;
     *y = currenty * INCHES_PER_PIXEL;
     if(std::abs(currentx) <= tolerance) *x = 0;
@@ -183,7 +181,7 @@ void Camera::getTokenErrors(float* x, float*y, int att) {
   }
 }
 
-std::vector<cv::Vec3f> Camera::checkPartialCircle(int attempts = 1) { //NOTE: ALSO DETECTS INTERSECTIONS
+std::vector<cv::Vec3f> Camera::checkPartialCircle(int attempts = 1) { //Detects both intersection and token circles
   int Y1 = 150;
   int X1 = 195;
   int X2 = 440;
@@ -198,7 +196,7 @@ std::vector<cv::Vec3f> Camera::checkPartialCircle(int attempts = 1) { //NOTE: AL
     cv::Mat canny, gray, grayBI;
     cv::cvtColor(img, gray, CV_BGR2GRAY );
     cv::bilateralFilter(gray, grayBI, 5, 75, 75);
-    cv::Canny(grayBI, canny, 200,20); //prev 200, 20
+    cv::Canny(grayBI, canny, 200,20);
     cv::HoughCircles( gray, circles, CV_HOUGH_GRADIENT, 2, 300, 50, 100, 50, 90 );
     
     //compute distance transform:
@@ -233,7 +231,8 @@ std::vector<cv::Vec3f> Camera::checkPartialCircle(int attempts = 1) { //NOTE: AL
       std::cout << 100.0f*(float)inlier/(float)counter << " % of a circle with radius " << radius << " detected" << std::endl;
       //radius should be 60 - 70
     }
-    if(!circles.empty()) break; 
+    //if(!circles.empty()) break;
+    if(circles.size() > 2) break;
   }
   return circles;
 }
