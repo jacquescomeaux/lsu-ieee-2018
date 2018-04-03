@@ -11,7 +11,7 @@
 #include "SortingPlate.h"
 
 
-class SortingSystem {
+class SortingSystem : private SerialLink {
   private:
     const MagnetArm token_arm;
     LED token_light;
@@ -24,7 +24,7 @@ class SortingSystem {
   public:
     void pickUpToken();
     Color checkTokenColor() const;
-    void sortToken();
+    void sortToken(Color);
     void dropTokenStack(Color);
 };
 

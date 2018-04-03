@@ -14,6 +14,7 @@ void MagnetArm::reset() const {}
 
 void MagnetArm::pickUpToken() const {
   transmitChar('p');
+  receiveChar();
 }
 
 void MagnetArm::dropTokens() const {}

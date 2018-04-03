@@ -10,17 +10,36 @@
 
 int main(int argc, char* argv[])
 {
+  int Y1 = 150;
+  int X1 = 195;
+  int X2 = 440;
+  
+  std::vector<cv::Point2f> pts1, pts2;
+  
+  pts1.push_back(cv::Point2f(92,0));
+  pts1.push_back(cv::Point2f(148,0));
+  pts1.push_back(cv::Point2f(74,283));
+  pts1.push_back(cv::Point2f(178,283));
+  
+  pts2.push_back(cv::Point2f(74,0));
+  pts2.push_back(cv::Point2f(140,0));
+  pts2.push_back(cv::Point2f(74,283));
+  pts2.push_back(cv::Point2f(140,283));
+  
   cv::VideoCapture cam(2);
   while(true) {
-    cv::Mat color;
-    cam >> color;
-    //cv::namedWindow("input"); cv::imshow("input", color);
+
+    cv::Mat image, img;
+    cam >> image;
+    img = image(cv::Rect(X1, Y1, X2-X1, 283)); //crop
+    cv::Mat M = cv::getPerspectiveTransform(pts1, pts2);
+    cv::warpPerspective(img, img, M, img.size());
 
     cv::Mat canny;
 
     cv::Mat gray;
     /// Convert it to gray
-    cv::cvtColor( color, gray, CV_BGR2GRAY );
+    cv::cvtColor(img, gray, CV_BGR2GRAY );
 
     // compute canny (don't blur with that image quality!!)
     cv::Canny(gray, canny, 50,60); //prev 200, 20
@@ -36,14 +55,14 @@ int main(int argc, char* argv[])
     {
         cv::Point center(cvRound(circles[i][0]), cvRound(circles[i][1]));
         int radius = cvRound(circles[i][2]);
-        cv::circle( color, center, 3, cv::Scalar(0,255,255), -1);
-        cv::circle( color, center, radius, cv::Scalar(0,0,255), 1 );
+        cv::circle( img, center, 3, cv::Scalar(0,255,255), -1);
+        cv::circle( img, center, radius, cv::Scalar(0,0,255), 1 );
     }
 
     //compute distance transform:
     cv::Mat dt;
     cv::distanceTransform(255-(canny>0), dt, CV_DIST_L2 ,3);
-    cv::namedWindow("distance transform"); cv::imshow("distance transform", dt/255.0f);
+    //cv::namedWindow("distance transform"); cv::imshow("distance transform", dt/255.0f);
 
     // test for semi-circles:
     float minInlierDist = 2.0f;
@@ -71,15 +90,15 @@ int main(int argc, char* argv[])
             if(dt.at<float>(cY,cX) < maxInlierDist) 
             {
                 inlier++;
-                cv::circle(color, cv::Point2i(cX,cY),3, cv::Scalar(0,255,0));
+                cv::circle(img, cv::Point2i(cX,cY),3, cv::Scalar(0,255,0));
             } 
            else
-                cv::circle(color, cv::Point2i(cX,cY),3, cv::Scalar(255,0,0));
+                cv::circle(img, cv::Point2i(cX,cY),3, cv::Scalar(255,0,0));
         }
         std::cout << 100.0f*(float)inlier/(float)counter << " % of a circle with radius " << radius << " detected" << std::endl;
     }
 
-    cv::namedWindow("output"); cv::imshow("output", color);
+    cv::namedWindow("output"); cv::imshow("output", img);
     //cv::imwrite("houghLinesComputed.png", color);
 
     cv::waitKey(0);

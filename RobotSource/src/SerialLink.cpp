@@ -69,6 +69,13 @@ void SerialLink::transmitDirection(Direction d) const {
   std::cout << "Writing Direction " << out << std::endl;
 }
 
+void SerialLink::transmitColor(Color c) const {
+  uint8_t i = static_cast<uint8_t>(c);
+  int out = static_cast<int>(i);
+  transmitBuffer(&i, sizeof(uint8_t));
+  std::cout << "Writing Color " << out << std::endl;
+}
+
 void SerialLink::transmitValue(int n) const {
   Fixed f = n;
   int64_t i = f.getInternal();

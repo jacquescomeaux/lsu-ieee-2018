@@ -3,6 +3,7 @@
 
 #include <Fixed.h>
 #include <Direction.h>
+#include <Color.h>
 
 #define moveSetDstAmt 4 //how far the robot moves via moveSetDistance (in inches)
 
@@ -30,6 +31,11 @@ unsigned int receiveIndex() {
 Direction receiveDirection() {
   while(!Serial.available());
   return static_cast<Direction>(Serial.read());
+}
+
+Color receiveColor() {
+  while(!Serial.available());
+  return static_cast<Color>(Serial.read());
 }
 
 Fixed receiveFixed() {
@@ -137,7 +143,11 @@ void parseCommand() {
     case 'p': robot->pickUpToken(); break;
     case ' ': robot->stop(); break;
     
-    case 'r': robot->storeToken(Color::RED); break;
+    case 'r': {
+      Color c = receiveColor();
+      robot->storeToken(c);
+      break;
+    }
     case 'd': robot->dropNextTokenStack(); break;
     case '|': robot->toggle(Flag::CENTERING_CROSS); break;
     case '\\': robot->toggle(Flag::CENTERING_CORNER); break;

@@ -34,12 +34,13 @@ Controller::Controller(SortBot& r, Direction* f_seq, Direction* c_seq, int n) :
 void Controller::coverLine(Direction dir, bool cross, int offset, int num_tokens) const {
   for(int i = 0; i < num_tokens; i++) {
     robot.center(cross, offset);
-    if(robot.tokenSeen()) robot.sortToken();
-    //robot.pickUpToken();
+    //if(robot.tokenSeen()) robot.sortToken();
+    robot.pickUpToken();
+    robot.sortToken(robot.checkTokenColor());
     if(i == num_tokens - 1) break;
     robot.snapToLine(dir, 2);
     robot.followLine(dir);
-    robot.travel(dir, 70, 2.15, false);
+    robot.travel(dir, 70, 1.15, false);
     robot.followUntilIntersection(dir);
   }
 }
@@ -63,12 +64,12 @@ void Controller::runAlgorithm() const {
   robot.toggleCalibration();
   robot.setSpeed(70);
   robot.snapToLine(Direction::LEFT, 6);
-  //robot.followUntilIntersection(Direction::LEFT);
-  //robot.center(false, 16);
-  //robot.pickUpToken();
-  for(int i = 0; i < NUM_LINES; i++) {
+  /*robot.followUntilIntersection(Direction::LEFT);
+  robot.center(false, 16);
+  robot.pickUpToken();
+  */for(int i = 0; i < NUM_LINES; i++) {
     robot.followLine(follow_sequence[i]);
-    robot.travel(follow_sequence[i], 70, 2.15, false);
+    robot.travel(follow_sequence[i], 40, 2.15, false);
     robot.followUntilIntersection(follow_sequence[i]);
     coverLine(cover_sequence[i], type_sequence[i], offset_sequence[i], 4);
   }
