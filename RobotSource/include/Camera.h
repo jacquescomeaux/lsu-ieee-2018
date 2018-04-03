@@ -14,7 +14,8 @@ class Camera {
     cv::VideoCapture cap;
     cv::Mat M;
     int countBlack();
-    std::vector<cv::Vec3f> checkCircle(int); //looks for a circle in current frame. Argument is optional (default 1) and tells function how many times to check for a circle
+    std::vector<cv::Vec3f> checkCircle(int);//looks for a full circle (token) in current frame.
+    std::vector<cv::Vec3f> checkPartialCircle(int); //looks for partial circle (token or intersection)
   public:
     Camera(int n);
     bool onLine();
@@ -26,7 +27,6 @@ class Camera {
     bool tokenCentered();//true if token arm is cleared
     void getTokenErrors(float*, float*); //errors given in pixels, might need some conversion to real world units
     void getTokenErrors(float*, float*, int); //errors given in pixels, might need some conversion to real world units
-    void getTokenPicture();
 };
 
 #endif//CAMERA_H
