@@ -244,14 +244,14 @@ std::vector<cv::Vec3f> Camera::checkPartialCircle(int attempts = 1) { //NOTE: AL
   return circles;
 }
 
-std::vector<double> readToken() {
+std::vector<double> Camera::readToken() {
   cv::Mat src;
   cv::Rect roi;
   cap >> src;
-  cv::roi.x = 220;
-  cv::roi.y = 290;
-  cv::roi.width = 220;
-  cv::roi.height = 120;
+  roi.x = 220;
+  roi.y = 290;
+  roi.width = 220;
+  roi.height = 120;
   int h = 0;
   int s = 0;
   int v = 0;
