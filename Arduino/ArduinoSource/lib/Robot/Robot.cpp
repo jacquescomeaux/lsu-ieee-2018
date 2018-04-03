@@ -70,8 +70,8 @@ void Robot::update() {
     //if((flags & Flag::PRINTING_LINE) != Flag::NONE) printReadings();
   }
   
-  if((dt[4] > 0) ? (last_ran[4] = time) : false) {
-  checkEdges();
+  if((dt[4] > 200) ? (last_ran[4] = time) : false) {
+  //checkEdges();
   }
   
   if((dt[5] > 100) ? (last_ran[5] = time) : false) {

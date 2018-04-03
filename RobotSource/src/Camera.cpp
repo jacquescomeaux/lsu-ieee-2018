@@ -32,6 +32,17 @@ Camera::Camera(int n) : INCHES_PER_PIXEL(0.00839223), cap(n) {
   pts_dst.push_back(cv::Point2f(139, 233));
   M = cv::getPerspectiveTransform(pts_src, pts_dst);
   //for(int i = 0; i < 50; i++) countBlack();
+  std::vector<cv::Point2f> pts12, pts22;
+  pts12.push_back(cv::Point2f(92,0));
+  pts12.push_back(cv::Point2f(148,0));
+  pts12.push_back(cv::Point2f(74,283));
+  pts12.push_back(cv::Point2f(178,283));
+  pts22.push_back(cv::Point2f(74,0));
+  pts22.push_back(cv::Point2f(140,0));
+  pts22.push_back(cv::Point2f(74,283));
+  pts22.push_back(cv::Point2f(140,283));
+  M2 = cv::getPerspectiveTransform(pts12, pts22);
+
 }
 
 int Camera::countBlack() {
@@ -87,27 +98,14 @@ std::vector<cv::Vec3f> Camera::checkCircle(int attempts = 1) { //argument for nu
   int X1 = 195;
   int X2 = 440;
 
-  std::vector<cv::Point2f> pts1, pts2;
-
-  pts1.push_back(cv::Point2f(92,0));
-  pts1.push_back(cv::Point2f(148,0));
-  pts1.push_back(cv::Point2f(74,283));
-  pts1.push_back(cv::Point2f(178,283));
-
-  pts2.push_back(cv::Point2f(74,0));
-  pts2.push_back(cv::Point2f(140,0));
-  pts2.push_back(cv::Point2f(74,283));
-  pts2.push_back(cv::Point2f(140,283));
-
   std::vector<cv::Vec3f> circles;
   for(int a = 0; a < attempts; a++) {
     cv::Mat image, img, dst, dst1;
     cap >> image;
 
     img = image(cv::Rect(X1, Y1, X2-X1, 283));
-    cv::Mat M = cv::getPerspectiveTransform(pts1, pts2);
     cv::warpPerspective(img, dst, M, img.size());
-    cv::warpPerspective(img, img, M, img.size());
+    //cv::warpPerspective(img, img, M, img.size());
     cv::cvtColor(dst, dst1, CV_BGR2GRAY);
     cv::bilateralFilter(dst1, dst, 5, 75, 75);
     cv::Canny(dst, dst, 50, 60);

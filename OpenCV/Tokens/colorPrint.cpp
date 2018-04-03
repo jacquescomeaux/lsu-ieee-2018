@@ -9,7 +9,7 @@ using namespace cv;
 using namespace std;
 
 /** @function main */
-Color main(int argc, char** argv)
+int main(int argc, char** argv)
 {
   //VideoCapture cap(1);
   //if(!cap.isOpened()) return -1;
@@ -48,9 +48,9 @@ Color main(int argc, char** argv)
 
   for (int i = 0; i<roi.width; i++) {
     for (int j = 0; j<roi.height; j++) {
-      //b = b + img.at<Vec3b>(j,i)[0];
-      //g = g + img.at<Vec3b>(j,i)[1];
-      //r = r + img.at<Vec3b>(j,i)[2];
+      b = b + img.at<Vec3b>(j,i)[0];
+      g = g + img.at<Vec3b>(j,i)[1];
+      r = r + img.at<Vec3b>(j,i)[2];
       h = h + hsv.at<Vec3b>(j,i)[0];
       s = s + hsv.at<Vec3b>(j,i)[1];
       v = v + hsv.at<Vec3b>(j,i)[2];
@@ -60,9 +60,9 @@ Color main(int argc, char** argv)
 
   imwrite("Crop.png", img);
 
-  //double avB = b/sum;
-  //double avG = g/sum;
-  //double avR = r/sum;
+  double avB = b/sum;
+  double avG = g/sum;
+  double avR = r/sum;
 
   double avH = h/sum;
   double avV = v/sum;
@@ -77,14 +77,14 @@ Color main(int argc, char** argv)
   //cout << bG << endl;
   Color tokenColor;
 
-  if ((avS < 80) && (avV < 80)) tokenColor = Color::GRAY;
+  if ((avS < 80) && (avV < 80)) cout << "Grey";
   else if (avH > 136) {
-    if (avS > 141) tokenColor = Color::RED;
-      else tokenColor = Color::PURPLE;
+    if (avS > 141) cout << "Red";
+      else cout << "Purple";
   }
-  else if (avS < 66) tokenColor = Color::CYAN;
-  else if (avH < 68) tokenColor = Color::GREEN;
-  else tokenColor = Color::BLUE;
+  else if (avS < 66) cout << "Cyan";
+  else if (avH < 68) cout << "Green";
+  else cout << "Blue";
 
 
   /*
@@ -119,13 +119,11 @@ Color main(int argc, char** argv)
   }
   */
 
-  //cout << "B: " << avB << endl;
-  //cout << "G: " << avG << endl;
-  //cout << "R: " << avR << endl;
+  cout << "B: " << avB << endl;
+  cout << "G: " << avG << endl;
+  cout << "R: " << avR << endl;
 
-  //cout << "H: " << avH << endl;
-  //cout << "S: " << avS << endl;
-  //cout << "V: " << avV << endl;
-
-  return tokenColor;
+  cout << "H: " << avH << endl;
+  cout << "S: " << avS << endl;
+  cout << "V: " << avV << endl;
 }

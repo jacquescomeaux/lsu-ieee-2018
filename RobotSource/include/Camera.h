@@ -12,7 +12,7 @@ class Camera {
   private:
     const double INCHES_PER_PIXEL;
     cv::VideoCapture cap;
-    cv::Mat M;
+    cv::Mat M, M2;
     int countBlack();
     std::vector<cv::Vec3f> checkCircle(int); //looks for a circle in current frame. Argument is optional (default 1) and tells function how many times to check for a circle
   public:

@@ -29,6 +29,7 @@ void Robot::followUntilIntersection(Direction dir) {
   while(!int_cam.atIntersection());
   //std::cout << "stopped at intersection" << std::endl;
   stop();
+  //nudge(dir, -0.5);
 }
 
 bool Robot::tokenSeen() const {
@@ -46,7 +47,9 @@ void Robot::center(bool cross, int offset) {
 */
   float x = 0;
   float y = 0;
-  while(!int_cam.intersectionInFrame()) LineFollower::center(cross, offset);
+  LineFollower::startCentering(cross, offset);
+  while(!int_cam.intersectionInFrame());
+  stop();
   while(!int_cam.tokenCentered()) {
     int_cam.getTokenErrors(&x, &y);
     if(x > 0 ) nudge(Direction::RIGHT, x);

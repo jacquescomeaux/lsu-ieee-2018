@@ -12,7 +12,7 @@ class LineFollower : private SerialLink {
     void followLine(Direction) const;
     void toggleCalibration() const;
     void snapToLine(Direction, int) const;
-    void center(bool cross, int) const;
+    void startCentering(bool cross, int) const;
 };
 
 #endif//LINEFOLLOWER_H
