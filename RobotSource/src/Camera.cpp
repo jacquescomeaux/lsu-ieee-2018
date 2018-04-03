@@ -124,9 +124,19 @@ std::vector<cv::Vec3f> Camera::checkCircle(int attempts = 1) { //argument for nu
 }
 
 bool Camera::intersectionInFrame() {
-  if(checkCircle(10).size() > 0) {
+  if(checkCircle(5).size() > 0) {
   std::cout << "intersectionInFrame(): Intersection Found" << std::endl;
   return true;
+  }
+  else if(checkPartialCircle(5).size() > 0) {
+    std::vector<cv::Vec3f> center = checkPartialCircle(5);
+    for(int i = 0; i < center.size(); i++) {
+      if(center[i][2] > 60 || center[i][2] < 90) {
+	std::cout << "Partial intersection found" << std::endl;
+	return true;
+      }
+      else return false;
+    }
   }
   else {
   std::cout << "intersectionInFrame(): No intersection found..." << std::endl;
@@ -157,8 +167,9 @@ void Camera::getTokenErrors(float* x, float*y, int att) {
   static const int xtarget = 105;
   static const int ytarget = 120;
   std::vector<cv::Vec3f> center;
-  center = checkCircle(att); //if multiple reads are needed to avoid trash values
-  if(!center.empty() && intersectionInFrame()) {
+  if(intersectionInFrame()) center = checkCircle(att);
+  else center = checkPartialCircle();
+  if(!center.empty() && (intersectionInFrame() || partialIntersectionInFrame())) {
     int tolerance = 10; //allowable number of pixels to be off target, needs testing
     float currentx = xtarget - center[center.size() - 1][0];
     float currenty = center[center.size() - 1][1] - ytarget;
@@ -170,19 +181,66 @@ void Camera::getTokenErrors(float* x, float*y, int att) {
   }
 }
 
-void Camera::getTokenPicture() {
-/*  cv::Mat img;
-  cap >> img;
-  std::ostringstream imagename;
-  imagename << "../../OpenCV/Tokens/token_color_";
-  for(int i = 0; i < 24; i++) {
-    std::ostringstream s;
-    s << imagename << i;
-    std::ifstream infile(s.str());
-    if(infile.good()) {
-    imagename << i;
-    cv::imwrite(imagename.str() , img);
-    break;
+std::vector<cv::Vec3f> Camera::checkPartialCircle(int attempts = 1) { //NOTE: ALSO DETECTS INTERSECTIONS
+  int Y1 = 150;
+  int X1 = 195;
+  int X2 = 440;
+  
+  std::vector<cv::Point2f> pts1, pts2;
+  pts1.push_back(cv::Point2f(92,0));
+  pts1.push_back(cv::Point2f(148,0));
+  pts1.push_back(cv::Point2f(74,283));
+  pts1.push_back(cv::Point2f(178,283));
+  pts2.push_back(cv::Point2f(74,0));
+  pts2.push_back(cv::Point2f(140,0));
+  pts2.push_back(cv::Point2f(74,283));
+  pts2.push_back(cv::Point2f(140,283));
+  while(int i = 0; i < attempts; i++) {
+    cv::Mat image, img;
+    cap >> image;
+    img = image(cv::Rect(X1, Y1, X2-X1, 283)); //crop
+    cv::Mat M = cv::getPerspectiveTransform(pts1, pts2);
+    cv::warpPerspective(img, img, M, img.size());
+    
+    cv::Mat canny, gray, grayBI;
+    cv::cvtColor(img, gray, CV_BGR2GRAY );
+    cv::bilateralFilter(gray, grayBI, 5, 75, 75);
+    cv::Canny(grayBI, canny, 200,20); //prev 200, 20
+    std::vector<cv::Vec3f> circles;
+    cv::HoughCircles( gray, circles, CV_HOUGH_GRADIENT, 2, 300, 50, 100, 50, 90 );
+    
+    //compute distance transform:
+    cv::Mat dt;
+    cv::distanceTransform(255-(canny>0), dt, CV_DIST_L2 ,3);
+    
+    // test for semi-circles:
+    float minInlierDist = 2.0f;
+    for( size_t i = 0; i < circles.size(); i++ ) 
+    {
+      // test inlier percentage:
+      // sample the circle and check for distance to the next edge
+      unsigned int counter = 0;
+      unsigned int inlier = 0;
+      
+      cv::Point2f center((circles[i][0]), (circles[i][1]));
+      float radius = (circles[i][2]);
+      
+      // maximal distance of inlier might depend on the size of the circle
+      float maxInlierDist = radius/25.0f;
+      if(maxInlierDist<minInlierDist) maxInlierDist = minInlierDist;
+      
+      //TODO: maybe paramter incrementation might depend on circle size!
+      for(float t =0; t<2*3.14159265359f; t+= 0.1f) {
+	counter++;
+	float cX = radius*cos(t) + circles[i][0];
+	float cY = radius*sin(t) + circles[i][1];
+	
+	if(dt.at<float>(cY,cX) < maxInlierDist) inlier++; 
+      }
+      std::cout << 100.0f*(float)inlier/(float)counter << " % of a circle with radius " << radius << " detected" << std::endl;
+      //radius should be 60 - 70
     }
-  } */
+    if(!circles.empty()) break; 
+  }
+  return circles;
 }
