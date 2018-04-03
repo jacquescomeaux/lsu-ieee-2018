@@ -171,3 +171,11 @@ void Camera::getTokenErrors(float* x, float*y, int att) {
     if(std::abs(currenty) <= tolerance) *y = 0;
   }
 }
+
+void Camera::getTokenPicture(int i) {
+  cv::Mat img;
+  cap >> img;
+
+  string imagename = "../../OpenCV/Tokens/token_color_";
+  cv::imwrite(imagename + i, img);
+}
