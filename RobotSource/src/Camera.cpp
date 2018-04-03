@@ -80,7 +80,7 @@ bool Camera::atIntersection() {
   else return false;
 }
 
-bool Camera::tokenSeen() const {
+bool Camera::tokenSeen() {
   //if(intersectionInFrame() && !checkCircle(5).empty()) return true;
 
   if(intersectionInFrame()) {

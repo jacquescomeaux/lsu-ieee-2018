@@ -32,7 +32,7 @@ void Robot::followUntilIntersection(Direction dir) {
   //nudge(dir, -0.5);
 }
 
-bool Robot::tokenSeen() const {
+bool Robot::tokenSeen() {
   return int_cam.tokenSeen();
 }
 

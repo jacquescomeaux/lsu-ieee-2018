@@ -20,7 +20,7 @@ class Camera {
     Camera(int n);
     bool onLine();
     bool atIntersection();
-    bool tokenSeen() const;
+    bool tokenSeen();
     Coord determineLocation() const;
     
     bool intersectionInFrame(); //true if circle can be detected
