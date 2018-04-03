@@ -44,7 +44,7 @@ void LineFollower::center(bool cross, int offset) const {
   transmitIndex(offset);
   char centerChar = cross ? '|' : '\\';
   transmitChar(centerChar);
-  std::this_thread::sleep_for(std::chrono::seconds(6)); //prev 6 secs
+  std::this_thread::sleep_for(std::chrono::seconds(2)); //prev 6 secs
   transmitChar(centerChar);
   transmitChar(' ');
 }

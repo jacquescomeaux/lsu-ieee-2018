@@ -8,7 +8,7 @@
 #include <iostream>
 
 
-int main()
+int main(int argc, char* argv[])
 {
   int Y1 = 150;
   int X1 = 195;
@@ -28,6 +28,7 @@ int main()
   
   cv::VideoCapture cam(2);
   while(true) {
+
     cv::Mat image, img;
     cam >> image;
     img = image(cv::Rect(X1, Y1, X2-X1, 283)); //crop
@@ -41,7 +42,7 @@ int main()
     cv::cvtColor(img, gray, CV_BGR2GRAY );
 
     // compute canny (don't blur with that image quality!!)
-    cv::Canny(gray, canny, 200,20);
+    cv::Canny(gray, canny, 50,60); //prev 200, 20
     cv::namedWindow("canny2"); cv::imshow("canny2", canny>0);
 
     std::vector<cv::Vec3f> circles;
@@ -54,8 +55,8 @@ int main()
     {
         cv::Point center(cvRound(circles[i][0]), cvRound(circles[i][1]));
         int radius = cvRound(circles[i][2]);
-        cv::circle( color, center, 3, cv::Scalar(0,255,255), -1);
-        cv::circle( color, center, radius, cv::Scalar(0,0,255), 1 );
+        cv::circle( img, center, 3, cv::Scalar(0,255,255), -1);
+        cv::circle( img, center, radius, cv::Scalar(0,0,255), 1 );
     }
 
     //compute distance transform:
@@ -89,15 +90,15 @@ int main()
             if(dt.at<float>(cY,cX) < maxInlierDist) 
             {
                 inlier++;
-                cv::circle(color, cv::Point2i(cX,cY),3, cv::Scalar(0,255,0));
+                cv::circle(img, cv::Point2i(cX,cY),3, cv::Scalar(0,255,0));
             } 
            else
-                cv::circle(color, cv::Point2i(cX,cY),3, cv::Scalar(255,0,0));
+                cv::circle(img, cv::Point2i(cX,cY),3, cv::Scalar(255,0,0));
         }
         std::cout << 100.0f*(float)inlier/(float)counter << " % of a circle with radius " << radius << " detected" << std::endl;
     }
 
-    cv::namedWindow("output"); cv::imshow("output", color);
+    cv::namedWindow("output"); cv::imshow("output", img);
     //cv::imwrite("houghLinesComputed.png", color);
 
     cv::waitKey(0);

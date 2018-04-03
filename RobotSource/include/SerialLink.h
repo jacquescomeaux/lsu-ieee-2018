@@ -4,6 +4,7 @@
 #include <libserialport.h>
 
 #include "Direction.h"
+#include "Color.h"
 
 class SerialLink {
   private:
@@ -21,6 +22,7 @@ class SerialLink {
     void transmitChar(char) const;
     void transmitIndex(unsigned int) const;
     void transmitDirection(Direction) const;
+    void transmitColor(Color) const;
     void transmitValue(int) const;
     void transmitValue(float) const;
     void transmitBuffer(void*, size_t) const;

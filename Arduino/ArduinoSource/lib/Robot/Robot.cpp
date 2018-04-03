@@ -6,10 +6,10 @@ Robot::Robot() :
   follow_range(2),
   flags(Flag::NONE),
   edge_detectors {
-    ProximitySensor( 6,  7), //RIGHT(0)
-    ProximitySensor( 8,  9), //FRONT(1)
-    ProximitySensor(10, 11), //LEFT(2)
-    //ProximitySensor(12, 14)  //BACK(3)
+    ProximitySensor( 6,  7, 600, 750), //RIGHT(0)
+    ProximitySensor( 8,  9, 500, 750), //FRONT(1)
+    ProximitySensor(10, 11, 500, 800), //LEFT(2)
+    ProximitySensor(12, 14, 500, 750)  //BACK(3)
   } {
     stop();
     pinMode(A8, INPUT);
@@ -19,8 +19,10 @@ Robot::Robot() :
 void Robot::checkEdges() {
   //for(ProximitySensor& s : edge_detectors) if(s.edgeDetected()) stop();
 
+
+
   //DEBUGGING CODE
-  /* for (int s = 0; s < 3; s++) {
+  /* for (int s = 0; s < 4; s++) {
 	Serial.print("S: ");
 	Serial.print(s);
 	Serial.print("  ");
@@ -31,7 +33,7 @@ void Robot::checkEdges() {
 
   /* COMMENTED OUT WORKING CODE
   if(current_direction == Direction::FRONT) if(edge_detectors[1].edgeDetected()) stop();
-  //if(current_direction == Direction::BACK) if(edge_detectors[3].edgeDetected()) stop();
+  if(current_direction == Direction::BACK) if(edge_detectors[3].edgeDetected()) stop();
   if(current_direction == Direction::LEFT) if(edge_detectors[2].edgeDetected()) stop();
   if(current_direction == Direction::RIGHT) if(edge_detectors[0].edgeDetected()) stop();
   */

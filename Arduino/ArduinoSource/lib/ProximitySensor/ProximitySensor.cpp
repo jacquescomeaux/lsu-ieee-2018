@@ -1,13 +1,13 @@
 #include "ProximitySensor.h"
 #include <Arduino.h>
 
-ProximitySensor::ProximitySensor(int t, int e) :
-  range_min(600),
-  range_max(800),
+ProximitySensor::ProximitySensor(int t, int e, int min, int max) : 
+  range_min(min),
+  range_max(max),
   certainty_threshold(1),
   trig_pin(t),
   echo_pin(e),
-  proximity(500),
+  proximity(0),
   count(0)
   {
     pinMode(trig_pin, OUTPUT);

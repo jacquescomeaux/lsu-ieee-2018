@@ -16,6 +16,7 @@ SortingSystem::SortingSystem() :
 void SortingSystem::pickUpToken() {
   //Serial.println("picking up token my man");
   task_buffer.push(9);
+  Serial.write('+');
 }
 
 void SortingSystem::storeToken(Color c) {
