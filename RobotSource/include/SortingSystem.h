@@ -5,26 +5,21 @@
 #include "Token.h"
 #include <vector>
 
-#include "MagnetArm.h"
-#include "LED.h"
-#include "RGBSensor.h"
-#include "SortingPlate.h"
-
+#include "Camera.h"
+#include "SerialLink.h"
 
 class SortingSystem : private SerialLink {
   private:
-    const MagnetArm token_arm;
-    LED token_light;
-    const RGBSensor color_sensor;
-    SortingPlate storage_plate, selector_plate;
+    Camera token_cam;
     Token* held_token;
     std::vector<Token*> token_stacks[7];
+    void pickUpToken();
+    Color checkTokenColor() const;
+    void storeToken(Color) const;
   protected:
     SortingSystem();
   public:
-    void pickUpToken();
-    Color checkTokenColor() const;
-    void sortToken(Color);
+    void sortToken();
     void dropTokenStack(Color);
 };
 

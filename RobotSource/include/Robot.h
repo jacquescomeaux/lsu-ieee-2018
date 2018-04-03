@@ -9,17 +9,12 @@
 #include "SortingSystem.h"
 
 #include "Camera.h"
-#include "SensorRing.h"
-#include "ProximitySensor.h"
 #include "Controller.h"
 
 class Robot : public Drivetrain, public LineFollower {
   private:
     //Coord location;
-    Camera token_cam;
-    Camera location_cam;
-    const SensorRing line_sensor_array;
-    const ProximitySensor prox_sensors[4];
+    Camera int_cam, location_cam;
   public:
     Robot();
     Coord getLocation() const;
