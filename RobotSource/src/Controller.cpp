@@ -39,7 +39,7 @@ void Controller::coverLine(Direction dir, bool cross, int offset, int num_tokens
     if(i == num_tokens - 1) break;
     robot.snapToLine(dir, 2);
     robot.followLine(dir);
-    robot.travel(dir, 70, 2.15, false);
+    robot.travel(dir, 70, 1.5, false);
     robot.followUntilIntersection(dir);
   }
 }
@@ -68,7 +68,7 @@ void Controller::runAlgorithm() const {
   //robot.pickUpToken();
   for(int i = 0; i < NUM_LINES; i++) {
     robot.followLine(follow_sequence[i]);
-    robot.travel(follow_sequence[i], 70, 2.15, false);
+    robot.travel(follow_sequence[i], 70, 1.5, false);
     robot.followUntilIntersection(follow_sequence[i]);
     coverLine(cover_sequence[i], type_sequence[i], offset_sequence[i], 4);
   }
