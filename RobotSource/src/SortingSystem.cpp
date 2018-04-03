@@ -6,6 +6,8 @@
 #include "opencv2/imgproc.hpp"
 #include "../../RobotSource/include/Color.h"
 
+using namespace cv;
+
 SortingSystem::SortingSystem() : token_cam(0) {}
 
 void SortingSystem::pickUpToken() {
@@ -13,10 +15,11 @@ void SortingSystem::pickUpToken() {
   receiveChar();
 }
 
-Color SortingSystem::checkTokenColor() const {
-  Mat src;
+Color SortingSystem::checkTokenColor() {
+  cv::Mat src;
   Rect roi;
-
+  cv::VideoCapture tcam(0);
+  tcam >> src;
   roi.x = 220;
   roi.y = 290;
   roi.width = 220;
@@ -25,10 +28,8 @@ Color SortingSystem::checkTokenColor() const {
   int s = 0;
   int v = 0;
   int sum = 0;
+  //token_cam >> src;
 
-  cap >> src;
-  if(src.empty()) return -1;
-  
   Mat img = src(roi);
   Mat hsv;
   cvtColor(img, hsv, cv::COLOR_BGR2HSV);
@@ -51,7 +52,7 @@ Color SortingSystem::checkTokenColor() const {
   if ((avS < 80) && (avV < 80)) tokenColor = Color::GRAY;
   else if (avH > 136) {
     if (avS > 141) tokenColor = Color::RED;
-    else tokenColor = Color::PURPLE;
+    else tokenColor = Color::MAGENTA;
   }
   else if (avS < 66) tokenColor = Color::CYAN;
   else if (avH < 68) tokenColor = Color::GREEN;
