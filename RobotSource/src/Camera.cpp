@@ -172,10 +172,15 @@ void Camera::getTokenErrors(float* x, float*y, int att) {
   }
 }
 
-void Camera::getTokenPicture(int i) {
+void Camera::getTokenPicture() {
   cv::Mat img;
   cap >> img;
-
-  string imagename = "../../OpenCV/Tokens/token_color_";
-  cv::imwrite(imagename + i, img);
+  std::string imagename = "../../OpenCV/Tokens/token_color_";
+  for(int i = 0; i < 24; i++) {
+    ifstream infile(imagename + i);
+    if(infile.good()) {
+    cv::imwrite(imagename + i, img);
+    break;
+    }
+  }
 }
