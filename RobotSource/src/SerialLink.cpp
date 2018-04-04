@@ -76,6 +76,10 @@ void SerialLink::transmitColor(Color c) const {
   //std::cout << "Writing Color " << out << std::endl;
 }
 
+void SerialLink::transmitBool(bool b) const {
+  transmitIndex(b ? 1 : 0);
+}
+
 void SerialLink::transmitValue(int n) const {
   Fixed f = n;
   int64_t i = f.getInternal();

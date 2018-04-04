@@ -35,18 +35,16 @@ void Drivetrain::resolveDirection(Direction dir, Fixed* x, Fixed* y, Fixed* rot)
   }
 }
 
-void Drivetrain::checkDestination() {
+Flag Drivetrain::checkDestination(bool stopping) {
   for(int i = 0; i < 2; i++) {
-    //if((wheels[i].getSpeed() > Fixed(0))) if(wheels[i].getPosition() < target_wheel_pos[i]) continue;
-    //if((wheels[i].getSpeed() <= Fixed(0))) if(wheels[i].getPosition() > target_wheel_pos[i]) continue;
     if((wheels[i].getActualSpeed() > Fixed(0)) != (wheels[i].getPosition() >= target_wheel_pos[i])) continue;
-    travelDstReached = true;
-    if(stoppingstop();
-    const Fixed speeds[4] = {0, 0, 0, 0};
-    correctWheelSpeeds(speeds);
+    if(stopping) stop();
+    //const Fixed speeds[4] = {0, 0, 0, 0};
+    //correctWheelSpeeds(speeds);
     Serial.write('+');
-    break;
+    return Flag::TRAVELLING;
   }
+  return Flag::NONE;
 }
 
 void Drivetrain::setWheelSpeeds(const Fixed* speeds) {
@@ -90,13 +88,6 @@ void Drivetrain::move(Fixed x, Fixed y, Fixed rot) {
   setWheelSpeeds(speeds);
 }
 
-void Drivetrain::nudge(Direction dir, Fixed dist) {
-  Fixed x, y, rot;
-  Fixed speed = 100;
-  resolveDirection(dir, &x, &y, &rot);
-  nudge(speed * x, speed * y, speed * rot, dist);
-}
-
 void Drivetrain::nudge(Fixed x, Fixed y, Fixed rot, Fixed dist) {
   static const Fixed STEPS_PER_INCH = 286.7, ZERO = 0, POS_ONE = 1, NEG_ONE = -1;
   if(dist == Fixed(0)) return;
@@ -104,18 +95,7 @@ void Drivetrain::nudge(Fixed x, Fixed y, Fixed rot, Fixed dist) {
   const Fixed speeds[4] = {y + x - rot, y - x - rot, y + x + rot, y - x + rot};
   for(Wheel& w : wheels) w.resetPosition();
   for(int i = 0; i < 2; i++) target_wheel_pos[i] = wheels[i].getPosition() + steps_to_travel * ((speeds[i] > ZERO) ? POS_ONE : NEG_ONE);
-  travelDstReached = false;
   correctWheelSpeeds(speeds);
-}
-
-void Drivetrain::travel(Direction dir, Fixed dist) {
-  travel(dir, base_speed, dist);
-}
-
-void Drivetrain::travel(Direction dir, Fixed speed, Fixed dist) {
-  Fixed x, y, rot;
-  resolveDirection(dir, &x, &y, &rot);
-  travel(speed * x, speed * y, speed * rot, dist);
 }
 
 void Drivetrain::travel(Fixed x, Fixed y, Fixed rot, Fixed dist) {
@@ -125,7 +105,6 @@ void Drivetrain::travel(Fixed x, Fixed y, Fixed rot, Fixed dist) {
   const Fixed speeds[4] = {y + x - rot, y - x - rot, y + x + rot, y - x + rot};
   for(Wheel& w : wheels) w.resetPosition();
   for(int i = 0; i < 2; i++) target_wheel_pos[i] = wheels[i].getPosition() + steps_to_travel * ((speeds[i] > ZERO) ? POS_ONE : NEG_ONE);
-  travelDstReached = false;
   setWheelSpeeds(speeds);
 }
 

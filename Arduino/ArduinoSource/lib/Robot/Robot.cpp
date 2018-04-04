@@ -75,7 +75,7 @@ void Robot::update() {
   }
   
   if((dt[5] > 100) ? (last_ran[5] = time) : false) {
-    if((flags & Flag::TRAVELLING) != Flag::NONE) flags |= Drivetrain::checkDestination((flags & Flag::STOP_AFTER_TRAVEL) != Flags::NONE);
+    if((flags & Flag::TRAVELLING) != Flag::NONE) flags &= ~Drivetrain::checkDestination((flags & Flag::STOP_AFTER_TRAVEL) != Flags::NONE);
   }
   
   if((dt[6] > 0) ? (last_ran[6] = time) : false) {
@@ -96,6 +96,34 @@ void Robot::update() {
   
   if(!ready()) stop();
 }
+
+void Robot::travel(Direction dir, Fixed dist) {
+  travel(dir, base_speed, dist);
+}
+
+void Robot::travel(Direction dir, Fixed speed, Fixed dist) {
+  Fixed x, y, rot;
+  resolveDirection(dir, &x, &y, &rot);
+  travel(speed * x, speed * y, speed * rot, dist);
+}
+
+void Robot::travel(Fixed x, Fixed y, Fixed rot, Fixed dist) {
+  flags |= Flag::TRAVELLING;
+  Drivetrain::travel(x, y, rot, dist);
+}
+
+void Robot::nudge(Direction dir, Fixed dist) {
+  Fixed x, y, rot;
+  Fixed speed = 100;
+  resolveDirection(dir, &x, &y, &rot);
+  nudge(speed * x, speed * y, speed * rot, dist);
+}
+
+void Drivetrain::nudge(Fixed x, Fixed y, Fixed rot, Fixed dist) {
+  flags |= Flag::TRAVELLING;
+  Drivetrain::nudge(x, y, rot, dist);
+}
+
 
 void Robot::setFlags(Flag settings) {
   flags |= settings;
@@ -132,9 +160,18 @@ void Robot::setFollowRange(unsigned int range) {
   follow_range = range;
 }
 
+void Robot::setTravelStop(bool stopping) {
+  if(stopping) flags |= Flag::STOP_AFTER_TRAVEL;
+  else flags &= ~Flag::STOP_AFTER_TRAVEL;
+}
+
 SortBot::SortBot() {}
 
 void SortBot::update() {
   continueSorting();
   Robot::update();
+}
+
+void SortBot::stop() {
+  Robot::stop();
 }

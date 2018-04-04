@@ -27,6 +27,7 @@ class SerialLink {
     void transmitIndex(unsigned int) const;
     void transmitDirection(Direction) const;
     void transmitColor(Color) const;
+    void transmitBool(bool) const;
     void transmitValue(int) const;
     void transmitValue(float) const;
     void transmitBuffer(void*, size_t) const;

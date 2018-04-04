@@ -45,6 +45,10 @@ Fixed receiveFixed() {
   return Fixed(x.number);
 }
 
+bool receiveBool() {
+  return(receiveIndex() > 0);
+}
+
 void receivePIDCommand(unsigned int var) {
   while(Serial.available() < 2);
   unsigned char param1 = Serial.read();
@@ -81,9 +85,9 @@ void parseCommand() {
     case '>': robot->adjustBaseSpeed(Fixed(10)); break;
    
     case '/': robot->setCenterOffset(receiveIndex()); break;
-    case '"': robot->setCenterOffset(16); break;
-    //case 'T': robot->setCenterOffset(8); break;
+    //case '"': robot->setCenterOffset(16); break;
     case '.': robot->setFollowRange(receiveIndex()); break;
+    case 'k': robot->setTravelStop(receiveBool()); break;
 
     case 'm': robot->move(receiveDirection()); break;
     

@@ -3,6 +3,7 @@
 
 #include <Direction.h>
 #include <Fixed.h>
+#include <Flag.h>
 
 #include <MotorShield.h>
 #include <Wheel.h>
@@ -18,7 +19,7 @@ class Drivetrain {
     Direction current_direction;
     bool travelDstReached; //tracks if travel has been completed
     void resolveDirection(Direction, Fixed* x, Fixed* y, Fixed* rot);
-    void checkDestination();	
+    Flag checkDestination(bool);	
     void setWheelSpeeds(const Fixed*);
     void adjustWheelSpeeds(const Fixed*);
     void correctWheelSpeeds(const Fixed*);
@@ -37,11 +38,7 @@ class Drivetrain {
     void move(Fixed x, Fixed y, Fixed rot);
    
     //move a set amount
-    void nudge(Direction, Fixed dist);
     void nudge(Fixed x, Fixed y, Fixed rot, Fixed dist);
-    
-    void travel(Direction, Fixed dist);
-    void travel(Direction, Fixed speed, Fixed dist);
     void travel(Fixed x, Fixed y, Fixed rot, Fixed dist);
   
     //permanently adjust direction of movement
