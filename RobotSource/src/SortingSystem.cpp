@@ -5,7 +5,7 @@ SortingSystem::SortingSystem() : token_cam(0) {}
 
 void SortingSystem::pickUpToken() {
   transmitChar('p');
-  waitForChar('p');//receiveChar();
+  waitForChar('p');
   std::cout << "done waiting" << std::endl;
 }
 

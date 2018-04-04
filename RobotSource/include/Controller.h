@@ -5,6 +5,7 @@
 
 #include "Direction.h"
 #include <vector> 
+#include "Color.h"
 
 class SortBot;
 

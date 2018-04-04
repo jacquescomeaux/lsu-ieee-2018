@@ -14,6 +14,7 @@ void Robot::setSpeed(int s) const {
 
 void Robot::moveUntilLine(Direction dir, int speed) {
   std::cout << "following until line" << std::endl;
+  travel(dir, speed, 1, false);
   for(int i = 0; i < 20; i++) int_cam.onLine();
   if(dir == Direction::NONE) return;
   if(dir == Direction::CLOCKWISE) return;
@@ -27,7 +28,7 @@ void Robot::moveUntilLine(Direction dir, int speed) {
 void Robot::followUntilIntersection(Direction dir) {
   std::cout << "following until intersection" << std::endl;
   for(int i = 0; i < 20; i++) int_cam.onLine();
-  travel(dir, )
+  travel(dir, speed, 1, false);
   if(dir == Direction::NONE) return;
   if(dir == Direction::CLOCKWISE) return;
   if(dir == Direction::COUNTER_CLOCKWISE) return;
