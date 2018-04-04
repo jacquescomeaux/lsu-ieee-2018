@@ -75,7 +75,7 @@ void Robot::update() {
   }
   
   if((dt[5] > 100) ? (last_ran[5] = time) : false) {
-    if(!travelDstReached) Drivetrain::checkDestination();
+    if((flags & Flag::TRAVELLING) != Flag::NONE) flags |= Drivetrain::checkDestination((flags & Flag::STOP_AFTER_TRAVEL) != Flags::NONE);
   }
   
   if((dt[6] > 0) ? (last_ran[6] = time) : false) {

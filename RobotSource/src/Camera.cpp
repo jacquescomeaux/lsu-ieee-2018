@@ -83,7 +83,7 @@ bool Camera::atIntersection() {
 bool Camera::tokenSeen() {
   //if(intersectionInFrame() && !checkCircle(5).empty()) return true;
 
-  if(intersectionInFrame()) {
+  /*if(intersectionInFrame()) {
     std::cout << "tokenSeen(): Intersection found...looking for token" << std::endl;
     if (!checkCircle(5).empty()) {
       std::cout << "tokenSeen(): Token Detected" << std::endl;
@@ -92,6 +92,8 @@ bool Camera::tokenSeen() {
   }
   std::cout << "tokenSeen(): Token not detected" << std::endl;
   return false;
+*/
+  return true;
 }
 
 Coord Camera::determineLocation() const {return Coord(0,0);}
@@ -119,7 +121,7 @@ std::vector<cv::Vec3f> Camera::checkCircle(int attempts = 1) { //Only detects to
     //minRadius - Minimum circle radius
     //maxRadius - Maximum circle radius
     cv::HoughCircles(dst, circles, CV_HOUGH_GRADIENT, 2, 300, 50, 65, 60, 70);
-    if (!circles.empty()) std::cout << "Circle Detected: (" << circles[0][0] << "," << circles[0][1] << ")" << std::endl;
+    //if (!circles.empty()) std::cout << "Circle Detected: (" << circles[0][0] << "," << circles[0][1] << ")" << std::endl;
     if(!circles.empty()) break;
   }
   return circles;
@@ -127,14 +129,14 @@ std::vector<cv::Vec3f> Camera::checkCircle(int attempts = 1) { //Only detects to
 
 bool Camera::intersectionInFrame() {
   if(checkCircle(5).size() > 0) {
-  std::cout << "intersectionInFrame(): Intersection Found" << std::endl;
+  //std::cout << "intersectionInFrame(): Intersection Found" << std::endl;
   return true;
   }
   else if(checkPartialCircle(5).size() > 0) {
     std::vector<cv::Vec3f> center = checkPartialCircle(5);
     for(unsigned int i = 0; i < center.size(); i++) {
       if(center[i][2] > 60 || center[i][2] < 90) {
-	std::cout << "Partial intersection found" << std::endl;
+	//std::cout << "Partial intersection found" << std::endl;
 	return true;
       }
       else return false;
@@ -167,17 +169,17 @@ void Camera::getTokenErrors(float* x, float*y, int att) {
   static const int xtarget = 105;
   static const int ytarget = 120;
   std::vector<cv::Vec3f> center;
-  if(intersectionInFrame() && tokenSeen()) center = checkCircle(att);
-  else center = checkPartialCircle(att);
+  if(!checkCircle(5).empty()) center = checkCircle(att);
+  else if (!checkPartialCircle(5).empty()) center = checkPartialCircle(att);
   if(!center.empty() && intersectionInFrame()) {
-    int tolerance = 10; //allowable number of pixels to be off target, needs testing
+    int tolerance = 24; //allowable number of pixels to be off target, needs testing
     float currentx = xtarget - center[center.size() - 1][0];
     float currenty = center[center.size() - 1][1] - ytarget;
-    std::cout << "getTokenErrors(): x=" << currentx << " y=" << currenty << std::endl;
-    *x = currentx * INCHES_PER_PIXEL;
-    *y = currenty * INCHES_PER_PIXEL;
+    //std::cout << "getTokenErrors(): x=" << currentx << " y=" << currenty << std::endl;
     if(std::abs(currentx) <= tolerance) *x = 0;
     if(std::abs(currenty) <= tolerance) *y = 0;
+    *x = currentx * INCHES_PER_PIXEL;
+    *y = currenty * INCHES_PER_PIXEL;
   }
 }
 
@@ -228,11 +230,10 @@ std::vector<cv::Vec3f> Camera::checkPartialCircle(int attempts = 1) { //Detects 
 	
 	if(dt.at<float>(cY,cX) < maxInlierDist) inlier++; 
       }
-      std::cout << 100.0f*(float)inlier/(float)counter << " % of a circle with radius " << radius << " detected" << std::endl;
+      //std::cout << 100.0f*(float)inlier/(float)counter << " % of a circle with radius " << radius << " detected" << std::endl;
       //radius should be 60 - 70
     }
-    //if(!circles.empty()) break;
-    if(circles.size() > 2) break;
+    if(!circles.empty()) break;
   }
   return circles;
 }

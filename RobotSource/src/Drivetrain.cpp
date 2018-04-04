@@ -41,19 +41,23 @@ void Drivetrain::move(Direction dir, int speed) const {
 }
 
 void Drivetrain::nudge(Direction dir, float dist) {
+  std::cout << "nudging robot in direction " << static_cast<int>(dir) << " by " << dist << " inches" <<  std::endl;
   transmitChar('n');
   transmitDirection(dir);
   transmitValue(dist);
   waitForChar('+');//receiveChar();
+  std::cout << "done nudging" << std::endl << std::endl;
 }
 
 void Drivetrain::travel(Direction dir, int speed, float dist, bool stopping) {
+  std::cout << "travelling in direction " << static_cast<uint8_t>(dir) << " for " << dist << " inches at speed " << speed << std::endl;
   transmitChar('t');
   transmitDirection(dir);
   transmitValue(speed);
   transmitValue(dist);
   waitForChar('+');//receiveChar();
   if(stopping) stop();
+  std::cout << "done travelling" << std::endl << std::endl;
 }
 
 void Drivetrain::travel(float x, float y, float rot, float dist) {

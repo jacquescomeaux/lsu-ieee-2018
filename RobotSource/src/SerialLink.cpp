@@ -27,7 +27,7 @@ SerialLink::~SerialLink() {
 char SerialLink::receiveChar() const {
   char c;
   receiveBuffer(&c, sizeof(char));
-  std::cout << "Receiving " << c << std::endl;
+  //std::cout << "Receiving " << c << std::endl;
   return c;
 }
 
@@ -53,7 +53,7 @@ void SerialLink::receiveBuffer(void* buf, size_t size) const {
 }
 
 void SerialLink::transmitChar(char c) const {
-  std::cout << "Writing " << c << std::endl;
+  //std::cout << "Writing " << c << std::endl;
   transmitBuffer(&c, sizeof(char));
 }
 
@@ -66,14 +66,14 @@ void SerialLink::transmitDirection(Direction d) const {
   uint8_t i = static_cast<uint8_t>(d);
   int out = static_cast<int>(i);
   transmitBuffer(&i, sizeof(uint8_t));
-  std::cout << "Writing Direction " << out << std::endl;
+  //std::cout << "Writing Direction " << out << std::endl;
 }
 
 void SerialLink::transmitColor(Color c) const {
   uint8_t i = static_cast<uint8_t>(c);
   int out = static_cast<int>(i);
   transmitBuffer(&i, sizeof(uint8_t));
-  std::cout << "Writing Color " << out << std::endl;
+  //std::cout << "Writing Color " << out << std::endl;
 }
 
 void SerialLink::transmitValue(int n) const {
@@ -84,7 +84,7 @@ void SerialLink::transmitValue(int n) const {
 
 void SerialLink::transmitValue(float x) const {
   Fixed f = static_cast<double>(x);
-  std::cout << f.getDouble() << std::endl;
+  //std::cout << "transmiting fixed "<< f.getDouble() << std::endl;
   int64_t i = f.getInternal();
   transmitBuffer(&i, sizeof(int64_t));
 }

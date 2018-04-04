@@ -13,7 +13,8 @@ Drivetrain::Drivetrain() :
     Wheel(wheel_shield.getMotor(4), 19, 17)  //FRONT_RIGHT
   },
   current_direction(Direction::NONE),
-  travelDstReached(true) {}
+  travelDstReached(true),
+  stopping_after_travel(true) {}
 
 void Drivetrain::resolveDirection(Direction dir, Fixed* x, Fixed* y, Fixed* rot) {
   static const Fixed ZERO = 0, POS_ONE = 1, NEG_ONE = -1, POS_SQRT_HALF = sqrt(0.5), NEG_SQRT_HALF = -1 * sqrt(0.5);
@@ -38,9 +39,9 @@ void Drivetrain::checkDestination() {
   for(int i = 0; i < 2; i++) {
     //if((wheels[i].getSpeed() > Fixed(0))) if(wheels[i].getPosition() < target_wheel_pos[i]) continue;
     //if((wheels[i].getSpeed() <= Fixed(0))) if(wheels[i].getPosition() > target_wheel_pos[i]) continue;
-    if((wheels[i].getSpeed() > Fixed(0)) != (wheels[i].getPosition() >= target_wheel_pos[i])) continue;
+    if((wheels[i].getActualSpeed() > Fixed(0)) != (wheels[i].getPosition() >= target_wheel_pos[i])) continue;
     travelDstReached = true;
-    //stop();
+    if(stoppingstop();
     const Fixed speeds[4] = {0, 0, 0, 0};
     correctWheelSpeeds(speeds);
     Serial.write('+');
@@ -91,8 +92,9 @@ void Drivetrain::move(Fixed x, Fixed y, Fixed rot) {
 
 void Drivetrain::nudge(Direction dir, Fixed dist) {
   Fixed x, y, rot;
+  Fixed speed = 100;
   resolveDirection(dir, &x, &y, &rot);
-  nudge(Fixed(120)*x, Fixed(25)*y, Fixed(40) * rot, dist);
+  nudge(speed * x, speed * y, speed * rot, dist);
 }
 
 void Drivetrain::nudge(Fixed x, Fixed y, Fixed rot, Fixed dist) {
@@ -100,7 +102,7 @@ void Drivetrain::nudge(Fixed x, Fixed y, Fixed rot, Fixed dist) {
   if(dist == Fixed(0)) return;
   Fixed steps_to_travel = dist * STEPS_PER_INCH;
   const Fixed speeds[4] = {y + x - rot, y - x - rot, y + x + rot, y - x + rot};
-  //for(Wheel& w : wheels) w.resetPosition();
+  for(Wheel& w : wheels) w.resetPosition();
   for(int i = 0; i < 2; i++) target_wheel_pos[i] = wheels[i].getPosition() + steps_to_travel * ((speeds[i] > ZERO) ? POS_ONE : NEG_ONE);
   travelDstReached = false;
   correctWheelSpeeds(speeds);

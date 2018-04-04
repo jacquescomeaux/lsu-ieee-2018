@@ -1,6 +1,7 @@
 #include "../include/LineFollower.h"
 #include <chrono>
 #include <thread>
+#include <iostream>
 
 LineFollower::LineFollower() {}
 
@@ -27,12 +28,15 @@ void LineFollower::followLine(Direction dir) const {
 }
 
 void LineFollower::snapToLine(Direction dir, int range) const {
+  std::cout << "Snapping to line" << std::endl;
   followLine(dir);
   transmitChar('.');
   transmitIndex(range);
   transmitChar(' ');
   transmitChar('f');
   std::this_thread::sleep_for(std::chrono::seconds(2));
+  transmitChar(' ');
+  std::cout << "Done snapping to line" << std::endl << std::endl;
 }
 
 void LineFollower::toggleCalibration() const {

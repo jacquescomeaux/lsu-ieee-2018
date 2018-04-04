@@ -45,7 +45,7 @@ void SortingSystem::continueSorting() {
       else state += storage_plate.continueMoving();
     }
     else if(state == 1) {
-      delay(20);
+      delay(500);
       token_arm.storeToken();
       state++;
     }
