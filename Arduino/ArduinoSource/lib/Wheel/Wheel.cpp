@@ -75,7 +75,7 @@ void Wheel::stop() {
 }
 
 Fixed Wheel::getPosition() {
-  return Fixed(static_cast<int>(encoder.read()));
+  return Fixed(static_cast<int32_t>(encoder.read()));
 }
 
 void Wheel::resetPosition() {

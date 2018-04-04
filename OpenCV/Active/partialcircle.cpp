@@ -13,6 +13,7 @@ int main(int argc, char* argv[])
   int Y1 = 150;
   int X1 = 195;
   int X2 = 440;
+  unsigned int runcount = 0;
   
   std::vector<cv::Point2f> pts1, pts2;
   
@@ -26,38 +27,40 @@ int main(int argc, char* argv[])
   pts2.push_back(cv::Point2f(74,283));
   pts2.push_back(cv::Point2f(140,283));
   
-  cv::VideoCapture cam(1);
+  cv::VideoCapture cam(2);
   while(true) {
-    double t = cv::getTickCount();
+    //double t = cv::getTickCount();
+    runcount++;
     cv::Mat image, img;
     cam >> image;
     img = image(cv::Rect(X1, Y1, X2-X1, 283)); //crop
     cv::Mat M = cv::getPerspectiveTransform(pts1, pts2);
     cv::warpPerspective(img, img, M, img.size());
 
-    cv::Mat canny;
+    cv::Mat canny, canny2;
 
     cv::Mat gray;
     cv::Mat grayBI;
     /// Convert it to gray
     cv::cvtColor(img, gray, CV_BGR2GRAY );
 
-    cv::bilateralFilter(gray, grayBI, 5, 75, 75);
-
+    //cv::bilateralFilter(gray, grayBI, 5, 75, 75);
+    cv::GaussianBlur(gray, grayBI, cv::Size(0,0), 4);
     // compute canny (don't blur with that image quality!!)
-    cv::Canny(grayBI, canny, 200,20); //prev 200, 20
-    cv::namedWindow("canny2"); cv::imshow("canny2", canny>0);
-    cv::namedWindow("BLUR"); cv::imshow("BLUR", grayBI>0);
+    cv::Canny(grayBI, canny, 30, 40); //prev 200, 20
+    cv::namedWindow("canny"); cv::imshow("canny", canny>0);
+    //cv::namedWindow("BLUR"); cv::imshow("BLUR", grayBI>0);
 
     std::vector<cv::Vec3f> circles;
 
     /// Apply the Hough Transform to find the circles
-    cv::HoughCircles( gray, circles, CV_HOUGH_GRADIENT, 2, 300, 50, 100, 50, 90 );
+    cv::HoughCircles( gray, circles, CV_HOUGH_GRADIENT, 2, 300, 50, 65, 60, 85); //60, 85
 
     /// Draw the circles detected
     for( size_t i = 0; i < circles.size(); i++ ) 
     {
         cv::Point center(cvRound(circles[i][0]), cvRound(circles[i][1]));
+        std::cout << "Run: " << runcount <<  "  Circle Center:  X:" << circles[i][0] << "  Y: " << circles[i][1] << std::endl;
         int radius = cvRound(circles[i][2]);
         cv::circle( img, center, 3, cv::Scalar(0,255,255), -1);
         cv::circle( img, center, radius, cv::Scalar(0,0,255), 1 );
@@ -102,8 +105,8 @@ int main(int argc, char* argv[])
         std::cout << 100.0f*(float)inlier/(float)counter << " % of a circle with radius " << radius << " detected" << std::endl;
     }
     
-    t = (cv::getTickCount() - t)/cv::getTickFrequency();
-    std::cout << "Time: " << t << std::endl;
+    //t = (cv::getTickCount() - t)/cv::getTickFrequency();
+    //std::cout << "Time: " << t << std::endl;
 
     cv::namedWindow("output"); cv::imshow("output", img);
     //cv::imwrite("houghLinesComputed.png", color);

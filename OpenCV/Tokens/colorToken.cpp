@@ -36,7 +36,7 @@ int main(int argc, char** argv)
   int sum = 0;
 
   //cap >> src;
-  src = imread("tokBlue.png", CV_LOAD_IMAGE_COLOR);
+  src = imread("tokRed.png", CV_LOAD_IMAGE_COLOR);
   if(src.empty()) return -1;
 
   //Mat img;

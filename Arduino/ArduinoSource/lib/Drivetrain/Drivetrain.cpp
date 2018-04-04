@@ -99,6 +99,7 @@ void Drivetrain::nudge(Fixed x, Fixed y, Fixed rot, Fixed dist) {
 void Drivetrain::travel(Fixed x, Fixed y, Fixed rot, Fixed dist) {
   static const Fixed STEPS_PER_INCH = 286.7, ZERO = 0, POS_ONE = 1, NEG_ONE = -1;
   if(dist == Fixed(0)) return;
+  if(x == Fixed(0) && y == Fixed(0) && rot == Fixed(0)) return;
   Fixed steps_to_travel = dist * STEPS_PER_INCH;
   const Fixed speeds[4] = {y + x - rot, y - x - rot, y + x + rot, y - x + rot};
   for(Wheel& w : wheels) w.resetPosition();
