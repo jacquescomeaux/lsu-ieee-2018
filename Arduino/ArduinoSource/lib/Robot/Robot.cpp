@@ -74,7 +74,7 @@ void Robot::update() {
   //checkEdges();
   }
   
-  if((dt[5] > 100) ? (last_ran[5] = time) : false) {
+  if((dt[5] > 0) ? (last_ran[5] = time) : false) {
     if((flags & Flag::TRAVELLING) != Flag::NONE) flags &= ~Drivetrain::checkDestination((flags & Flag::STOP_AFTER_TRAVEL) != Flags::NONE);
   }
   
