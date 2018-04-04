@@ -109,9 +109,13 @@ std::vector<cv::Vec3f> Camera::checkCircle(int attempts = 1) { //Only detects to
     cap >> image;
 
     img = image(cv::Rect(X1, Y1, X2-X1, 283));
-    cv::warpPerspective(img, dst, M2, img.size());
-    cv::cvtColor(dst, dst1, CV_BGR2GRAY);
-    cv::bilateralFilter(dst1, dst, 5, 75, 75);
+
+    cv::cvtColor(img, dst, CV_BGR2GRAY);                 //I swapped these two lines
+    cv::warpPerspective(dst, dst1, M2, dst.size());      //if it breaks things swap them back
+    //cv::warpPerspective(img, dst, M2, img.size());
+    //cv::cvtColor(dst, dst1, CV_BGR2GRAY);
+
+    cv::bilateralFilter(dst1, dst, 5, 75, 75); //Is the bilateral filter necessary?
     cv::Canny(dst, dst, 50, 60);
 
     //HoughCircles(input, output, method, dp,
@@ -128,6 +132,12 @@ std::vector<cv::Vec3f> Camera::checkCircle(int attempts = 1) { //Only detects to
 }
 
 bool Camera::intersectionInFrame() {
+  std::vector<cv::Vec3f> circles = checkCircle(/*5*/);
+  if(!circle.empty()) return true;
+  std::vector<cv::Vec3f> partial_circles = checkPartialCircle(/*5*/);
+  for(cv::Vec3f& circ : partial_circles) if(circ[2] > 60 && circ[2] < 90) return true;
+  return false;
+  /*
   if(checkCircle(5).size() > 0) {
   //std::cout << "intersectionInFrame(): Intersection Found" << std::endl;
   return true;
@@ -144,6 +154,7 @@ bool Camera::intersectionInFrame() {
   }
   return false;
   //std::cout << "intersectionInFrame(): No intersection found..." << std::endl;
+  */
 }
 
 bool Camera::tokenCentered() {
@@ -168,6 +179,21 @@ void Camera::getTokenErrors(float* x, float* y) {
 void Camera::getTokenErrors(float* x, float*y, int att) {
   static const int xtarget = 105;
   static const int ytarget = 120;
+  static const int tolerance = 24; //allowable number of pixels to be off target, needs testing
+  std::vector<cv::Vec3f> center = checkCircle(att);
+  std::vector<cv::Vec3f> center_partial = checkPartialCircle(att);
+  std::vector<cv::Vec3f>* circles = &center;
+  if(center.empty()) circles = &center_partial 
+  if(!*circles.empty() && intersectionInFrame()) {
+    float currentx = xtarget - circles[circles.size() - 1][0];
+    float currenty = circles[circles.size() - 1][1] - ytarget;
+    if(std::abs(currentx) <= tolerance) *x = 0;
+    if(std::abs(currenty) <= tolerance) *y = 0;
+    *x = currentx * INCHES_PER_PIXEL;
+    *y = currenty * INCHES_PER_PIXEL;
+  }
+  /*static const int xtarget = 105;
+  static const int ytarget = 120;
   std::vector<cv::Vec3f> center;
   if(!checkCircle(5).empty()) center = checkCircle(att);
   else if (!checkPartialCircle(5).empty()) center = checkPartialCircle(att);
@@ -180,55 +206,64 @@ void Camera::getTokenErrors(float* x, float*y, int att) {
     if(std::abs(currenty) <= tolerance) *y = 0;
     *x = currentx * INCHES_PER_PIXEL;
     *y = currenty * INCHES_PER_PIXEL;
-  }
+  }*/
 }
 
 std::vector<cv::Vec3f> Camera::checkPartialCircle(int attempts = 1) { //Detects both intersection and token circles
-  int Y1 = 150;
-  int X1 = 195;
-  int X2 = 440;
+  static const int Y1 = 150;
+  static const int X1 = 195;
+  static const int X2 = 440;
   
   std::vector<cv::Vec3f> circles;
   for(int i = 0; i < attempts; i++) {
     cv::Mat image, img;
     cap >> image;
     img = image(cv::Rect(X1, Y1, X2-X1, 283)); //crop
+    
+    cv::cvtColor(img, img, CV_BGR2GRAY );
     cv::warpPerspective(img, img, M2, img.size());
+    
+    cv::Mat canny, filt;
+    cv::bilateralFilter(img, filt, 5, 75, 75);
+    cv::Canny(filt, canny, 200, 20);
+    cv::HoughCircles(img, circles, CV_HOUGH_GRADIENT, 2, 300, 50, 100, 50, 90 );
+    
+    
+    /*cv::warpPerspective(img, img, M2, img.size());
     
     cv::Mat canny, gray, grayBI;
     cv::cvtColor(img, gray, CV_BGR2GRAY );
     cv::bilateralFilter(gray, grayBI, 5, 75, 75);
     cv::Canny(grayBI, canny, 200,20);
     cv::HoughCircles( gray, circles, CV_HOUGH_GRADIENT, 2, 300, 50, 100, 50, 90 );
-    
+    */
     //compute distance transform:
     cv::Mat dt;
     cv::distanceTransform(255-(canny>0), dt, CV_DIST_L2 ,3);
     
     // test for semi-circles:
     float minInlierDist = 2.0f;
-    for( size_t i = 0; i < circles.size(); i++ ) 
-    {
+    for(cv::Vec3f& circ : circles) {
       // test inlier percentage:
       // sample the circle and check for distance to the next edge
-      unsigned int counter = 0;
+      //unsigned int counter = 0;
       unsigned int inlier = 0;
       
-      cv::Point2f center((circles[i][0]), (circles[i][1]));
-      float radius = (circles[i][2]);
+      //cv::Point2f center((circ[0]), (circ[1]));
+      //float radius = circ[2];
       
       // maximal distance of inlier might depend on the size of the circle
       float maxInlierDist = radius/25.0f;
-      if(maxInlierDist<minInlierDist) maxInlierDist = minInlierDist;
+      if(maxInlierDist < minInlierDist) maxInlierDist = minInlierDist;
       
       //TODO: maybe parameter incrementation might depend on circle size!
       //wow
       for(float t =0; t<2*3.14159265359f; t+= 0.1f) {
-	counter++;
-	float cX = radius*cos(t) + circles[i][0];
-	float cY = radius*sin(t) + circles[i][1];
+	//counter++;
+	float cX = radius*cos(t) + circ[0];
+	float cY = radius*sin(t) + circ[1];
 	
-	if(dt.at<float>(cY,cX) < maxInlierDist) inlier++; 
+	if(dt.at<float>(cY, cX) < maxInlierDist) inlier++; 
       }
       //std::cout << 100.0f*(float)inlier/(float)counter << " % of a circle with radius " << radius << " detected" << std::endl;
       //radius should be 60 - 70
