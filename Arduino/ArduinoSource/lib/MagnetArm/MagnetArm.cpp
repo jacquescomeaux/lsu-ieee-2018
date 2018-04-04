@@ -19,7 +19,7 @@ MagnetArm::MagnetArm(Adafruit_StepperMotor* mot, Adafruit_DCMotor* mag) :
   magnet(mag) {
     motor->setSpeed(RPM);
     magnet->run(RELEASE);
-    magnet->setSpeed(230);
+    magnet->setSpeed(255);
 }
 
 void MagnetArm::goToHeight(int s) {
@@ -44,8 +44,8 @@ void MagnetArm::pickUpToken() {
 }
 
 void MagnetArm::storeToken() {
-  magnet->run(BACKWARD); //maybe short reverse in polarity will help it drop
-  delay(50);
+  //magnet->run(BACKWARD); //maybe short reverse in polarity will help it drop
+  //delay(50);
   demagnetize();
 }
 

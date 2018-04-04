@@ -2,9 +2,6 @@
 
 Drivetrain::Drivetrain() :
   wheel_shield(MotorShield(0x61)), //wheels
-  base_speed(Fixed(90)),
-  veer_amount(Fixed(10)),
-  acceleration(Fixed(20)), //previously set at 10
   wheels {
     //Interrupt Pins: 2, 3, 18, 19, 20, 21
     Wheel(wheel_shield.getMotor(1),  2, 4), //FRONT_LEFT
@@ -12,9 +9,10 @@ Drivetrain::Drivetrain() :
     Wheel(wheel_shield.getMotor(3), 18, 16), //BACK_RIGHT
     Wheel(wheel_shield.getMotor(4), 19, 17)  //FRONT_RIGHT
   },
-  current_direction(Direction::NONE),
-  travelDstReached(true),
-  stopping_after_travel(true) {}
+  base_speed(Fixed(90)),
+  veer_amount(Fixed(10)),
+  acceleration(Fixed(20)), //previously set at 10
+  current_direction(Direction::NONE) {}
 
 void Drivetrain::resolveDirection(Direction dir, Fixed* x, Fixed* y, Fixed* rot) {
   static const Fixed ZERO = 0, POS_ONE = 1, NEG_ONE = -1, POS_SQRT_HALF = sqrt(0.5), NEG_SQRT_HALF = -1 * sqrt(0.5);

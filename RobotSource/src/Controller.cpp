@@ -51,6 +51,7 @@ void Controller::runAlgorithm() const {
   std::cout << "Waiting for enter key" << std::endl; 
   getchar();
 
+  robot.setSpeed(30);
   robot.toggleCalibration();
   robot.moveUntilLine(Direction::FRONT, 30);
   getchar();

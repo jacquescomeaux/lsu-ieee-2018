@@ -11,7 +11,10 @@ void SortingSystem::pickUpToken() {
 
 Color SortingSystem::checkTokenColor() { //this only reads once. We need to check the accuracy of the color detection.
                                          //if it's not consistently accurate we may need to read multiple times and get the most likely value.
-  std::cout << "running check token color" << std::endl;
+  static int c = 0;
+  if(++c > 7) c = 1;
+  return static_cast<Color>(c);
+  /*std::cout << "running check token color" << std::endl;
   std::vector<double> hvs = token_cam.readToken();
 
   double avH = hvs[0];
@@ -39,7 +42,7 @@ Color SortingSystem::checkTokenColor() { //this only reads once. We need to chec
     default : std::cout << "Color not recognized" << std::endl; break;
   }
   return tokenColor;
-}
+*/}
 
 void SortingSystem::storeToken(Color c) const {
   std::cout << "storing token" << std::endl;

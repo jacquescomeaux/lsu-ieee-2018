@@ -75,7 +75,7 @@ void Robot::update() {
   }
   
   if((dt[5] > 0) ? (last_ran[5] = time) : false) {
-    if((flags & Flag::TRAVELLING) != Flag::NONE) flags &= ~Drivetrain::checkDestination((flags & Flag::STOP_AFTER_TRAVEL) != Flags::NONE);
+    if((flags & Flag::TRAVELLING) != Flag::NONE) flags &= ~Drivetrain::checkDestination((flags & Flag::STOP_AFTER_TRAVEL) != Flag::NONE);
   }
   
   if((dt[6] > 0) ? (last_ran[6] = time) : false) {
@@ -116,10 +116,10 @@ void Robot::nudge(Direction dir, Fixed dist) {
   Fixed x, y, rot;
   Fixed speed = 100;
   resolveDirection(dir, &x, &y, &rot);
-  nudge(speed * x, speed * y, speed * rot, dist);
+  nudge(Fixed(70) * x, Fixed(24) * y, speed * rot, dist);
 }
 
-void Drivetrain::nudge(Fixed x, Fixed y, Fixed rot, Fixed dist) {
+void Robot::nudge(Fixed x, Fixed y, Fixed rot, Fixed dist) {
   flags |= Flag::TRAVELLING;
   Drivetrain::nudge(x, y, rot, dist);
 }

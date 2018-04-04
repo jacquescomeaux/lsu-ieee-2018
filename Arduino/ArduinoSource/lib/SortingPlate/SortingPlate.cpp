@@ -44,7 +44,7 @@ void SortingPlate::rotateCCW(unsigned int dst) {
 
 void SortingPlate::rotateCW() {
   if(moving) return;
-  stepForward(target_step);
+  stepForward(target_step + 10);
   motor->release();
   position += total_steps;
   position -= target_step;

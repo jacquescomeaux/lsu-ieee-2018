@@ -81,19 +81,8 @@ bool Camera::atIntersection() {
 }
 
 bool Camera::tokenSeen() {
-  //if(intersectionInFrame() && !checkCircle(5).empty()) return true;
-
-  /*if(intersectionInFrame()) {
-    std::cout << "tokenSeen(): Intersection found...looking for token" << std::endl;
-    if (!checkCircle(5).empty()) {
-      std::cout << "tokenSeen(): Token Detected" << std::endl;
-      return true;
-    }
-  }
-  std::cout << "tokenSeen(): Token not detected" << std::endl;
-  return false;
-*/
-  return true;
+  if(tokenInFrame(2)) return true;
+  else return false;
 }
 
 Coord Camera::determineLocation() const {return Coord(0,0);}
@@ -128,22 +117,21 @@ std::vector<cv::Vec3f> Camera::checkCircle(int attempts = 1) { //Only detects to
 }
 
 bool Camera::intersectionInFrame() {
-  if(checkCircle(5).size() > 0) {
-  //std::cout << "intersectionInFrame(): Intersection Found" << std::endl;
-  return true;
-  }
-  else if(checkPartialCircle(5).size() > 0) {
-    std::vector<cv::Vec3f> center = checkPartialCircle(5);
-    for(unsigned int i = 0; i < center.size(); i++) {
-      if(center[i][2] > 60 || center[i][2] < 90) {
-	//std::cout << "Partial intersection found" << std::endl;
-	return true;
-      }
-      else return false;
-    }
+  std::vector<cv::Vec3f> center = checkPartialCircle(5);
+  for(unsigned int i = 0; i < center.size(); i++) {
+    if(center[i][2] > 50 || center[i][2] < 100) return true;
   }
   return false;
-  //std::cout << "intersectionInFrame(): No intersection found..." << std::endl;
+}
+
+bool Camera::tokenInFrame() {
+  if(tokenInFrame(1)) return true;
+  else return false;
+}
+
+bool Camera::tokenInFrame(int att) {
+  if(checkCircle(att).size() > 0) return true;
+  else return false;
 }
 
 bool Camera::tokenCentered() {
@@ -169,17 +157,17 @@ void Camera::getTokenErrors(float* x, float*y, int att) {
   static const int xtarget = 105;
   static const int ytarget = 120;
   std::vector<cv::Vec3f> center;
-  if(!checkCircle(5).empty()) center = checkCircle(att);
-  else if (!checkPartialCircle(5).empty()) center = checkPartialCircle(att);
-  if(!center.empty() && intersectionInFrame()) {
+  center = checkCircle(att);
+  if (center.empty()) center = checkPartialCircle(att);
+  if(!center.empty()) {
     int tolerance = 24; //allowable number of pixels to be off target, needs testing
     float currentx = xtarget - center[center.size() - 1][0];
     float currenty = center[center.size() - 1][1] - ytarget;
     //std::cout << "getTokenErrors(): x=" << currentx << " y=" << currenty << std::endl;
-    if(std::abs(currentx) <= tolerance) *x = 0;
-    if(std::abs(currenty) <= tolerance) *y = 0;
     *x = currentx * INCHES_PER_PIXEL;
     *y = currenty * INCHES_PER_PIXEL;
+    if(std::abs(currentx) <= tolerance) *x = 0;
+    if(std::abs(currenty) <= tolerance) *y = 0;
   }
 }
 

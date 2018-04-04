@@ -2,7 +2,7 @@
 
 #include <iostream>
 
-Robot::Robot() : int_cam(1), location_cam(2) {}
+Robot::Robot() : int_cam(2), location_cam(1) {}
 
 Coord Robot::getLocation() const {
   return location_cam.determineLocation();
@@ -47,7 +47,7 @@ void Robot::center(bool cross, int offset) {
   while(!int_cam.intersectionInFrame());
   stop();
   std::cout << "Done with line follow centering, starting camera centering" << std::endl;
-  while(!int_cam.tokenCentered()) {
+  while(int_cam.tokenSeen() && !int_cam.tokenCentered()) {
     int_cam.getTokenErrors(&x, &y);
     std::cout << "Token Errors: X: " << x << " Y: " << y << std::endl;
     if(x > 0 ) nudge(Direction::RIGHT, x);
