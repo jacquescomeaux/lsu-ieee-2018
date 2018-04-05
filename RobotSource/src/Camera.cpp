@@ -187,34 +187,31 @@ std::vector<cv::Vec3f> Camera::getCircle(int attempts = 1) { //Detects both inte
 }
 
 Color Camera::getTokenColor() {
-  cv::Mat src, bgr;
+  //arrays for comparing BGR/HSV values (to be filled in)
+  static const cv::Vec6d blue = {0, 0, 0, 0, 0, 0};
+  static const cv::Vec6d green = {0, 0, 0, 0, 0, 0};
+  static const cv::Vec6d red = {0, 0, 0, 0, 0, 0};
+  static const cv::Vec6d cyan = {0, 0, 0, 0, 0, 0};
+  static const cv::Vec6d magenta = {0, 0, 0, 0, 0, 0};
+  static const cv::Vec6d yellow = {0, 0, 0, 0, 0, 0};
+  static const cv::Vec6d gray = {0, 0, 0, 0, 0, 0};
+
+  
+  static const std::vector<cv::Vec6d> bgrhsv = {blue, green, red, cyan, magenta, yellow, gray};
+  static int b, g, r, h, s, v, sum;
+  
+  cv::Mat src, bgr, hsv;
   cv::Rect roi;
   roi.x = 220;
   roi.y = 290;
   roi.width = 220;
   roi.height = 120;
-  
-  // BGR HSV
-  // Blue 96, 34, 25, 116, 187, 96
-  // Purple 77, 22, 92, 156, 193, 92
-  // Green 116, 15, 72, 43, 220, 116
-  // Red 28, 14, 99, 175, 214, 99
-  // Yellow:
-  // Cyan: 104, 103, 58 | 90, 114, 106
-  
-  int b = 0;
-  int g = 0;
-  int r = 0;
-  int h = 0;
-  int s = 0;
-  int v = 0;
-  int sum = 0;
 
   cap >> src;
-  cv::Mat img = src(roi);
-  cv::Mat hsv;
+  bgr = src(roi);
+  
   cv::cvtColor(img, hsv, cv::COLOR_BGR2HSV);
-  const unsigned char hue_shift = 80; //this is actually saturation shift
+  /*const unsigned char hue_shift = 80; //this is actually saturation shift
   for (int j = 0; j < hsv.rows; j++) {
     for (int i = 0; i < hsv.cols; i++) {
       unsigned char s = hsv.at<cv::Vec3b>(j,i)[1];
@@ -224,7 +221,7 @@ Color Camera::getTokenColor() {
         s = s + hue_shift;
       hsv.at<cv::Vec3b>(j,i)[1] = s;
     }
-  }
+  }*/
   cv::cvtColor(hsv, bgr, cv::COLOR_HSV2BGR);
   for (int i = 0; i < bgr.rows; i++) {
     for (int j = 0; j < bgr.cols; j++) {
@@ -237,49 +234,74 @@ Color Camera::getTokenColor() {
       sum++;
     }
   }
-  double avB = b/sum;
-  double avG = g/sum;
-  double avR = r/sum;
-  //double avH = h/sum;
-  //double avV = v/sum;
-  //double avS = s/sum;
 
+  std::vector<double> avgs; //to hold average values of (B, G, R, H, S, V) for current image
+  avgs.push_back(b/sum);
+  avgs.push_back(g/sum);
+  avgs.push_back(r/sum);
+  avgs.push_back(h/sum);
+  avgs.push_back(s/sum);
+  avgs.push_back(v/sum);
+  static double diff;
+  static std::vector<double> distance;
+
+
+  for(int i = 0; i < bgrhsv.size(); i++) { //find the distance between current value and all colors
+    double total = 0;
+    for(int j = 0; j < 6, j++) {
+      diff = avgs[j] - bgrhsv[i][j];
+      total += diff * diff;
+    }
+    total = std::sqrt(total);
+    distance.push_back(total);
+  }
+  double color = 0;
+  double min = distance[0];
+  for(int i = 1; i < distance.size(); i++) {
+    if(distance[i] < min) {
+      min = distance[i];
+      color = i;
+    }
+  }
+  
   Color tokenColor = Color::NONE;
-  // RGB Color Detection
-  if(avB > 70 && avR > 90) {
-    tokenColor = Color::MAGENTA;
-    std::cout << "Magenta detected" << std::endl;
-  }
-  if(avB > 90) {
-    if(avG > 90) {
-    tokenColor = Color::CYAN;
-    std::cout << "Cyan detected" << std::endl;
-    }
-    else {
-      tokenColor = Color::BLUE;
-      std::cout << "Blue detected" << std::endl;
-    }
-  }
-  if(avG > 90) {
-    if(avR < 90) {
-      tokenColor = Color::GREEN;
-      std::cout << "Green detected" << std::endl;
-    }
-    else {
-      tokenColor = Color::YELLOW;
-      std::cout << "Yellow detected" << std::endl;
-    }
-  }
-  if(avR > 90) {
+  
+  switch(color) {
+  case 0 :
+    tokenColor = Color::BLUE;
+    std::cout << "Blue detected" << std::endl;
+    break;
+  case 1 :
+    tokenColor = Color::GREEN;
+    std::cout << "Green detected" << std::endl;
+    break;
+  case 2 :
     tokenColor = Color::RED;
     std::cout << "Red detected" << std::endl;
+    break;
+  case 3 :
+    tokenColor = Color::CYAN;
+    std::cout << "Cyan detected" << std::endl;
+    break;
+  case 4 :
+    tokenColor = Color::MAGENTA;
+    std::cout << "Magenta detected" << std::endl;
+    break;
+  case 5 :
+    tokenColor = Color::YELLOW;
+    std::cout << "Yellow detected" << std::endl;
+    break;
+  case 6 :
+    tokenColor = Color::GRAY;
+    std::cout << "Gray detected" << std::endl;
+    break;
+  default:
+    tokenColor = Color::NONE;
+    std::cout << "No color detected" << std::endl;
+    break;
   }
-  if(tokenColor == Color::NONE) std::cout << "No color detected" << std::endl;
-  std::cout << "(B, G, R): (" << avB << ", " << avG << ", " << avR << ")" << std::endl;
-
-  //cout << "H: " << avH << endl;
-  //cout << "S: " << avS << endl;
-  //cout << "V: " << avV << endl;
+  std::cout << "(B, G, R): (" << avgs[0] << ", " << avgs[1] << ", " << avgs[2] << ")" << std::endl;
+  std::cout << "(H, S, V): (" << avgs[3] << ", " << avgs[4] << ", " << avgs[5] << ")" << std::endl;
 
   return tokenColor;
 }
