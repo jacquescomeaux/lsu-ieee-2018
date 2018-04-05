@@ -196,10 +196,10 @@ Color Camera::getTokenColor() {
   static const cv::Vec6d yellow = {0, 0, 0, 0, 0, 0};
   static const cv::Vec6d gray = {0, 0, 0, 0, 0, 0};
 
-  
+
   static const std::vector<cv::Vec6d> bgrhsv = {blue, green, red, cyan, magenta, yellow, gray};
   static int b, g, r, h, s, v, sum;
-  
+
   cv::Mat src, bgr, hsv;
   cv::Rect roi;
   roi.x = 220;
@@ -209,8 +209,8 @@ Color Camera::getTokenColor() {
 
   cap >> src;
   bgr = src(roi);
-  
-  cv::cvtColor(img, hsv, cv::COLOR_BGR2HSV);
+  cv::cvtColor(bgr, hsv, cv::COLOR_BGR2HSV);
+
   /*const unsigned char hue_shift = 80; //this is actually saturation shift
   for (int j = 0; j < hsv.rows; j++) {
     for (int i = 0; i < hsv.cols; i++) {
@@ -221,8 +221,9 @@ Color Camera::getTokenColor() {
         s = s + hue_shift;
       hsv.at<cv::Vec3b>(j,i)[1] = s;
     }
-  }*/
-  cv::cvtColor(hsv, bgr, cv::COLOR_HSV2BGR);
+  }
+  cv::cvtColor(hsv, bgr, cv::COLOR_HSV2BGR); */
+
   for (int i = 0; i < bgr.rows; i++) {
     for (int j = 0; j < bgr.cols; j++) {
       b = b + bgr.at<cv::Vec3b>(j,i)[0];
@@ -246,26 +247,26 @@ Color Camera::getTokenColor() {
   static std::vector<double> distance;
 
 
-  for(int i = 0; i < bgrhsv.size(); i++) { //find the distance between current value and all colors
+  for(unsigned int i = 0; i < bgrhsv.size(); i++) { //find the distance between current value and all colors
     double total = 0;
-    for(int j = 0; j < 6, j++) {
+    for(int j = 0; j < 6; j++) {
       diff = avgs[j] - bgrhsv[i][j];
       total += diff * diff;
     }
     total = std::sqrt(total);
     distance.push_back(total);
   }
-  double color = 0;
+  int color = 0;
   double min = distance[0];
-  for(int i = 1; i < distance.size(); i++) {
+  for(unsigned int i = 1; i < distance.size(); i++) {
     if(distance[i] < min) {
       min = distance[i];
       color = i;
     }
   }
-  
+
   Color tokenColor = Color::NONE;
-  
+
   switch(color) {
   case 0 :
     tokenColor = Color::BLUE;
