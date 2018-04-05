@@ -1,60 +1,44 @@
 #include "../include/SortingSystem.h"
 #include <iostream>
 
-SortingSystem::SortingSystem() : token_cam(0) {}
+SortingSystem::SortingSystem() :
+  COLOR_POSITIONS {0, 4, 3, 2, 5, 6, 7, 1},
+  token_cam(0),
+  held_token(NULL),
+  plate_position(0) {}
 
-void SortingSystem::pickUpToken() {
+bool SortingSystem::pickUpToken() {
   transmitChar('p');
   waitForChar('p');
   std::cout << "done waiting" << std::endl;
+  Color seen = token_cam.getTokenColor();
+  if(seen == Color::NONE || seen == Color::WHITE || seen == Color::BLACK) return false;
+  held_token = new Token(seen);
+  return true;
 }
 
-Color SortingSystem::checkTokenColor() { //this only reads once. We need to check the accuracy of the color detection.
-                                         //if it's not consistently accurate we may need to read multiple times and get the most likely value.
-  static int c = 0;
-  if(++c > 7) c = 1;
-  return static_cast<Color>(c);
-  /*std::cout << "running check token color" << std::endl;
-  std::vector<double> hvs = token_cam.readToken();
-
-  double avH = hvs[0];
-  double avV = hvs[1];
-  double avS = hvs[2];
-
-  Color tokenColor;
-  //you forgot to do yellow
-  if ((avS < 80) && (avV < 80)) tokenColor = Color::GRAY;
-  else if (avH > 136) {
-    if (avS > 141) tokenColor = Color::RED;
-    else tokenColor = Color::MAGENTA;
-  }
-  else if (avS < 66) tokenColor = Color::CYAN;
-  else if (avH < 68) tokenColor = Color::GREEN;
-  else tokenColor = Color::BLUE;
-  
-  switch(tokenColor) {
-    case Color::GRAY : std::cout << "Gray Token Detected" << std::endl; break;
-    case Color::RED : std::cout << "Red Token Detected" << std::endl; break;
-    case Color::MAGENTA : std::cout << "Magenta Token Detected" << std::endl;
-    case Color::CYAN : std::cout << "Cyan Token Detected" << std::endl; break;
-    case Color::GREEN : std::cout << "Green Token Detected" << std::endl; break;
-    case Color::BLUE : std::cout << "Blue Token Detected" << std::endl; break;
-    default : std::cout << "Color not recognized" << std::endl; break;
-  }
-  return tokenColor;
-*/}
-
-void SortingSystem::storeToken(Color c) const {
+void SortingSystem::storeToken(Token* t) {
   std::cout << "storing token" << std::endl;
   transmitChar('r');
-  transmitColor(c);
+  //waitForChar('r');
+  transmitColor(t->getColor());
+  token_stacks[COLOR_POSITIONS[static_cast<int>(t->getColor())] - 1].push_back(t);
 }
 
 void SortingSystem::sortToken() {
   std::cout << "picking up token my man" << std::endl;
-  pickUpToken();
-  storeToken(checkTokenColor());
+  if(pickUpToken()) {
+    storeToken(held_token);
+    held_token = NULL;
+  }
   std::cout << std::endl;
 }
 
-void SortingSystem::dropTokenStack(Color c) {}
+bool SortingSystem::dropTokenStack(Color c) {
+  int next_pos = plate_position + 7;
+  next_pos %= 8;
+  if(next_pos != COLOR_POSITIONS[static_cast<int>(c)]) return false;
+  transmitChar('d');
+  plate_position = next_pos;
+  return true;
+}

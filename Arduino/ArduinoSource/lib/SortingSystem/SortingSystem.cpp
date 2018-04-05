@@ -2,7 +2,7 @@
 
 SortingSystem::SortingSystem() :
   NUM_COLORS(8),
-  COLOR_POSITIONS {0, 4, 5, 6, 3, 2, 1, 7},
+  COLOR_POSITIONS {0, 4, 3, 2, 5, 6, 7, 1},
   state(0),
   sorting_shields {
     MotorShield(0x62),

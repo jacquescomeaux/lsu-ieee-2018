@@ -9,7 +9,7 @@ void MagnetArm::demagnetize() {
 }
 
 MagnetArm::MagnetArm(Adafruit_StepperMotor* mot, Adafruit_DCMotor* mag) :
-  RPM(60),
+  RPM(255),
   bot_target(0),
   top_target(500),
   cam_target(300),
@@ -40,7 +40,7 @@ void MagnetArm::pickUpToken() {
   goToHeight(bot_target);
   goToHeight(cam_target);
   Serial.write('p');
-  delay(500);
+  delay(300);
 }
 
 void MagnetArm::storeToken() {

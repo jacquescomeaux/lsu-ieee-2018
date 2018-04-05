@@ -36,7 +36,7 @@ void Controller::coverLine(Direction dir, bool cross, int offset, int num_tokens
   for(int i = 0; i < num_tokens; i++) {
     robot.center(cross, offset);
     waitForEnter();
-    if(robot.tokenSeen());//robot.sortToken();
+    if(robot.tokenSeen()) //robot.sortToken();
     waitForEnter();
     if(i == num_tokens - 1) break;
     robot.snapToLine(dir, 2);
@@ -54,8 +54,9 @@ void Controller::waitForEnter() const {
 void Controller::runAlgorithm() const {
   std::cout << "Waiting for enter key" << std::endl; 
   waitForEnter();
-  #if 0
-  robot.move(Direction::FRONT);
+  #if 1
+  robot.travel(Direction::FRONT, 120, 2, true);
+  //robot.move(Direction::FRONT);
   //robot.center(16, false);
   #else 
   robot.setSpeed(30);

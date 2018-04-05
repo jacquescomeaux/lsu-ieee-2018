@@ -59,11 +59,12 @@ void Robot::center(bool cross, int offset) {
   for(bool found = int_cam.getTokenErrors(&x, &y); std::abs(x) >= x_tol || std::abs(y) >= y_tol; found = int_cam.getTokenErrors(&x, &y)) {
     if(!found) continue;
     std::cout << "nudging" << std::endl;
+    //nudge(Direction::RIGHT, x);
+    //nudge(Direction::FRONT, y);
     if(x > 0 ) nudge(Direction::RIGHT, x);
     else if(x < 0) nudge(Direction::LEFT, -x);
     if(y > 0) nudge(Direction::FRONT, y);
     else if(y < 0) nudge(Direction::BACK, -y);
-    getchar();
   }
   
   /*while(int_cam.tokenSeen() && !int_cam.tokenCentered()) {

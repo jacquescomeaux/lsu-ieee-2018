@@ -86,9 +86,8 @@ void parseCommand() {
    
     case '/': robot->setCenterOffset(receiveIndex()); break;
     case '"': {
-      Fixed f = receiveFixed();
-      if(f < Fixed(0)) Serial.write('n');
-      else Serial.write('p');
+      robot->setTravelStop(true);
+      robot->travel(Direction::LEFT, 120, 5);
       break;
     }
     case '.': robot->setFollowRange(receiveIndex()); break;

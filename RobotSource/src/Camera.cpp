@@ -96,7 +96,7 @@ bool Camera::getTokenErrors(float* x, float*y, int att) {
   static const int xtarget = 75; //prev 105
   static const int ytarget = 150; //prev 120
 
-  std::vector<cv::Vec3f> circles = checkPartialCircle(att);
+  std::vector<cv::Vec3f> circles = getCircle(att);
   if(!circles.empty()) {
     float currentx = xtarget - circles[circles.size() - 1][0];
     float currenty = circles[circles.size() - 1][1] - ytarget;
