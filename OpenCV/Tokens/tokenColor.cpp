@@ -9,7 +9,8 @@ using namespace cv;
 using namespace std;
 
 /** @function main */
-Color main(int argc, char* argv[])
+//Color
+int main(int argc, char* argv[])
 {
   VideoCapture cap(0);
   if(!cap.isOpened()) return -1;
@@ -75,5 +76,5 @@ Color main(int argc, char* argv[])
   else if ((avH > 35) && (avH < 75)) tokenColor = Color::GREEN;
   else tokenColor = Color::YELLOW;
 
-  return tokenColor;
+  std::cout << static_cast<int>(tokenColor) << std::endl;//return tokenColor;
 }

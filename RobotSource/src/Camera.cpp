@@ -109,7 +109,7 @@ bool Camera::getTokenErrors(float* x, float*y, int att) {
   return false;
 }
 
-std::vector<cv::Vec3f> Camera::checkPartialCircle(int attempts = 1) { //Detects both intersection and token circles
+std::vector<cv::Vec3f> Camera::getCircle(int attempts = 1) { //Detects both intersection and token circles
   /*static const int Y1 = 150;
   static const int X1 = 195;
   static const int X2 = 440;
@@ -186,35 +186,37 @@ std::vector<cv::Vec3f> Camera::checkPartialCircle(int attempts = 1) { //Detects 
   return circles;
 }
 
-std::vector<double> Camera::readToken() {
-  cv::Mat src;
-  cv::Rect roi;
-  cap >> src;
-  roi.x = 220;
-  roi.y = 290;
-  roi.width = 220;
-  roi.height = 120;
+Color Camera::getTokenColor() {
+  cv::Mat src, bgr, hsv;
   int h = 0;
   int s = 0;
   int v = 0;
   int sum = 0;
-
-  cv::Mat img = src(roi);
-  cv::Mat hsv;
-  cv::cvtColor(img, hsv, cv::COLOR_BGR2HSV);
-  for (int i = 0; i < roi.width; i++) {
-    for (int j = 0; j < roi.height; j++) {
-      h = h + hsv.at<cv::Vec3b>(j,i)[0];
-      s = s + hsv.at<cv::Vec3b>(j,i)[1];
-      v = v + hsv.at<cv::Vec3b>(j,i)[2];
-      sum = sum + 1;
-    }
+  cap >> src;
+  cvtColor(src, hsv, cv::COLOR_BGR2HSV);
+  const unsigned char hue_shift = 80;
+  for(int j = 0; j < hsv.rows; j++) for (int i = 0; i < hsv.cols; i++) {
+    unsigned char s = hsv.at<cv::Vec3b>(j,i)[1];
+    if(s + hue_shift > 255) s +=  hue_shift - 180;
+    else s += hue_shift;
+    hsv.at<cv::Vec3b>(j,i)[1] = s;
   }
-
-  std::vector<double> hvs;
-  hvs.push_back(h/sum);
-  hvs.push_back(v/sum);
-  hvs.push_back(s/sum);
-
-  return hvs;
+  for(int i = 220; i < 440; i++) for(int j = 290; j < 410; j++) {
+    h += hsv.at<cv::Vec3b>(j,i)[0];
+    s += hsv.at<cv::Vec3b>(j,i)[1];
+    v += hsv.at<cv::Vec3b>(j,i)[2];
+    sum++;
+  }
+  double avH = h/sum;
+  double avV = v/sum;
+  double avS = s/sum;
+  Color tokenColor;
+  if(avS < 75) tokenColor = Color::GRAY;
+  else if(avH > 160) tokenColor = Color::RED;
+  else if((avH > 130) && (avH < 160)) tokenColor = Color::MAGENTA;
+  else if((avH > 100) && (avH < 130)) tokenColor = Color::BLUE;
+  else if((avH > 75) && (avH < 100)) tokenColor = Color::CYAN;
+  else if((avH > 35) && (avH < 75)) tokenColor = Color::GREEN;
+  else tokenColor = Color::YELLOW;
+  return tokenColor;
 }

@@ -92,7 +92,7 @@ void Drivetrain::nudge(Fixed x, Fixed y, Fixed rot, Fixed dist) {
   Fixed steps_to_travel = dist * STEPS_PER_INCH;
   const Fixed speeds[4] = {y + x - rot, y - x - rot, y + x + rot, y - x + rot};
   for(Wheel& w : wheels) w.resetPosition();
-  for(int i = 0; i < 2; i++) target_wheel_pos[i] = wheels[i].getPosition() + steps_to_travel * ((speeds[i] > ZERO) ? POS_ONE : NEG_ONE);
+  for(int i = 0; i < 2; i++) target_wheel_pos[i] = wheels[i].getPosition() + steps_to_travel * ((speeds[i] * dist> ZERO) ? POS_ONE : NEG_ONE);
   correctWheelSpeeds(speeds);
 }
 
@@ -103,7 +103,7 @@ void Drivetrain::travel(Fixed x, Fixed y, Fixed rot, Fixed dist) {
   Fixed steps_to_travel = dist * STEPS_PER_INCH;
   const Fixed speeds[4] = {y + x - rot, y - x - rot, y + x + rot, y - x + rot};
   for(Wheel& w : wheels) w.resetPosition();
-  for(int i = 0; i < 2; i++) target_wheel_pos[i] = wheels[i].getPosition() + steps_to_travel * ((speeds[i] > ZERO) ? POS_ONE : NEG_ONE);
+  for(int i = 0; i < 2; i++) target_wheel_pos[i] = wheels[i].getPosition() + steps_to_travel * ((speeds[i] * dist > ZERO) ? POS_ONE : NEG_ONE);
   setWheelSpeeds(speeds);
 }
 
