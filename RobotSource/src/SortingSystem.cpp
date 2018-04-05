@@ -12,7 +12,9 @@ bool SortingSystem::pickUpToken() {
   waitForChar('p');
   std::cout << "done waiting" << std::endl;
   Color seen = token_cam.getTokenColor();
-  if(seen == Color::NONE || seen == Color::WHITE || seen == Color::BLACK) return false;
+  std::cout << "color checked" << std::endl;
+  //if(seen == Color::NONE || seen == Color::WHITE || seen == Color::BLACK) return false;
+  if(seen == Color::NONE || seen == Color::WHITE || seen == Color::BLACK) seen = Color::GRAY;
   held_token = new Token(seen);
   return true;
 }
@@ -20,7 +22,6 @@ bool SortingSystem::pickUpToken() {
 void SortingSystem::storeToken(Token* t) {
   std::cout << "storing token" << std::endl;
   transmitChar('r');
-  //waitForChar('r');
   transmitColor(t->getColor());
   token_stacks[COLOR_POSITIONS[static_cast<int>(t->getColor())] - 1].push_back(t);
 }
@@ -31,7 +32,6 @@ void SortingSystem::sortToken() {
     storeToken(held_token);
     held_token = NULL;
   }
-  std::cout << std::endl;
 }
 
 bool SortingSystem::dropTokenStack(Color c) {

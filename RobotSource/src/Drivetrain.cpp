@@ -11,11 +11,8 @@ void Drivetrain::stop() const {
 }
 
 void Drivetrain::move(Direction dir) const {
-  transmitChar('"');
-  transmitValue(-0.64f);
-  receiveChar();
-  //transmitChar('m');
-  //transmitDirection(dir);
+  transmitChar('m');
+  transmitDirection(dir);
 }
 
 void Drivetrain::setSpeed(int speed) const {

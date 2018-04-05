@@ -98,7 +98,7 @@ void parseCommand() {
     case 'M': {
       Direction dir = receiveDirection();
       Fixed speed = receiveFixed();
-      robot->veer(dir, speed);
+      robot->move(dir, speed);
       break;
     }
     

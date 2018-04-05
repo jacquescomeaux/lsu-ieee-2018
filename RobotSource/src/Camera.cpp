@@ -209,8 +209,8 @@ Color Camera::getTokenColor() {
   int s = 0;
   int v = 0;
   int sum = 0;
-  
-  cap >> src
+
+  cap >> src;
   cv::Mat img = src(roi);
   cv::Mat hsv;
   cv::cvtColor(img, hsv, cv::COLOR_BGR2HSV);
@@ -219,15 +219,15 @@ Color Camera::getTokenColor() {
     for (int i = 0; i < hsv.cols; i++) {
       unsigned char s = hsv.at<cv::Vec3b>(j,i)[1];
       if (s + hue_shift > 255)
-        s = (s + hue_shift) - 180; // <-- what??
+        s = 250;
       else
         s = s + hue_shift;
       hsv.at<cv::Vec3b>(j,i)[1] = s;
     }
   }
   cv::cvtColor(hsv, bgr, cv::COLOR_HSV2BGR);
-  for (int i = 220; i<440; i++) {
-    for (int j = 290; j<410; j++) {
+  for (int i = 0; i < bgr.rows; i++) {
+    for (int j = 0; j < bgr.cols; j++) {
       b = b + bgr.at<cv::Vec3b>(j,i)[0];
       g = g + bgr.at<cv::Vec3b>(j,i)[1];
       r = r + bgr.at<cv::Vec3b>(j,i)[2];
@@ -240,10 +240,10 @@ Color Camera::getTokenColor() {
   double avB = b/sum;
   double avG = g/sum;
   double avR = r/sum;
-  double avH = h/sum;
-  double avV = v/sum;
-  double avS = s/sum;
-  
+  //double avH = h/sum;
+  //double avV = v/sum;
+  //double avS = s/sum;
+
   Color tokenColor = Color::NONE;
   // RGB Color Detection
   if(avB > 70 && avR > 90) {
@@ -274,7 +274,7 @@ Color Camera::getTokenColor() {
     tokenColor = Color::RED;
     std::cout << "Red detected" << std::endl;
   }
-
+  if(tokenColor == Color::NONE) std::cout << "No color detected" << std::endl;
   std::cout << "(B, G, R): (" << avB << ", " << avG << ", " << avR << ")" << std::endl;
 
   //cout << "H: " << avH << endl;

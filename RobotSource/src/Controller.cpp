@@ -7,7 +7,7 @@ Controller::Controller(SortBot& r) :
   robot(r),
   NUM_LINES(6),
   follow_sequence {
-    Direction::NONE,//LEFT,
+    Direction::LEFT,
     Direction::FRONT,
     Direction::FRONT,
     Direction::RIGHT,
@@ -24,7 +24,8 @@ Controller::Controller(SortBot& r) :
   },
   type_sequence {false, true, false, false, true, false},
   offset_sequence {16, 0, 8, 0, 0, 24}, 
-  dist_sequence {8.48, 6, 8.48, 8.48, 6, 8.48} {}
+  dist_sequence {8.48, 6, 8.48, 8.48, 6, 8.48},
+  travel_sequence {25}
 
 Controller::Controller(SortBot& r, Direction* f_seq, Direction* c_seq, int n) :
   robot(r),
@@ -36,7 +37,7 @@ void Controller::coverLine(Direction dir, bool cross, int offset, int num_tokens
   for(int i = 0; i < num_tokens; i++) {
     robot.center(cross, offset);
     waitForEnter();
-    if(robot.tokenSeen()) //robot.sortToken();
+    if(robot.tokenSeen()) robot.sortToken();
     waitForEnter();
     if(i == num_tokens - 1) break;
     robot.snapToLine(dir, 2);
@@ -54,28 +55,27 @@ void Controller::waitForEnter() const {
 void Controller::runAlgorithm() const {
   std::cout << "Waiting for enter key" << std::endl; 
   waitForEnter();
-  #if 1
+  #if 0
   robot.travel(Direction::FRONT, 120, 2, true);
   //robot.move(Direction::FRONT);
   //robot.center(16, false);
   #else 
   robot.setSpeed(30);
   robot.toggleCalibration();
-  robot.moveUntilLine(Direction::FRONT, 30);
-  waitForEnter();
-  robot.moveUntilLine(Direction::FRONT, 30);
-  waitForEnter();
-  robot.travel(Direction::COUNTER_CLOCKWISE, 70, 54, true); //prev dist 52
+  robot.travel(Direction::FRONT, 30, 12, true);
+  robot.snapToLine(Direction::LEFT, 6);
+  robot.travel(Direction::COUNTER_CLOCKWISE, 70, 54, true);
   robot.toggleCalibration();
-  waitForEnter();
+  
   robot.setSpeed(120);
   robot.snapToLine(Direction::LEFT, 6);
-  waitForEnter();
-  robot.followLine(Direction::LEFT);
-  robot.travel(Direction::LEFT, 120, 25, false);
+  
   robot.setSpeed(60);
+  
   robot.followUntilIntersection(Direction::LEFT);
   for(int i = 0; i < NUM_LINES; i++) {
+    robot.followLine(follow_sequence[i]);
+    robot.travel(follow_sequence[i], , 18, false);
     robot.followUntilIntersection(follow_sequence[i]);
     waitForEnter();
     coverLine(cover_sequence[i], type_sequence[i], offset_sequence[i], 4);
