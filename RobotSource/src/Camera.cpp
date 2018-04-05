@@ -22,7 +22,7 @@ Lines
 	Perpendicular: 11,950 (MAX)
 */
 
-Camera::Camera(int n) : INCHES_PER_PIXEL(0.00839223), cap(n) {
+Camera::Camera(int n) : INCHES_PER_PIXEL(0.006), /*INCHES_PER_PIXEL(0.00839223)*/ cap(n) {
   //cap.set(CV_CAP_PROP_FRAME_WIDTH, 320);
   //cap.set(CV_CAP_PROP_FRAME_HEIGHT, 240);
   std::vector<cv::Point2f> pts_src, pts_dst;
@@ -88,170 +88,101 @@ bool Camera::tokenSeen() {
 
 Coord Camera::determineLocation() const {return Coord(0,0);}
 
-std::vector<cv::Vec3f> Camera::checkCircle(int attempts = 1) { //Only detects token circles
-  int Y1 = 150;
-  int X1 = 195;
-  int X2 = 440;
-
-  std::vector<cv::Vec3f> circles;
-  for(int a = 0; a < attempts; a++) {
-    cv::Mat image, img, dst, dst1;
-    cap >> image;
-
-    img = image(cv::Rect(X1, Y1, X2-X1, 283));
-
-    cv::cvtColor(img, dst, CV_BGR2GRAY);                 //I swapped these two lines
-    cv::warpPerspective(dst, dst1, M2, dst.size());      //if it breaks things swap them back
-    //cv::warpPerspective(img, dst, M2, img.size());
-    //cv::cvtColor(dst, dst1, CV_BGR2GRAY);
-
-    cv::bilateralFilter(dst1, dst, 5, 75, 75); //Is the bilateral filter necessary?
-    cv::Canny(dst, dst, 50, 60);
-
-    //HoughCircles(input, output, method, dp,
-    //minDist - min dist between centers
-    //param1 - higher threshold of the 2 passed to Canny() (the lower one is twice smaller)
-    //param2 - accumlator threshold for the circle centers at detection stage
-    //minRadius - Minimum circle radius
-    //maxRadius - Maximum circle radius
-    cv::HoughCircles(dst, circles, CV_HOUGH_GRADIENT, 2, 300, 50, 65, 60, 70);
-    //if (!circles.empty()) std::cout << "Circle Detected: (" << circles[0][0] << "," << circles[0][1] << ")" << std::endl;
-    if(!circles.empty()) break;
-  }
-  return circles;
+bool Camera::getTokenErrors(float* x, float* y) {
+  return getTokenErrors(x, y, 1);
 }
 
-bool Camera::intersectionInFrame() {
-  std::vector<cv::Vec3f> circles = checkCircle(5);
-  if(!circles.empty()) return true;
-  //std::vector<cv::Vec3f> partial_circles = checkPartialCircle(5);
-  //for(cv::Vec3f& circ : partial_circles) if(circ[2] > 60 && circ[2] < 90) return true;
-  return false;
-  /*
-  if(checkCircle(5).size() > 0) {
-  //std::cout << "intersectionInFrame(): Intersection Found" << std::endl;
-  return true;
-  }
-  else if(checkPartialCircle(5).size() > 0) {
-    std::vector<cv::Vec3f> center = checkPartialCircle(5);
-    for(unsigned int i = 0; i < center.size(); i++) {
-      if(center[i][2] > 60 || center[i][2] < 90) {
-	//std::cout << "Partial intersection found" << std::endl;
-	return true;
-      }
-      else return false;
-    }
-  }
-  return false;
-  //std::cout << "intersectionInFrame(): No intersection found..." << std::endl;
-  */
-}
+bool Camera::getTokenErrors(float* x, float*y, int att) {
+  static const int xtarget = 75; //prev 105
+  static const int ytarget = 150; //prev 120
 
-bool Camera::tokenCentered() {
-    float checkx = 0;
-    float checky = 0;
-    getTokenErrors(&checkx, &checky);
-    if(checkx == 0 && checky == 0) return true;
-    return false;
-}
-
-void Camera::getTokenErrors(float* x, float* y) {
-  getTokenErrors(x, y, 1);
-}
-
-void Camera::getTokenErrors(float* x, float*y, int att) {
-  static const int xtarget = 105;
-  static const int ytarget = 120;
-  static const int tolerance = 24; //allowable number of pixels to be off target, needs testing
-  std::vector<cv::Vec3f> center = checkCircle(att);
-  std::vector<cv::Vec3f> center_partial = checkPartialCircle(att);
-  std::vector<cv::Vec3f>* circles = &center;
-  if(center.empty()) circles = &center_partial;
-  if(!circles->empty() && intersectionInFrame()) {
-    float currentx = xtarget - (*circles)[circles->size() - 1][0];
-    float currenty = (*circles)[circles->size() - 1][1] - ytarget;
-    if(std::abs(currentx) <= tolerance)  currentx = 0;
-    if(std::abs(currenty) <= tolerance)  currenty = 0;
+  std::vector<cv::Vec3f> circles = checkPartialCircle(att);
+  if(!circles.empty()) {
+    float currentx = xtarget - circles[circles.size() - 1][0];
+    float currenty = circles[circles.size() - 1][1] - ytarget;
     *x = currentx * INCHES_PER_PIXEL;
     *y = currenty * INCHES_PER_PIXEL;
+   std::cout << "getTokenErrors() x:" << *x << "  y:" << *y << std::endl;
+    return true;
   }
-  /*static const int xtarget = 105;
-  static const int ytarget = 120;
-  std::vector<cv::Vec3f> center;
-  center = checkCircle(att);
-  if (center.empty()) center = checkPartialCircle(att);
-  if(!center.empty()) {
-    int tolerance = 24; //allowable number of pixels to be off target, needs testing
-    float currentx = xtarget - center[center.size() - 1][0];
-    float currenty = center[center.size() - 1][1] - ytarget;
-    //std::cout << "getTokenErrors(): x=" << currentx << " y=" << currenty << std::endl;
-    *x = currentx * INCHES_PER_PIXEL;
-    *y = currenty * INCHES_PER_PIXEL;
-  }*/
+  //std::cout << "getTokenErrors Returned False" << std::endl;
+  return false;
 }
 
 std::vector<cv::Vec3f> Camera::checkPartialCircle(int attempts = 1) { //Detects both intersection and token circles
-  static const int Y1 = 150;
+  /*static const int Y1 = 150;
   static const int X1 = 195;
   static const int X2 = 440;
-  unsigned int stopattempts = attempts - 1; //values to get in circles before breaking loop
-  
+
   std::vector<cv::Vec3f> circles;
+  cv::Mat image, img, filt;
   for(int i = 0; i < attempts; i++) {
-    cv::Mat image, img;
     cap >> image;
     img = image(cv::Rect(X1, Y1, X2-X1, 283)); //crop
-    
     cv::cvtColor(img, img, CV_BGR2GRAY );
     cv::warpPerspective(img, img, M2, img.size());
-    
-    cv::Mat canny, filt;
-    cv::bilateralFilter(img, filt, 5, 75, 75);
-    cv::Canny(filt, canny, 200, 20);
-    cv::HoughCircles(img, circles, CV_HOUGH_GRADIENT, 2, 300, 50, 100, 50, 90 );
-    
-    
-    /*cv::warpPerspective(img, img, M2, img.size());
-    
-    cv::Mat canny, gray, grayBI;
-    cv::cvtColor(img, gray, CV_BGR2GRAY );
-    cv::bilateralFilter(gray, grayBI, 5, 75, 75);
-    cv::Canny(grayBI, canny, 200,20);
-    cv::HoughCircles( gray, circles, CV_HOUGH_GRADIENT, 2, 300, 50, 100, 50, 90 );
-    */
-    //compute distance transform:
-    cv::Mat dt;
-    cv::distanceTransform(255-(canny>0), dt, CV_DIST_L2 ,3);
-    
-    // test for semi-circles:
-    float minInlierDist = 2.0f;
-    for(cv::Vec3f& circ : circles) {
-      // test inlier percentage:
-      // sample the circle and check for distance to the next edge
-      unsigned int counter = 0;
-      unsigned int inlier = 0;
-      
-      //cv::Point2f center((circ[0]), (circ[1]));
-      float radius = circ[2];
-      
-      // maximal distance of inlier might depend on the size of the circle
-      float maxInlierDist = radius/25.0f;
-      if(maxInlierDist < minInlierDist) maxInlierDist = minInlierDist;
-      
-      //TODO: maybe parameter incrementation might depend on circle size!
-      //wow
-      for(float t =0; t<2*3.14159265359f; t+= 0.1f) {
-	counter++;
-	float cX = radius*cos(t) + circ[0];
-	float cY = radius*sin(t) + circ[1];
-	
-	if(dt.at<float>(cY, cX) < maxInlierDist) inlier++; 
-      }
-      //std::cout << 100.0f*(float)inlier/(float)counter << " % of a circle with radius " << radius << " detected" << std::endl;
-      //radius should be 60 - 70
-    }
-    if(circles.size() > 3 || circles.size() > stopattempts) break;
+    cv::GaussianBlur(img, filt, cv::Size(0,0), 4);
+    cv::Canny(filt, img, 30, 40);
+    cv::HoughCircles(img, circles, CV_HOUGH_GRADIENT, 2, 300, 50, 65, 60, 85);
+    if(!circles.empty()) std::cout << "Circle Detected" << std::endl;
+    if(!circles.empty()) break;
   }
+  return circles;
+  
+  */int Y1 = 150;
+  int X1 = 195;
+  int X2 = 440;
+  unsigned int runcount = 0;
+  
+  std::vector<cv::Point2f> pts1, pts2;
+  
+  pts1.push_back(cv::Point2f(92,0));
+  pts1.push_back(cv::Point2f(148,0));
+  pts1.push_back(cv::Point2f(74,283));
+  pts1.push_back(cv::Point2f(178,283));
+  
+  pts2.push_back(cv::Point2f(74,0));
+  pts2.push_back(cv::Point2f(140,0));
+  pts2.push_back(cv::Point2f(74,283));
+  pts2.push_back(cv::Point2f(140,283));
+  
+  //double t = cv::getTickCount();
+  runcount++;
+  cv::Mat image, img;
+  for(int i = 0; i < 10; i++) cap >> image;
+  //cap >> image;
+  img = image(cv::Rect(X1, Y1, X2-X1, 283)); //crop
+  cv::Mat M = cv::getPerspectiveTransform(pts1, pts2);
+  cv::warpPerspective(img, img, M, img.size());
+
+  cv::Mat canny, canny2;
+
+  cv::Mat gray;
+  cv::Mat grayBI;
+  /// Convert it to gray
+  cv::cvtColor(img, gray, CV_BGR2GRAY);
+
+  //cv::bilateralFilter(gray, grayBI, 5, 75, 75);
+  cv::GaussianBlur(gray, grayBI, cv::Size(0,0), 4);
+  // compute canny (don't blur with that image quality!!)
+  cv::Canny(grayBI, canny, 30, 40); //prev 200, 20
+  //cv::namedWindow("canny"); cv::imshow("canny", canny>0);
+  //cv::namedWindow("BLUR"); cv::imshow("BLUR", grayBI>0);
+
+  std::vector<cv::Vec3f> circles;
+
+  /// Apply the Hough Transform to find the circles
+  cv::HoughCircles(gray, circles, CV_HOUGH_GRADIENT, 2, 300, 50, 65, 60, 85); //60, 85
+
+  /// Draw the circles detected
+  /*for( size_t i = 0; i < circles.size(); i++ ) 
+  {
+      cv::Point center(cvRound(circles[i][0]), cvRound(circles[i][1]));
+      std::cout << "Run: " << runcount <<  "  Circle Center:  X:" << circles[i][0] << "  Y: " << circles[i][1] << std::endl;
+      int radius = cvRound(circles[i][2]);
+      cv::circle( img, center, 3, cv::Scalar(0,255,255), -1);
+      cv::circle( img, center, radius, cv::Scalar(0,0,255), 1 );
+  }*/
   return circles;
 }
 

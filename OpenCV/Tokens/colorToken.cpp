@@ -24,8 +24,13 @@ int main(int argc, char** argv)
   //roi.y = 290;
   //roi.width = 220;
   //roi.height = 120;
-  //Green: 200->421, 300->421
-  //Cyan: 180->400,  340->460
+  // BGR HSV
+  // Blue 96, 34, 25, 116, 187, 96
+  // Purple 77, 22, 92, 156, 193, 92
+  // Green 116, 15, 72, 43, 220, 116
+  // Red 28, 14, 99, 175, 214, 99
+  // Yellow 
+
 
   int b = 0;
   int g = 0;
@@ -35,8 +40,22 @@ int main(int argc, char** argv)
   int v = 0;
   int sum = 0;
 
+  int maxB = 0;
+  int minB = 0;
+  int maxG = 0;
+  int minG = 0;
+  int maxR = 0;
+  int minR = 0;
+  int maxH = 0;
+  int minH = 0;
+  int maxS = 0;
+  int minS = 0;
+  int maxV = 0;
+  int minV = 0;
+
+
   //cap >> src;
-  src = imread("tokRed.png", CV_LOAD_IMAGE_COLOR);
+  src = imread("tokGreen.png", CV_LOAD_IMAGE_COLOR);
   if(src.empty()) return -1;
 
   //Mat img;
@@ -73,6 +92,18 @@ int main(int argc, char** argv)
       s = s + hsv.at<Vec3b>(j,i)[1];
       v = v + hsv.at<Vec3b>(j,i)[2];
       sum = sum + 1;
+      if (b < minB) minB = b;
+      if (b > maxB) maxB = b;
+      if (g < minG) minG = g;
+      if (g > maxG) maxG = g;
+      if (r < minR) minR = r;
+      if (r > maxR) maxR = r;
+      if (h < minH) minH = h;
+      if (h > maxH) maxH = h;
+      if (s < minS) minS = s;
+      if (s > maxS) maxS = s;
+      if (v < minV) minV = v;
+      if (v > maxV) maxV = v;
     }
   }
 
@@ -144,6 +175,20 @@ int main(int argc, char** argv)
   cout << "H: " << avH << endl;
   cout << "S: " << avS << endl;
   cout << "V: " << avV << endl;
+
+  cout << "MinB: " << minB << endl;
+  cout << "MaxB: " << maxB << endl; 
+  cout << "MinG: " << minG << endl; 
+  cout << "MaxG: " << maxG << endl; 
+  cout << "MinR: " << minR << endl; 
+  cout << "MaxR: " << maxR << endl; 
+  cout << "MinH: " << minH << endl; 
+  cout << "MaxH: " << maxH << endl; 
+  cout << "MinS: " << minS << endl; 
+  cout << "MaxS: " << maxS << endl; 
+  cout << "MinV: " << minV << endl; 
+  cout << "MaxV: " << maxV << endl; 
+
 
   //return tokenColor;
 }

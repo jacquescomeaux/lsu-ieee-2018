@@ -19,7 +19,7 @@ class Robot : public Drivetrain, public LineFollower {
   public:
     Robot();
     Coord getLocation() const;
-    void setSpeed() const;
+    void setSpeed(int);
     void moveUntilLine(Direction, int);
     void followUntilIntersection(Direction);
     bool tokenSeen();

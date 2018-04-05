@@ -15,6 +15,11 @@ Fixed::Fixed(double d) {
   internal = static_cast<int64_t>(d * static_cast<double>(factor));
 }
 
+Fixed& Fixed::operator=(int i) {
+  internal = static_cast<int64_t>(i) << shift;
+  return *this;
+}
+
 Fixed& Fixed::operator=(int32_t i) {
   internal = static_cast<int64_t>(i) << shift;
   return *this;

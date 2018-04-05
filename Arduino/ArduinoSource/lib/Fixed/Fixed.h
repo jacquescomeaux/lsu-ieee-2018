@@ -16,6 +16,7 @@ class Fixed {
     Fixed(int32_t);
     Fixed(int64_t);
     Fixed(double);
+    Fixed& operator=(int);
     Fixed& operator=(int32_t);
     Fixed& operator=(double);
     Fixed& operator+=(const Fixed&);

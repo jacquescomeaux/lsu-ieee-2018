@@ -14,7 +14,7 @@ class Camera {
     cv::VideoCapture cap;
     cv::Mat M, M2;
     int countBlack();
-    std::vector<cv::Vec3f> checkCircle(int);//looks for a full circle (token) in current frame.
+    //std::vector<cv::Vec3f> checkCircle(int);//looks for a full circle (token) in current frame.
     std::vector<cv::Vec3f> checkPartialCircle(int); //looks for partial circle (token or intersection)
   public:
     Camera(int n);
@@ -23,12 +23,8 @@ class Camera {
     bool tokenSeen();
     Coord determineLocation() const;
     
-    bool intersectionInFrame(); //true if intersection circle detected
-    bool tokenInFrame(); //true if token circle detected
-    bool tokenInFrame(int);
-    bool tokenCentered(); //true if token arm is centered
-    void getTokenErrors(float*, float*);
-    void getTokenErrors(float*, float*, int); //errors given in pixels, might need some conversion to real world units
+    bool getTokenErrors(float*, float*);
+    bool getTokenErrors(float*, float*, int); //errors given in pixels, might need some conversion to real world units
     std::vector<double> readToken(); //returns vector of hsv values to detect color
 };
 

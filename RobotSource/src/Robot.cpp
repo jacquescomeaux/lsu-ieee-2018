@@ -8,8 +8,9 @@ Coord Robot::getLocation() const {
   return location_cam.determineLocation();
 }
 
-void Robot::setSpeed(int s) const {
+void Robot::setSpeed(int s) {
   speed = s;
+  Drivetrain::setSpeed(s);
 }
 
 void Robot::moveUntilLine(Direction dir, int speed) {
@@ -27,14 +28,15 @@ void Robot::moveUntilLine(Direction dir, int speed) {
 
 void Robot::followUntilIntersection(Direction dir) {
   std::cout << "following until intersection" << std::endl;
-  for(int i = 0; i < 20; i++) int_cam.onLine();
   travel(dir, speed, 1, false);
+  for(int i = 0; i < 20; i++) int_cam.onLine();
   if(dir == Direction::NONE) return;
   if(dir == Direction::CLOCKWISE) return;
   if(dir == Direction::COUNTER_CLOCKWISE) return;
   followLine(dir);
   //while(int_cam.onLine()) if(int_cam.atIntersection()) break;
   //while(true) int_cam.atIntersection();
+
   while(!int_cam.atIntersection());
   std::cout << "stopped at intersection" << std::endl;
   stop();
@@ -46,16 +48,30 @@ bool Robot::tokenSeen() {
 }
 
 void Robot::center(bool cross, int offset) {
-  float x = 0;
-  float y = 0;
-
+  static const float x_tol = 0.3;
+  static const float y_tol = 0.3;
+  float x = x_tol;
+  float y = y_tol;
   LineFollower::startCentering(cross, offset);
+  while(!int_cam.getTokenErrors(&x, &y, 5));
+  stop();
+  std::cout << "Done with line follow centering, starting camera centering" << std::endl;
+  for(bool found = int_cam.getTokenErrors(&x, &y); std::abs(x) >= x_tol || std::abs(y) >= y_tol; found = int_cam.getTokenErrors(&x, &y)) {
+    if(!found) continue;
+    std::cout << "nudging" << std::endl;
+    if(x > 0 ) nudge(Direction::RIGHT, x);
+    else if(x < 0) nudge(Direction::LEFT, -x);
+    if(y > 0) nudge(Direction::FRONT, y);
+    else if(y < 0) nudge(Direction::BACK, -y);
+    getchar();
+  }
+  
   /*while(int_cam.tokenSeen() && !int_cam.tokenCentered()) {
     std::cout << "nudging" << std::endl;
     int_cam.getTokenErrors(&x, &y);
     nudge(Direction::RIGHT, x);
     nudge(Direction::FRONT, y);
-  */while(!int_cam.intersectionInFrame());
+  *//*while(!int_cam.intersectionInFrame());
   stop();
   std::cout << "Done with line follow centering, starting camera centering" << std::endl;
   for(int i = 0; i < 5; i++) if(int_cam.tokenSeen()) {
@@ -70,6 +86,7 @@ void Robot::center(bool cross, int offset) {
     //if(int_cam.tokenCentered()) break;
   }
   //stop();
+  */
   std::cout << "Robot.center() Done" << std::endl << std::endl;
 }
 
