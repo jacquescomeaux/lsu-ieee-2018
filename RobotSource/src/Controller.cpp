@@ -78,12 +78,14 @@ void Controller::runAlgorithm() const {
   
   robot.setSpeed(60);
   
-  for(int i = 0; i < NUM_LINES; i++) {
+  /*for(int i = 0; i < NUM_LINES; i++) {
     robot.followLine(follow_sequence[i]);
     robot.travel(follow_sequence[i], 120, travel_sequence[i], true);
     robot.followUntilIntersection(follow_sequence[i]);
     coverLine(cover_sequence[i], type_sequence[i], offset_sequence[i], 4, dist_sequence[i]);
-  }
+  }*/
+
+  robot.followUntilIntersection(Direction::RIGHT);
 
   robot.followUntilIntersection(Direction::BACK_RIGHT);
   robot.travel(Direction::BACK_RIGHT, 60, 3, true);

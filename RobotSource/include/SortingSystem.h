@@ -11,7 +11,7 @@
 class SortingSystem : private SerialLink {
   private:
     const int COLOR_POSITIONS[8];
-    Camera token_cam;
+//    Camera token_cam;
     Token* held_token;
     std::vector<Token*> token_stacks[7];
     int plate_position;

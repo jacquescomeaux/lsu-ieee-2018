@@ -2,7 +2,7 @@
 
 #include <iostream>
 
-Robot::Robot() : int_cam(2), location_cam(1), speed(70) {}
+Robot::Robot() : int_cam(1), location_cam(0), speed(70) {}
 
 Coord Robot::getLocation() const {
   return location_cam.determineLocation();

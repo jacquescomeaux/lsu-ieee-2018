@@ -3,15 +3,17 @@
 
 SortingSystem::SortingSystem() :
   COLOR_POSITIONS {0, 4, 3, 2, 5, 6, 7, 1},
-  token_cam(0),
+  //token_cam(0),
   held_token(NULL),
   plate_position(0) {}
 
 bool SortingSystem::pickUpToken() {
+  static int c = 1;
   transmitChar('p');
   waitForChar('p');
   std::cout << "done waiting" << std::endl;
-  Color seen = token_cam.getTokenColor();
+  Color seen = static_cast<Color>(c);//token_cam.getTokenColor();
+  if(++c > 7) c = 1;
   std::cout << "color checked" << std::endl;
   //if(seen == Color::NONE || seen == Color::WHITE || seen == Color::BLACK) return false;
   if(seen == Color::NONE || seen == Color::WHITE || seen == Color::BLACK) seen = Color::GRAY;
