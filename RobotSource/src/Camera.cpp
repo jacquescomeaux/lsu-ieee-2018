@@ -3,6 +3,8 @@
 #include <iostream>
 #include <exception>
 #include <vector>
+#include <map>
+#include <string>
 
 //adding these trying to get ryan's color detection to work...
 #include "opencv2/core/core.hpp"
@@ -84,6 +86,62 @@ bool Camera::tokenSeen() {
   return true;
   //if(tokenInFrame(2)) return true;
   //else return false;
+
+  //static int count = 0;
+
+  //std::vector<int> compression_params;
+  //compression_params.push_back(CV_IMWRITE_PNG_COMPRESSION);
+  //compression_params.push_back(9);
+
+  /*cv::Mat image, img, hsvImg, mask;
+  cap >> image;
+  image = cv::imread("Token.png", CV_LOAD_IMAGE_COLOR);
+  static const unsigned int upperBound[3] = {64,67,80};
+  img = image(cv::Rect(195,150,245,283));
+  cv::cvtColor(img, hsvImg, cv::COLOR_BGR2HSV);
+  cv::warpPerspective(hsvImg, hsvImg, M2, hsvImg.size());
+  std::vector<cv::Vec3f> circles=getCircle(7);
+
+  if(circles.empty()) return false;
+
+  //float x = circles[0][0];
+  //float y = circles[0][1];
+  //float r = circles[0][2];
+
+  //const unsigned char hue_shift = 80;
+
+  //for (int j = 0; j < hsv.rows; j++) {
+  //  for (int i = 0; i < hsv.cols; i++) {
+  //    unsigned char s = hsv.at<Vec3b>(j,i)[1];
+
+  //    if (s + hue_shift > 255)
+  //      s = (s + hue_shift) - 255;
+  //    else
+  //      s = s + hue_shift;
+
+    //  hsv.at<Vec3b>(j,i)[1] = s;
+  //  }
+  //}
+
+  //std::string imFile = "Inter" + std::to_string(count) + ".png";
+  //cv::imwrite(imFile, img, compression_params);
+
+  mask = cv::Mat(283, 245, CV_64F, double(0)); //Look here
+  //cv::circle(hsvImg, (x,y), r, (255,255,255), -1);
+  cv::Scalar hsvAverage = cv::mean(hsvImg, mask);
+
+  float h = hsvAverage[0];
+  float s = hsvAverage[1];
+  float v = hsvAverage[2];
+
+  //count++;
+
+  if(h <= upperBound[0] && s <= upperBound[1] && v <= upperBound[2]) return true;
+
+  else return false;
+
+  return true;
+*/
 }
 
 Coord Camera::determineLocation() const {return Coord(0,0);}
@@ -134,7 +192,7 @@ std::vector<cv::Vec3f> Camera::getCircle(int attempts = 1) { //Detects both inte
   int X2 = 440;
   unsigned int runcount = 0;
   
-  std::vector<cv::Point2f> pts1, pts2;
+  /*std::vector<cv::Point2f> pts1, pts2;
   
   pts1.push_back(cv::Point2f(92,0));
   pts1.push_back(cv::Point2f(148,0));
@@ -145,15 +203,15 @@ std::vector<cv::Vec3f> Camera::getCircle(int attempts = 1) { //Detects both inte
   pts2.push_back(cv::Point2f(140,0));
   pts2.push_back(cv::Point2f(74,283));
   pts2.push_back(cv::Point2f(140,283));
-  
+  */
   //double t = cv::getTickCount();
   runcount++;
   cv::Mat image, img;
   for(int i = 0; i < 10; i++) cap >> image;
   //cap >> image;
   img = image(cv::Rect(X1, Y1, X2-X1, 283)); //crop
-  cv::Mat M = cv::getPerspectiveTransform(pts1, pts2);
-  cv::warpPerspective(img, img, M, img.size());
+  //cv::Mat M = cv::getPerspectiveTransform(pts1, pts2);
+  cv::warpPerspective(img, img, M2, img.size());
 
   cv::Mat canny, canny2;
 
@@ -174,68 +232,42 @@ std::vector<cv::Vec3f> Camera::getCircle(int attempts = 1) { //Detects both inte
   /// Apply the Hough Transform to find the circles
   cv::HoughCircles(gray, circles, CV_HOUGH_GRADIENT, 2, 300, 50, 65, 60, 85); //60, 85
 
-  /// Draw the circles detected
-  /*for( size_t i = 0; i < circles.size(); i++ ) 
-  {
-      cv::Point center(cvRound(circles[i][0]), cvRound(circles[i][1]));
-      std::cout << "Run: " << runcount <<  "  Circle Center:  X:" << circles[i][0] << "  Y: " << circles[i][1] << std::endl;
-      int radius = cvRound(circles[i][2]);
-      cv::circle( img, center, 3, cv::Scalar(0,255,255), -1);
-      cv::circle( img, center, radius, cv::Scalar(0,0,255), 1 );
-  }*/
   return circles;
 }
 
 Color Camera::getTokenColor() {
-  //arrays for comparing BGR/HSV values (to be filled in)
-  static const cv::Vec6d blue = {0, 0, 0, 0, 0, 0};
-  static const cv::Vec6d green = {0, 0, 0, 0, 0, 0};
-  static const cv::Vec6d red = {0, 0, 0, 0, 0, 0};
-  static const cv::Vec6d cyan = {0, 0, 0, 0, 0, 0};
-  static const cv::Vec6d magenta = {0, 0, 0, 0, 0, 0};
-  static const cv::Vec6d yellow = {0, 0, 0, 0, 0, 0};
-  static const cv::Vec6d gray = {0, 0, 0, 0, 0, 0};
-
-
-  static const std::vector<cv::Vec6d> bgrhsv = {blue, green, red, cyan, magenta, yellow, gray};
-  static int b, g, r, h, s, v, sum;
-
+  static std::map<Color,std::pair<cv::Vec6d,std::string> > bgrhsv;
+  bgrhsv[Color::BLUE] = std::make_pair(cv::Vec6d(156, 83, 68, 114, 143, 96), "Blue"); // Prev: (87, 44, 36, 115, 137, 87) 
+  bgrhsv[Color::GREEN] = std::make_pair(cv::Vec6d(51, 80, 50, 46, 96, 116), "Green"); // Prev: H:61
+  bgrhsv[Color::RED] = std::make_pair(cv::Vec6d(38, 24, 85, 172, 183, 99), "Red");   // Prev: (38, 24, 85, 172, 183, 85)
+  bgrhsv[Color::CYAN] = std::make_pair(cv::Vec6d(79, 73, 52, 90, 87, 106), "Cyan");   // Prev: H:99    
+  bgrhsv[Color::MAGENTA] = std::make_pair(cv::Vec6d(80, 34, 70, 156, 144, 92), "Magenta"); // Prev: 170  
+  bgrhsv[Color::YELLOW] = std::make_pair(cv::Vec6d(69, 92, 95, 29, 92, 115), "Yellow");    // Prev: H:79
+  bgrhsv[Color::GRAY] = std::make_pair(cv::Vec6d(46, 35, 30, 105, 86, 55), "Gray");        // Prev: H115     
+ // bgrhsv[Color::NONE] = std::make_pair(cv::Vec6d(29, 24, 25, 110, 54, 31), "None");       
+  int b, g, r, h, s, v, sum;
+  b = g = r = h = s = v = sum = 0;
   cv::Mat src, bgr, hsv;
   cv::Rect roi;
-  roi.x = 220;
-  roi.y = 290;
-  roi.width = 220;
-  roi.height = 120;
-
-  cap >> src;
-  bgr = src(roi);
+  roi.x = 128;
+  roi.y = 200;
+  roi.width = 490;
+  roi.height = 200;
+  
+  //for(int i = 0; i < ; i++) cap >> bgr;
+  cap >> bgr;
+  cv::Mat img = bgr(roi);
   cv::cvtColor(bgr, hsv, cv::COLOR_BGR2HSV);
-
-  /*const unsigned char hue_shift = 80; //this is actually saturation shift
-  for (int j = 0; j < hsv.rows; j++) {
-    for (int i = 0; i < hsv.cols; i++) {
-      unsigned char s = hsv.at<cv::Vec3b>(j,i)[1];
-      if (s + hue_shift > 255)
-        s = 250;
-      else
-        s = s + hue_shift;
-      hsv.at<cv::Vec3b>(j,i)[1] = s;
-    }
+  
+  for(int i = 220; i < 440; i++) for(int j = 290; j < 410; j++) {
+    b += bgr.at<cv::Vec3b>(j,i)[0];
+    g += bgr.at<cv::Vec3b>(j,i)[1];
+    r += bgr.at<cv::Vec3b>(j,i)[2];
+    h += hsv.at<cv::Vec3b>(j,i)[0];
+    s += hsv.at<cv::Vec3b>(j,i)[1];
+    v += hsv.at<cv::Vec3b>(j,i)[2];
+    sum++;
   }
-  cv::cvtColor(hsv, bgr, cv::COLOR_HSV2BGR); */
-
-  for (int i = 0; i < bgr.rows; i++) {
-    for (int j = 0; j < bgr.cols; j++) {
-      b = b + bgr.at<cv::Vec3b>(j,i)[0];
-      g = g + bgr.at<cv::Vec3b>(j,i)[1];
-      r = r + bgr.at<cv::Vec3b>(j,i)[2];
-      h = h + hsv.at<cv::Vec3b>(j,i)[0];
-      s = s + hsv.at<cv::Vec3b>(j,i)[1];
-      v = v + hsv.at<cv::Vec3b>(j,i)[2];
-      sum++;
-    }
-  }
-
   std::vector<double> avgs; //to hold average values of (B, G, R, H, S, V) for current image
   avgs.push_back(b/sum);
   avgs.push_back(g/sum);
@@ -243,64 +275,24 @@ Color Camera::getTokenColor() {
   avgs.push_back(h/sum);
   avgs.push_back(s/sum);
   avgs.push_back(v/sum);
-  static double diff;
-  static std::vector<double> distance;
-
-
-  for(unsigned int i = 0; i < bgrhsv.size(); i++) { //find the distance between current value and all colors
+  double diff = 0;
+  std::map<Color,double> distances;
+  for(auto& kv : bgrhsv) {
     double total = 0;
     for(int j = 0; j < 6; j++) {
-      diff = avgs[j] - bgrhsv[i][j];
+      diff = avgs[j] - kv.second.first[j];
       total += diff * diff;
     }
     total = std::sqrt(total);
-    distance.push_back(total);
+    distances[kv.first] = total;
   }
-  int color = 0;
-  double min = distance[0];
-  for(unsigned int i = 1; i < distance.size(); i++) {
-    if(distance[i] < min) {
-      min = distance[i];
-      color = i;
-    }
+  Color tokenColor;
+  double min = 700;
+  for(auto& kv : distances) if(kv.second < min) {
+    min = kv.second;
+    tokenColor = kv.first;
   }
-
-  Color tokenColor = Color::NONE;
-
-  switch(color) {
-  case 0 :
-    tokenColor = Color::BLUE;
-    std::cout << "Blue detected" << std::endl;
-    break;
-  case 1 :
-    tokenColor = Color::GREEN;
-    std::cout << "Green detected" << std::endl;
-    break;
-  case 2 :
-    tokenColor = Color::RED;
-    std::cout << "Red detected" << std::endl;
-    break;
-  case 3 :
-    tokenColor = Color::CYAN;
-    std::cout << "Cyan detected" << std::endl;
-    break;
-  case 4 :
-    tokenColor = Color::MAGENTA;
-    std::cout << "Magenta detected" << std::endl;
-    break;
-  case 5 :
-    tokenColor = Color::YELLOW;
-    std::cout << "Yellow detected" << std::endl;
-    break;
-  case 6 :
-    tokenColor = Color::GRAY;
-    std::cout << "Gray detected" << std::endl;
-    break;
-  default:
-    tokenColor = Color::NONE;
-    std::cout << "No color detected" << std::endl;
-    break;
-  }
+  std::cout << bgrhsv[tokenColor].second << " detected" << std::endl;
   std::cout << "(B, G, R): (" << avgs[0] << ", " << avgs[1] << ", " << avgs[2] << ")" << std::endl;
   std::cout << "(H, S, V): (" << avgs[3] << ", " << avgs[4] << ", " << avgs[5] << ")" << std::endl;
 

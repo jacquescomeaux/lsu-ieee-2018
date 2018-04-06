@@ -19,7 +19,7 @@ class Controller : private SerialLink {
     const std::vector<float> dist_sequence;
     const std::vector<float> travel_sequence;
     //void init(Direction*, Direction*, int)
-    void coverLine(Direction, bool, int, int) const;
+    void coverLine(Direction, bool, int, int, double) const;
     void waitForEnter() const;
   public:
     Controller(SortBot&);

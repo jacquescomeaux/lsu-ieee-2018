@@ -15,8 +15,9 @@ void Robot::setSpeed(int s) {
 
 void Robot::moveUntilLine(Direction dir, int speed) {
   std::cout << "following until line" << std::endl;
+  followLine(dir);
   for(int i = 0; i < 20; i++) int_cam.onLine();
-  travel(dir, speed, 1.5, false);
+  travel(dir, speed, 2, false);
   if(dir == Direction::NONE) return;
   if(dir == Direction::CLOCKWISE) return;
   if(dir == Direction::COUNTER_CLOCKWISE) return;
@@ -28,15 +29,12 @@ void Robot::moveUntilLine(Direction dir, int speed) {
 
 void Robot::followUntilIntersection(Direction dir) {
   std::cout << "following until intersection" << std::endl;
-  for(int i = 0; i < 20; i++) int_cam.onLine();
-  travel(dir, speed, 1.5, false);
   if(dir == Direction::NONE) return;
   if(dir == Direction::CLOCKWISE) return;
   if(dir == Direction::COUNTER_CLOCKWISE) return;
   followLine(dir);
-  //while(int_cam.onLine()) if(int_cam.atIntersection()) break;
+  for(int i = 0; i < 10; i++) int_cam.onLine();
   //while(true) int_cam.atIntersection();
-
   while(!int_cam.atIntersection());
   std::cout << "stopped at intersection" << std::endl;
   stop();
@@ -48,8 +46,8 @@ bool Robot::tokenSeen() {
 }
 
 void Robot::center(bool cross, int offset) {
-  static const float x_tol = 0.3;
-  static const float y_tol = 0.3;
+  static const float x_tol = 0.25;
+  static const float y_tol = 0.25;
   float x = x_tol;
   float y = y_tol;
   LineFollower::startCentering(cross, offset);
@@ -59,8 +57,8 @@ void Robot::center(bool cross, int offset) {
   for(bool found = int_cam.getTokenErrors(&x, &y); std::abs(x) >= x_tol || std::abs(y) >= y_tol; found = int_cam.getTokenErrors(&x, &y)) {
     if(!found) continue;
     std::cout << "nudging" << std::endl;
-    //nudge(Direction::RIGHT, x);
-    //nudge(Direction::FRONT, y);
+//    nudge(Direction::RIGHT, x);
+  //  nudge(Direction::FRONT, y);
     if(x > 0 ) nudge(Direction::RIGHT, x);
     else if(x < 0) nudge(Direction::LEFT, -x);
     if(y > 0) nudge(Direction::FRONT, y);

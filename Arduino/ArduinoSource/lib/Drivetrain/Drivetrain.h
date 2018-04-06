@@ -12,7 +12,9 @@ class Drivetrain {
   private:
     MotorShield wheel_shield; 
     Wheel wheels[4];
-    Fixed current_wheel_pos[4], target_wheel_pos[4];
+    //Fixed current_wheel_pos[4], target_wheel_pos[4];
+    Fixed starting_positions[4];
+    Fixed steps_to_travel;
   protected:
     Fixed base_speed, veer_amount, acceleration;
     Drivetrain();

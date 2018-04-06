@@ -9,6 +9,7 @@ Drivetrain::Drivetrain() :
     Wheel(wheel_shield.getMotor(3), 18, 16), //BACK_RIGHT
     Wheel(wheel_shield.getMotor(4), 19, 17)  //FRONT_RIGHT
   },
+  steps_to_travel(Fixed(0)),
   base_speed(Fixed(90)),
   veer_amount(Fixed(10)),
   acceleration(Fixed(20)), //previously set at 10
@@ -35,6 +36,15 @@ void Drivetrain::resolveDirection(Direction dir, Fixed* x, Fixed* y, Fixed* rot)
 
 Flag Drivetrain::checkDestination(bool stopping) {
   for(int i = 0; i < 2; i++) {
+    if((wheels[i].getPosition() - starting_positions[i]).mag() < steps_to_travel) continue;
+    if(stopping) stop();
+    const Fixed speeds[4] = {0, 0, 0, 0};
+    correctWheelSpeeds(speeds);
+    Serial.write('+');
+    return Flag::TRAVELLING;
+  }
+  return Flag::NONE;
+  /*for(int i = 0; i < 2; i++) {
     Fixed s = wheels[i].getActualSpeed();
     if(s == Fixed(0)) continue;
     if((s > Fixed(0)) != (wheels[i].getPosition() >= target_wheel_pos[i])) continue;
@@ -45,6 +55,7 @@ Flag Drivetrain::checkDestination(bool stopping) {
     return Flag::TRAVELLING;
   }
   return Flag::NONE;
+  */
 }
 
 void Drivetrain::setWheelSpeeds(const Fixed* speeds) {
@@ -90,17 +101,26 @@ void Drivetrain::move(Fixed x, Fixed y, Fixed rot) {
 
 void Drivetrain::nudge(Fixed x, Fixed y, Fixed rot, Fixed dist) {
   static const Fixed STEPS_PER_INCH = 286.7, ZERO = 0, POS_ONE = 1, NEG_ONE = -1;
+  steps_to_travel = dist * STEPS_PER_INCH;
+  //for(Wheel& w : wheels) w.resetPosition();
+  for(int i = 0; i < 2; i++) starting_positions[i] = wheels[i].getPosition();
+  veer(x, y, rot);
+  /*static const Fixed STEPS_PER_INCH = 286.7, ZERO = 0, POS_ONE = 1, NEG_ONE = -1;
   if(dist == Fixed(0)) return;
   Fixed steps_to_travel = dist * STEPS_PER_INCH;
   const Fixed speeds[4] = {y + x - rot, y - x - rot, y + x + rot, y - x + rot};
   for(Wheel& w : wheels) w.resetPosition();
   for(int i = 0; i < 2; i++) target_wheel_pos[i] = wheels[i].getPosition() + steps_to_travel * ((speeds[i] * dist> ZERO) ? POS_ONE : NEG_ONE);
   correctWheelSpeeds(speeds);
-}
+*/}
 
 void Drivetrain::travel(Fixed x, Fixed y, Fixed rot, Fixed dist) {
   static const Fixed STEPS_PER_INCH = 286.7, ZERO = 0, POS_ONE = 1, NEG_ONE = -1;
-  if(dist == Fixed(0)) return;
+  steps_to_travel = dist * STEPS_PER_INCH;
+  //for(Wheel& w : wheels) w.resetPosition();
+  for(int i = 0; i < 2; i++) starting_positions[i] = wheels[i].getPosition();
+  move(x, y, rot);
+  /*if(dist == Fixed(0)) return;
   if(x == Fixed(0) && y == Fixed(0) && rot == Fixed(0)) {
     Serial.write('+');
     return;
@@ -110,6 +130,7 @@ void Drivetrain::travel(Fixed x, Fixed y, Fixed rot, Fixed dist) {
   for(Wheel& w : wheels) w.resetPosition();
   for(int i = 0; i < 2; i++) target_wheel_pos[i] = wheels[i].getPosition() + steps_to_travel * ((speeds[i] * dist > ZERO) ? POS_ONE : NEG_ONE);
   setWheelSpeeds(speeds);
+  */
 }
 
 void Drivetrain::steer(Direction dir, Fixed amount) {
