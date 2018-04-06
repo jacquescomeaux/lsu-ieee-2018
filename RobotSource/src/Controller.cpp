@@ -90,44 +90,55 @@ void Controller::runAlgorithm() const {
   robot.followUntilIntersection(Direction::BACK_RIGHT);
   robot.travel(Direction::BACK_RIGHT, 60, 3, true);
   robot.dropTokenStack(Color::RED);
-  robot.travel(Direction::FRONT_LEFT, 60, 3, true);
+  robot.travel(Direction::FRONT_LEFT, 60, 12, true);
+  robot.center(false, 24);
 
+  robot.travel(Direction::FRONT, 60, 5, false)
   robot.followUntilIntersection(Direction::FRONT);
 
   robot.followUntilIntersection(Direction::RIGHT);
   robot.travel(Direction::RIGHT, 60, 3, true);
   robot.dropTokenStack(Color::RED);
-  robot.travel(Direction::LEFT, 60, 3, true);
+  robot.travel(Direction::LEFT, 60, 9, true);
+  robot.center(true, 0);
   
+  robot.travel(Direction::FRONT, 60, 5, false)
   robot.followUntilIntersection(Direction::FRONT);
 
   robot.followUntilIntersection(Direction::FRONT_RIGHT);
   robot.travel(Direction::FRONT_RIGHT, 60, 3, true);
   robot.dropTokenStack(Color::RED);
-  robot.travel(Direction::BACK_LEFT, 60, 3, true);
+  robot.travel(Direction::BACK_LEFT, 60, 12, true);
+  robot.center(false, 0);
 
+  robot.travel(Direction::LEFT, 60, 5, false)
   robot.followUntilIntersection(Direction::LEFT);
 
   robot.followUntilIntersection(Direction::FRONT_LEFT);
   robot.travel(Direction::FRONT_LEFT, 60, 3, true);
   robot.dropTokenStack(Color::RED);
-  robot.travel(Direction::BACK_RIGHT, 60, 3, true);
+  robot.travel(Direction::BACK_RIGHT, 60, 12, true);
+  robot.center(false, 8);
   
+  robot.travel(Direction::BACK, 60, 5, false)
   robot.followUntilIntersection(Direction::BACK);
 
   robot.followUntilIntersection(Direction::LEFT);
   robot.travel(Direction::LEFT, 60, 3, true);
   robot.dropTokenStack(Color::RED);
   robot.travel(Direction::RIGHT, 60, 3, true);
+  robot.center(24, false);
 
+  robot.travel(Direction::FRONT, 60, 5, false)
   robot.followUntilIntersection(Direction::BACK);
 
   robot.followUntilIntersection(Direction::BACK_LEFT);
   robot.travel(Direction::BACK_LEFT, 60, 3, true);
   robot.dropTokenStack(Color::RED);
   robot.travel(Direction::FRONT_RIGHT, 60, 3, true);
+  robot.center(24, false);
   
-  for(int i = 0; i < 4; i++) robot.followUntilIntersection(Direction::FRONT_RIGHT);
+  //for(int i = 0; i < 4; i++) robot.followUntilIntersection(Direction::FRONT_RIGHT);
   robot.travel(Direction::FRONT_RIGHT, 60, 3, true);
   robot.dropTokenStack(Color::RED);
   #endif
