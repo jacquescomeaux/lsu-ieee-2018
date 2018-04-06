@@ -11,9 +11,9 @@ void MagnetArm::demagnetize() {
 MagnetArm::MagnetArm(Adafruit_StepperMotor* mot, Adafruit_DCMotor* mag) :
   RPM(255),
   bot_target(0),
-  top_target(500),
+  top_target(490),
   cam_target(300),
-  total_steps(540),
+  total_steps(500),
   position(460),
   motor(mot),
   magnet(mag) {

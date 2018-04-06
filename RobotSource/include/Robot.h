@@ -19,11 +19,12 @@ class Robot : public Drivetrain, public LineFollower {
   public:
     Robot();
     Coord getLocation() const;
+    void followLine(Direction) const;
     void setSpeed(int);
     void moveUntilLine(Direction, int);
-    void followUntilIntersection(Direction);
+    bool followUntilIntersection(Direction);
     bool tokenSeen();
-    void center(bool, int);
+    bool center(bool, int);
 };
 
 class SortBot : public Robot, public SortingSystem {

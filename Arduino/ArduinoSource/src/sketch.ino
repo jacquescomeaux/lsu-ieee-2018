@@ -165,7 +165,7 @@ void parseCommand() {
 }
 
 void setup() {
-  Serial.begin(9600);
+  Serial.begin(115200);
   robot = new SortBot();
   TWBR = ((F_CPU /400000l) - 16) / 2; //change i2c clock to 400KHz
   robot->stop();

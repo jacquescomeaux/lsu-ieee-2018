@@ -1,8 +1,8 @@
 #include <SortingPlate.h>
 
 SortingPlate::SortingPlate(Adafruit_StepperMotor* m) :
-  RPM(250),
-  step_amount(5),
+  RPM(450),
+  step_amount(50),
   target_step(250),
   total_steps(2000),
   moving(false),
@@ -11,6 +11,8 @@ SortingPlate::SortingPlate(Adafruit_StepperMotor* m) :
   bottom_offset(0),
   motor(m) {
   motor->setSpeed(RPM);
+  //motor->onestep(FORWARD, DOUBLE);
+  //motor->release();
 }
 
 void SortingPlate::stepForward(unsigned int s) {
@@ -21,13 +23,29 @@ void SortingPlate::stepBackward(unsigned int s) {
   motor->step(static_cast<uint16_t>(s), BACKWARD, DOUBLE);
 }
 
+void SortingPlate::quickstepForward(unsigned int s) {
+  for(unsigned int t = 0; t < s; t++) {
+    motor->quickstep(FORWARD);
+    delayMicroseconds(750);
+  }
+}
+
+void SortingPlate::quickstepBackward(unsigned int s) {
+  for(unsigned int t = 0; t < s; t++) {
+    motor->quickstep(BACKWARD);
+    delayMicroseconds(750);
+  }
+}
+
 bool SortingPlate::ready() {
   return !moving;
 }
 
 void SortingPlate::reset() {
   stepBackward((total_steps - bottom_offset) % total_steps);
+  //quickstepBackward((total_steps - bottom_offset) % total_steps);
   stepForward((total_steps - position) % total_steps);
+  //quickstepForward((total_steps - position) % total_steps);
   motor->release();
   position = 0;
   target_position = 0;
@@ -45,6 +63,7 @@ void SortingPlate::rotateCCW(unsigned int dst) {
 void SortingPlate::rotateCW() {
   if(moving) return;
   stepForward(target_step + 10);
+  //quickstepForward(target_step + 10);
   motor->release();
   position += total_steps;
   position -= target_step;
@@ -60,6 +79,7 @@ int SortingPlate::continueMoving() {
   if(!moving) return 1;
   if((target_position - position + total_steps) % total_steps < step_amount) {
     stepBackward((target_position - position + total_steps) % total_steps);
+    //quickstepBackward((target_position - position + total_steps) % total_steps);
     position = target_position;
     motor->release();
     moving = false;
@@ -68,5 +88,6 @@ int SortingPlate::continueMoving() {
   position += step_amount;
   position %= total_steps;
   stepBackward(step_amount);
+  //quickstepBackward(step_amount);
   return 0;
 }

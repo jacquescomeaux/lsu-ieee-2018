@@ -101,6 +101,13 @@ void Drivetrain::move(Fixed x, Fixed y, Fixed rot) {
 
 void Drivetrain::nudge(Fixed x, Fixed y, Fixed rot, Fixed dist) {
   static const Fixed STEPS_PER_INCH = 286.7, ZERO = 0, POS_ONE = 1, NEG_ONE = -1;
+  if(dist < Fixed(0)) {
+    x = Fixed(0) - x;
+    y = Fixed(0) - y;
+    rot = Fixed(0) - rot;
+    dist = Fixed(0) - dist;
+  }
+  steps_to_travel = dist * STEPS_PER_INCH;
   steps_to_travel = dist * STEPS_PER_INCH;
   //for(Wheel& w : wheels) w.resetPosition();
   for(int i = 0; i < 2; i++) starting_positions[i] = wheels[i].getPosition();
@@ -116,6 +123,12 @@ void Drivetrain::nudge(Fixed x, Fixed y, Fixed rot, Fixed dist) {
 
 void Drivetrain::travel(Fixed x, Fixed y, Fixed rot, Fixed dist) {
   static const Fixed STEPS_PER_INCH = 286.7, ZERO = 0, POS_ONE = 1, NEG_ONE = -1;
+  if(dist < Fixed(0)) {
+    x = Fixed(0) - x;
+    y = Fixed(0) - y;
+    rot = Fixed(0) - rot;
+    dist = Fixed(0) - dist;
+  }
   steps_to_travel = dist * STEPS_PER_INCH;
   //for(Wheel& w : wheels) w.resetPosition();
   for(int i = 0; i < 2; i++) starting_positions[i] = wheels[i].getPosition();

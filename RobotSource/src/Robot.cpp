@@ -2,10 +2,14 @@
 
 #include <iostream>
 
-Robot::Robot() : int_cam(1), location_cam(0), speed(70) {}
+Robot::Robot() : int_cam(0), location_cam(1), speed(70) {}
 
 Coord Robot::getLocation() const {
   return location_cam.determineLocation();
+}
+
+void Robot::followLine(Direction dir) const {
+  LineFollower::followLine(dir, speed);
 }
 
 void Robot::setSpeed(int s) {
@@ -27,32 +31,38 @@ void Robot::moveUntilLine(Direction dir, int speed) {
   std::cout << "stopped at line" << std::endl;
 }
 
-void Robot::followUntilIntersection(Direction dir) {
+bool Robot::followUntilIntersection(Direction dir) {
   std::cout << "following until intersection" << std::endl;
-  if(dir == Direction::NONE) return;
-  if(dir == Direction::CLOCKWISE) return;
-  if(dir == Direction::COUNTER_CLOCKWISE) return;
+  if(dir == Direction::NONE) return false;
+  if(dir == Direction::CLOCKWISE) return false;
+  if(dir == Direction::COUNTER_CLOCKWISE) return false;
   followLine(dir);
   for(int i = 0; i < 10; i++) int_cam.onLine();
-  //while(true) int_cam.atIntersection();
-  while(!int_cam.atIntersection());
+  float x, y;
+  while(!int_cam.atIntersection());// || int_cam.getTokenErrors(&x, &y, 2));
   std::cout << "stopped at intersection" << std::endl;
   stop();
-  //nudge(dir, -0.5);
+  if(!int_cam.getTokenErrors(&x, &y)) return false;
+  return true;
 }
 
 bool Robot::tokenSeen() {
   return int_cam.tokenSeen();
 }
 
-void Robot::center(bool cross, int offset) {
-  static const float x_tol = 0.25;
-  static const float y_tol = 0.25;
+bool Robot::center(bool cross, int offset) {
+  static const float x_tol = 0.1;
+  static const float y_tol = 0.1;
   float x = x_tol;
   float y = y_tol;
-  LineFollower::startCentering(cross, offset);
-  while(!int_cam.getTokenErrors(&x, &y, 5));
+  //if(!int_cam.getTokenErrors(&x, &y, 5)) followUntilIntersection(dir)
   stop();
+  if(cross) {
+    LineFollower::startCentering(cross, offset);
+    while(!int_cam.getTokenErrors(&x, &y, 1));
+    stop();
+  }
+  else if(!int_cam.getTokenErrors(&x, &y, 1)) return false;
   std::cout << "Done with line follow centering, starting camera centering" << std::endl;
   for(bool found = int_cam.getTokenErrors(&x, &y); std::abs(x) >= x_tol || std::abs(y) >= y_tol; found = int_cam.getTokenErrors(&x, &y)) {
     if(!found) continue;
@@ -64,7 +74,7 @@ void Robot::center(bool cross, int offset) {
     if(y > 0) nudge(Direction::FRONT, y);
     else if(y < 0) nudge(Direction::BACK, -y);
   }
-  
+ 
   /*while(int_cam.tokenSeen() && !int_cam.tokenCentered()) {
     std::cout << "nudging" << std::endl;
     int_cam.getTokenErrors(&x, &y);
@@ -87,6 +97,7 @@ void Robot::center(bool cross, int offset) {
   //stop();
   */
   std::cout << "Robot.center() Done" << std::endl << std::endl;
+  return true;
 }
 
 SortBot::SortBot() : control(*this) {}

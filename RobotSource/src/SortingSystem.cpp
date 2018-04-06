@@ -25,6 +25,7 @@ void SortingSystem::storeToken(Token* t) {
   std::cout << "storing token" << std::endl;
   transmitChar('r');
   transmitColor(t->getColor());
+  waitForChar('r');
   token_stacks[COLOR_POSITIONS[static_cast<int>(t->getColor())] - 1].push_back(t);
 }
 
@@ -37,10 +38,10 @@ void SortingSystem::sortToken() {
 }
 
 bool SortingSystem::dropTokenStack(Color c) {
-  int next_pos = plate_position + 7;
-  next_pos %= 8;
-  if(next_pos != COLOR_POSITIONS[static_cast<int>(c)]) return false;
+  //int next_pos = plate_position + 7;
+  //next_pos %= 8;
+  //if(next_pos != COLOR_POSITIONS[static_cast<int>(c)]) return false;
   transmitChar('d');
-  plate_position = next_pos;
+  //plate_position = next_pos;
   return true;
 }

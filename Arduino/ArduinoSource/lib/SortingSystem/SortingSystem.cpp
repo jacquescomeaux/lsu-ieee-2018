@@ -30,7 +30,7 @@ void SortingSystem::continueSorting() {
   int current_task = task_buffer.front(); 
   if(current_task == 9) {
     token_arm.pickUpToken();
-    delay(500); //temporary...putting in a delay so that the camera has time to read the color
+    //delay(500); //temporary...putting in a delay so that the camera has time to read the color
     task_buffer.pop();
   }
   else if(current_task == 10) {
@@ -56,6 +56,7 @@ void SortingSystem::continueSorting() {
     else {
       state = 0;
       task_buffer.pop();
+      Serial.write('r');
     }
   }
 }

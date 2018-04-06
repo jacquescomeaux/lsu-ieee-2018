@@ -9,7 +9,7 @@
 int SerialLink::object_count = 0;
 struct sp_port* SerialLink::port;
 
-SerialLink::SerialLink() : PORTNAME("/dev/ttyACM0"), BAUD(9600) {
+SerialLink::SerialLink() : PORTNAME("/dev/ttyACM0"), BAUD(115200) {
   object_count++;
   if(object_count == 1) {
     sp_get_port_by_name(PORTNAME, &port);
