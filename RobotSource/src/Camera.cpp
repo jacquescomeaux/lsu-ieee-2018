@@ -232,6 +232,8 @@ std::vector<cv::Vec3f> Camera::getCircle(int attempts = 1) { //Detects both inte
   /// Apply the Hough Transform to find the circles
   cv::HoughCircles(gray, circles, CV_HOUGH_GRADIENT, 2, 300, 50, 65, 60, 85); //60, 85
 
+  std::cout << "Circle Detected... x=" << circles[0] << " y=" << circles[1] << " r=" << circles[2] << std::endl;
+
   return circles;
 }
 
@@ -256,7 +258,9 @@ Color Camera::getTokenColor() {
   
   for(int i = 0; i < 10; i++) cap >> bgr;
   cap >> bgr;
+  //cv::imwrite("token.jpg", bgr);
   cv::Mat img = bgr(roi);
+  //cv::imwrite("tokencrop.jpg", img);
   cv::cvtColor(bgr, hsv, cv::COLOR_BGR2HSV);
   
   for(int i = 220; i < 440; i++) for(int j = 290; j < 410; j++) {
