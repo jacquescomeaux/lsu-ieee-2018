@@ -57,13 +57,20 @@ bool Robot::center(bool cross, int offset) {
   //if(!int_cam.getTokenErrors(&x, &y, 5)) followUntilIntersection(dir)
   stop();
   if(cross) {
-    //LineFollower::startCentering(cross, offset);
+    LineFollower::startCentering(cross, offset);
     while(!int_cam.getTokenErrors(&x, &y, 1));
+    //for(int i = 0; i < 100; i++) 
     stop();
+    if(!int_cam.getTokenErrors(&x, &y, 1)) {
+      LineFollower::startCentering(cross, offset);
+      while(!int_cam.getTokenErrors(&x, &y, 1));
+      stop();
+    }
   }
   else if(!int_cam.getTokenErrors(&x, &y, 1)) return false;
   std::cout << "Done with line follow centering, starting camera centering" << std::endl;
-  for(bool found = int_cam.getTokenErrors(&x, &y); std::abs(x) >= x_tol || std::abs(y) >= y_tol; found = int_cam.getTokenErrors(&x, &y)) {
+  int iter = 0;
+  for(bool found = int_cam.getTokenErrors(&x, &y); (iter++ < 100) && (std::abs(x) >= x_tol || std::abs(y) >= y_tol); found = int_cam.getTokenErrors(&x, &y)) {
     if(!found) continue;
     std::cout << "nudging" << std::endl;
     nudge(Direction::RIGHT, x);

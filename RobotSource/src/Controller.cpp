@@ -54,7 +54,7 @@ Controller::Controller(SortBot& r, Direction* f_seq, Direction* c_seq, int n) :
 void Controller::coverLine(Direction dir, bool cross, int offset, int num_tokens, double dist) const {
   for(int i = 0; i < num_tokens; i++) {
     waitForEnter();
-    for(int i = 0; i < 15; i++) {
+    for(int i = 0; i < 10; i++) {
       if(robot.center(cross, offset)) {
         if(robot.tokenSeen()) robot.sortToken();
         else std::cout << "token not seen" << std::endl;
@@ -79,7 +79,7 @@ void Controller::runAlgorithm() const {
 
   std::cout << "Waiting for enter key" << std::endl; 
   waitForEnter();
-  #if 1
+  #if 0
   while(true) {
    robot.center(false, 16);
    robot.sortToken();
@@ -98,9 +98,10 @@ void Controller::runAlgorithm() const {
   
   robot.setSpeed(60);
   
-  robot.followLine(Direction::RIGHT);
+  /*robot.followLine(Direction::RIGHT);
   robot.travel(Direction::RIGHT, 70, 16, false);
   robot.followUntilIntersection(Direction::RIGHT);
+  */
   /*for(int i = 0; i < NUM_LINES; i++) {
     robot.followLine(follow_sequence[i]);
     robot.travel(follow_sequence[i], 70, travel_sequence[i], false);
@@ -113,14 +114,8 @@ void Controller::runAlgorithm() const {
     robot.dropTokenStack(Color::RED);
     if(i == 5) break;
     robot.travel(box_sequence[i], 90, 10, true);
-    robot.moveUntilLine(drop_sequence[(i+3)%6], 90);
-    //robot.travel(drop_sequence[i], 60, -1 * blind_sequence[i], true);
-    
-    ////robot.center(type_sequence[i], offset_sequence[5-i]);
-    ////robot.snapToLine(drop_sequence[(i+3)%6], 7);
-    
+    robot.moveUntilLine(drop_sequence[(i+3)%6], 80);
     robot.snapToLine(box_sequence[i], 5);
-    
     robot.followLine(box_sequence[i]);
     robot.travel(box_sequence[i], 90, 8, false);
     robot.followUntilIntersection(box_sequence[i]);
