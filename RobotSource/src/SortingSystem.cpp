@@ -8,12 +8,12 @@ SortingSystem::SortingSystem() :
   plate_position(0) {}
 
 bool SortingSystem::pickUpToken() {
-  //static int c = 1;
+  static int c = 1;
   transmitChar('p');
   waitForChar('p');
   std::cout << "done waiting" << std::endl;
-  Color seen = /*static_cast<Color>(c);*/token_cam.getTokenColor();
-  //if(++c > 7) c = 1;
+  Color seen = static_cast<Color>(c);//token_cam.getTokenColor();
+  if(++c > 7) c = 1;
   std::cout << "color checked" << std::endl;
   //if(seen == Color::NONE || seen == Color::WHITE || seen == Color::BLACK) return false;
   if(seen == Color::NONE || seen == Color::WHITE || seen == Color::BLACK) seen = Color::GRAY;
