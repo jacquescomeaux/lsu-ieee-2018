@@ -26,7 +26,7 @@ Controller::Controller(SortBot& r) :
   offset_sequence {16, 0, 8, 0, 0, 24},
   dist_sequence {11.5, 6, 11.5, 11.5, 6, 11.5},
   travel_sequence {16, 3, 16, 12, 16, 3},
-  blind_sequence {22, 3, 22, 22, 16, 3},
+  blind_sequence {22, 11, 22, 22, 11, 22},
   drop_sequence {
     Direction::BACK_RIGHT,
     Direction::RIGHT,
@@ -105,21 +105,31 @@ void Controller::runAlgorithm() const {
   }*/
 
   for(int i = 0; i < NUM_LINES; i++) {
-    robot.travel(drop_sequence[i], 60, blind_sequence[i], true);
+    robot.travel(drop_sequence[i], 50, blind_sequence[i], true);
     robot.dropTokenStack(Color::RED);
-    robot.travel(box_sequence[i], 60, 10, true);
-    robot.travel(drop_sequence[i], 60, -1 * blind_sequence[i], true);
-    //robot.center(type_sequence[i], offset_sequence[5-i]);
-    robot.snapToLine(drop_sequence[(i+3)%6], 7);
-    
     if(i == 5) break;
+    robot.travel(box_sequence[i], 50, 10, true);
+    robot.moveUntilLine(drop_sequence[(i+3)%6], 60);
+    //robot.travel(drop_sequence[i], 60, -1 * blind_sequence[i], true);
+    
+    ////robot.center(type_sequence[i], offset_sequence[5-i]);
+    ////robot.snapToLine(drop_sequence[(i+3)%6], 7);
+    
+    robot.snapToLine(box_sequence[i], 5);
+    
     robot.followLine(box_sequence[i]);
-    robot.travel(box_sequence[i], 100, 15, false);
+    robot.travel(box_sequence[i], 80, 8, false);
     robot.followUntilIntersection(box_sequence[i]);
+    robot.center(type_sequence[i], offset_sequence[5-i]);
   }
 
-  //for(int i = 0; i < 4; i++) robot.followUntilIntersection(Direction::FRONT_RIGHT);
-  robot.travel(Direction::FRONT_RIGHT, 60, 48, true);
+  //robot.travel(Direction::FRONT_RIGHT, 50, 48, true);
+  robot.travel(Direction::FRONT_RIGHT, 50, 16, true);
+  for(int i = 0; i < 5; i++) {
+    robot.followUntilIntersection(Direction::FRONT_RIGHT);
+    robot.followLine(Direction::FRONT_RIGHT);
+    robot.travel(Direction::FRONT_RIGHT, 50, 6, false);
+  }
   robot.dropTokenStack(Color::RED);
   #endif
 }

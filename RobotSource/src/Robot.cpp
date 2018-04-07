@@ -19,7 +19,6 @@ void Robot::setSpeed(int s) {
 
 void Robot::moveUntilLine(Direction dir, int speed) {
   std::cout << "following until line" << std::endl;
-  followLine(dir);
   for(int i = 0; i < 20; i++) int_cam.onLine();
   travel(dir, speed, 2, false);
   if(dir == Direction::NONE) return;
@@ -67,35 +66,14 @@ bool Robot::center(bool cross, int offset) {
   for(bool found = int_cam.getTokenErrors(&x, &y); std::abs(x) >= x_tol || std::abs(y) >= y_tol; found = int_cam.getTokenErrors(&x, &y)) {
     if(!found) continue;
     std::cout << "nudging" << std::endl;
-//    nudge(Direction::RIGHT, x);
-  //  nudge(Direction::FRONT, y);
-    if(x > 0 ) nudge(Direction::RIGHT, x);
-    else if(x < 0) nudge(Direction::LEFT, -x);
-    if(y > 0) nudge(Direction::FRONT, y);
-    else if(y < 0) nudge(Direction::BACK, -y);
-  }
- 
-  /*while(int_cam.tokenSeen() && !int_cam.tokenCentered()) {
-    std::cout << "nudging" << std::endl;
-    int_cam.getTokenErrors(&x, &y);
     nudge(Direction::RIGHT, x);
     nudge(Direction::FRONT, y);
-  *//*while(!int_cam.intersectionInFrame());
-  stop();
-  std::cout << "Done with line follow centering, starting camera centering" << std::endl;
-  for(int i = 0; i < 5; i++) if(int_cam.tokenSeen()) {
-  //while(int_cam.tokenSeen() && !int_cam.tokenCentered()) {
-    int_cam.getTokenErrors(&x, &y);
-    std::cout << "Token Errors: X: " << x << " Y: " << y << std::endl;
-    if(x > 0 ) nudge(Direction::RIGHT, x);
+  /*  if(x > 0 ) nudge(Direction::RIGHT, x);
     else if(x < 0) nudge(Direction::LEFT, -x);
     if(y > 0) nudge(Direction::FRONT, y);
     else if(y < 0) nudge(Direction::BACK, -y);
-    if (x == 0 && y == 0) break;
-    //if(int_cam.tokenCentered()) break;
-  }
-  //stop();
-  */
+  */}
+ 
   std::cout << "Robot.center() Done" << std::endl << std::endl;
   return true;
 }
