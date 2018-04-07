@@ -15,7 +15,7 @@ import cv2
 #X2=440
 
 #picam = cv2.VideoCapture(0)
-webcam = cv2.VideoCapture(1)
+webcam = cv2.VideoCapture(0)
 
 #480, 220-260
 #640, 360-520

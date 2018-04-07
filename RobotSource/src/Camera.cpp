@@ -244,7 +244,7 @@ Color Camera::getTokenColor() {
   bgrhsv[Color::MAGENTA] = std::make_pair(cv::Vec6d(80, 34, 70, 156, 144, 92), "Magenta"); // Prev: 170  
   bgrhsv[Color::YELLOW] = std::make_pair(cv::Vec6d(69, 92, 95, 29, 92, 115), "Yellow");    // Prev: H:79
   bgrhsv[Color::GRAY] = std::make_pair(cv::Vec6d(46, 35, 30, 105, 86, 55), "Gray");        // Prev: H115     
- // bgrhsv[Color::NONE] = std::make_pair(cv::Vec6d(29, 24, 25, 110, 54, 31), "None");       
+  bgrhsv[Color::NONE] = std::make_pair(cv::Vec6d(29, 24, 25, 110, 54, 31), "None");       
   int b, g, r, h, s, v, sum;
   b = g = r = h = s = v = sum = 0;
   cv::Mat src, bgr, hsv;
@@ -254,7 +254,7 @@ Color Camera::getTokenColor() {
   roi.width = 490;
   roi.height = 200;
   
-  //for(int i = 0; i < ; i++) cap >> bgr;
+  for(int i = 0; i < 10; i++) cap >> bgr;
   cap >> bgr;
   cv::Mat img = bgr(roi);
   cv::cvtColor(bgr, hsv, cv::COLOR_BGR2HSV);

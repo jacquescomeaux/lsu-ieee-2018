@@ -1,6 +1,8 @@
 #include "../include/Controller.h"
 #include "../include/Robot.h"
 
+#include <chrono>
+#include <thread>
 #include <iostream>
 
 Controller::Controller(SortBot& r) :
@@ -73,11 +75,13 @@ void Controller::waitForEnter() const {
 }
 
 void Controller::runAlgorithm() const {
+  std::this_thread::sleep_for(std::chrono::seconds(5)); //prev 6 secs
+
   std::cout << "Waiting for enter key" << std::endl; 
   waitForEnter();
-  #if 0
+  #if 1
   while(true) {
-   robot.center(cross, 16);
+   robot.center(false, 16);
    robot.sortToken();
    waitForEnter();
   }
@@ -105,11 +109,11 @@ void Controller::runAlgorithm() const {
   }*/
 
   for(int i = 0; i < NUM_LINES; i++) {
-    robot.travel(drop_sequence[i], 50, blind_sequence[i], true);
+    robot.travel(drop_sequence[i], 90, blind_sequence[i], true);
     robot.dropTokenStack(Color::RED);
     if(i == 5) break;
-    robot.travel(box_sequence[i], 50, 10, true);
-    robot.moveUntilLine(drop_sequence[(i+3)%6], 60);
+    robot.travel(box_sequence[i], 90, 10, true);
+    robot.moveUntilLine(drop_sequence[(i+3)%6], 90);
     //robot.travel(drop_sequence[i], 60, -1 * blind_sequence[i], true);
     
     ////robot.center(type_sequence[i], offset_sequence[5-i]);
@@ -118,17 +122,17 @@ void Controller::runAlgorithm() const {
     robot.snapToLine(box_sequence[i], 5);
     
     robot.followLine(box_sequence[i]);
-    robot.travel(box_sequence[i], 80, 8, false);
+    robot.travel(box_sequence[i], 90, 8, false);
     robot.followUntilIntersection(box_sequence[i]);
     robot.center(type_sequence[i], offset_sequence[5-i]);
   }
 
   //robot.travel(Direction::FRONT_RIGHT, 50, 48, true);
-  robot.travel(Direction::FRONT_RIGHT, 50, 16, true);
+  robot.travel(Direction::FRONT_RIGHT, 60, 16, true);
   for(int i = 0; i < 5; i++) {
     robot.followUntilIntersection(Direction::FRONT_RIGHT);
     robot.followLine(Direction::FRONT_RIGHT);
-    robot.travel(Direction::FRONT_RIGHT, 50, 6, false);
+    robot.travel(Direction::FRONT_RIGHT, 60, 6, false);
   }
   robot.dropTokenStack(Color::RED);
   #endif
