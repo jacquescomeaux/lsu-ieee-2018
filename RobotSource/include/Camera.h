@@ -22,8 +22,8 @@ class Camera {
     bool atIntersection();
     bool tokenSeen();
     Coord determineLocation() const;
-    bool getTokenErrors(float*, float*);
-    bool getTokenErrors(float*, float*, int); //errors given in pixels, might need some conversion to real world units
+    bool getTokenErrors(double*, double*);
+    bool getTokenErrors(double*, double*, int); //errors given in pixels, might need some conversion to real world units
     Color getTokenColor();
 };
 

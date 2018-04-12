@@ -21,7 +21,7 @@ class SerialLink {
     char receiveChar() const;
     void waitForChar(char);
     int receiveInt() const;
-    float receiveFloat() const;
+    double receiveFloat() const;
     void receiveBuffer(void*, size_t) const;
     void transmitChar(char) const;
     void transmitIndex(unsigned int) const;
@@ -29,7 +29,7 @@ class SerialLink {
     void transmitColor(Color) const;
     void transmitBool(bool) const;
     void transmitValue(int) const;
-    void transmitValue(float) const;
+    void transmitValue(double) const;
     void transmitBuffer(void*, size_t) const;
 };
 

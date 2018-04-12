@@ -2,70 +2,25 @@
 
 #include <cmath>
 #include <iostream>
+#include <set>
 
-Board::Board() : Board(8, 8) {}
+Board::Board(double l, double w, const std::vector<Coord>& S, const std::vector<Coord>& H, Coord start, Coord end, const std::vector<std::list<std::pair<int,double> > >& L) :
+  LENGTH(l),
+  WIDTH(w),
+  NUM_COLORS(S.size()),
+  NUM_HOLES(H.size()),
+  SQUARES(S),
+  HOLES(H),
+  START(start),
+  END(end),
+  LINES(L) {};
 
-Board::Board(float l, float w) :
-  length(l),
-  width(w),
-  NUM_COLORS(7),
-  NUM_HOLES(24),
-  SQUARES {
-    Coord(-3.5f,  3.5f),     //Red
-    Coord(-3.5f,  0.0f),     //Green
-    Coord(-3.5f, -3.5f),     //Blue
-    Coord( 3.5f,  3.5f),     //Cyan
-    Coord( 3.5f,  0.0f),     //Magenta
-    Coord( 3.5f, -3.5f),     //Yellow
-    Coord( 0.0f,  0.0f)      //Gray
-  },
-  HOLES {
-    Coord(-1.0f,  1.0f),
-    Coord(-1.0f,  0.0f),
-    Coord(-1.0f, -1.0f),
-  
-    Coord( 1.0f,  1.0f),
-    Coord( 1.0f,  0.0f),
-    Coord( 1.0f, -1.0f),
-  
-    Coord(-2.0f,  2.0f),
-    Coord(-2.0f,  0.0f),
-    Coord(-2.0f, -2.0f),
-  
-    Coord( 2.0f,  2.0f),
-    Coord( 2.0f,  0.0f),
-    Coord( 2.0f, -2.0f),
-  
-    Coord(-1.5f,  1.5f),
-    Coord(-1.5f,  0.0f),
-    Coord(-1.5f, -1.5f),
-  
-    Coord( 1.5f,  1.5f),
-    Coord( 1.5f,  0.0f),
-    Coord( 1.5f, -1.5f),
-  
-    Coord(-2.5f,  2.5f),
-    Coord(-2.5f,  0.0f),
-    Coord(-2.5f, -2.5f),
-  
-    Coord( 2.5f,  2.5f),
-    Coord( 2.5f,  0.0f),
-    Coord( 2.5f, -2.5f)
-  },
-  START(-3.5, 0),
-  END(-3.5, 0) {}
-
-Board::Board(float l, float w, const Coord* squares, int s, const Coord* holes, int h, Coord start, Coord end) : length(l), width(w), NUM_COLORS(s), NUM_HOLES(s), SQUARES(squares, squares + s), HOLES(holes, holes + h), START(start), END(end) {
-  //for(int i = 0; i < s; i++) SQUARES[i] = squares[i];
-  //for(int i = 0; i < h; i++) HOLES[i] = holes[i];
+double Board::getLength() const {
+  return LENGTH;
 }
 
-float Board::getLength() const {
-  return length;
-}
-
-float Board::getWidth() const {
-  return width;
+double Board::getWidth() const {
+  return WIDTH;
 }
 Coord Board::getStart() const {
   return START;
@@ -75,11 +30,42 @@ Coord Board::getEnd() const {
   return END;
 }
 
+Coord Board::getIntersectionLocation(int n) const {
+  return HOLES[n];
+}
+
+bool Board::getShortestPath(std::vector<int>* path, int src, int dest) {
+  //Dijkstra's shortest path algorithm
+  std::set<int> Q;
+  for(int i = 0; i < HOLES.size(); i++) Q.insert(i);
+  std::vector<double> dist(HOLES.size(), LENGTH + WIDTH);
+  std::vector<int> prev(HOLES.size(), -1);
+  dist[dest] = 0;
+  while(!Q.empty()) {
+    double min = LENGTH + WIDTH;
+    int u = *Q.begin();
+    for(int v : Q) if(dist[v] < min) {
+      min = dist[v];
+      u = v;
+    }
+    Q.erase(Q.find(u));
+    if(u == src) break;
+    for(auto& fs : LINES[u]) if(Q.count(fs.first) != 0) {
+      double alt = dist[u] + fs.second;
+      if(alt < dist[fs.first]) {
+        dist[fs.first] = alt;
+        prev[fs.first] = u; 
+      }
+    }
+  }
+  for(int u = prev[src]; u != -1; u = prev[u]) path->push_back(u);
+  return true;
+}
+
 void Board::checkTokens() const {
-  if(tokens.empty()) return;
-  for(unsigned int i = 0; i < tokens.size(); i++) {
-    float x = tokens[i].getLocation().x;
-    float y = tokens[i].getLocation().y;
+  for(int i = 0; i < tokens.size(); i++) {
+    double x = tokens[i].getLocation().x;
+    double y = tokens[i].getLocation().y;
     Color c = tokens[i].getColor();
     std::string s;
     switch(c) {

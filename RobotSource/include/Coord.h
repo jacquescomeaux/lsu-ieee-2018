@@ -3,10 +3,10 @@
 
 class Coord {
   public:
-    float x;
-    float y;
-    Coord(float, float);
-    float dist(Coord) const; //distance between this coord and another coord
+    double x;
+    double y;
+    Coord(double, double);
+    double dist(Coord) const; //distance between this coord and another coord
 };
 
 #endif//COORD_H

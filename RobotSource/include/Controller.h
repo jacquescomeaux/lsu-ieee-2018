@@ -16,7 +16,7 @@ class Controller : private SerialLink {
     const std::vector<Direction> follow_sequence, cover_sequence, drop_sequence, box_sequence;
     const std::vector<bool> type_sequence;
     const std::vector<int> offset_sequence;
-    const std::vector<float> dist_sequence, travel_sequence, blind_sequence;
+    const std::vector<double> dist_sequence, travel_sequence, blind_sequence;
     //void init(Direction*, Direction*, int)
     void coverLine(Direction, bool, int, int, double) const;
     void waitForEnter() const;

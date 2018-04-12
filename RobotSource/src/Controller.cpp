@@ -52,7 +52,7 @@ Controller::Controller(SortBot& r, Direction* f_seq, Direction* c_seq, int n) :
   cover_sequence(c_seq, c_seq + n) {}
 
 void Controller::coverLine(Direction dir, bool cross, int offset, int num_tokens, double dist) const {
-  for(int i = 0; i < num_tokens; i++) {
+  /*for(int i = 0; i < num_tokens; i++) {
     waitForEnter();
     for(int i = 0; i < 10; i++) {
       if(robot.center(cross, offset)) {
@@ -67,7 +67,7 @@ void Controller::coverLine(Direction dir, bool cross, int offset, int num_tokens
     waitForEnter();
     robot.followLine(dir);
     robot.travel(dir, 60, dist, true);
-  }
+  }*/
 }
 
 void Controller::waitForEnter() const {
@@ -75,16 +75,17 @@ void Controller::waitForEnter() const {
 }
 
 void Controller::runAlgorithm() const {
-  std::this_thread::sleep_for(std::chrono::seconds(5)); //prev 6 secs
+  /*std::this_thread::sleep_for(std::chrono::seconds(5)); //prev 6 secs
 
   std::cout << "Waiting for enter key" << std::endl; 
   waitForEnter();
-  #if 0
-  while(true) {
+  */
+  #if 1
+  /*while(true) {
    robot.center(false, 16);
    robot.sortToken();
    waitForEnter();
-  }
+  }*/
   #else 
   robot.setSpeed(30);
   robot.toggleCalibration();

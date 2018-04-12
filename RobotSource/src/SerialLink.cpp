@@ -42,9 +42,9 @@ int SerialLink::receiveInt() const {
   return n;
 }
 
-float SerialLink::receiveFloat() const {
-  float x;
-  receiveBuffer(&x, sizeof(float));
+double SerialLink::receiveFloat() const {
+  double x;
+  receiveBuffer(&x, sizeof(double));
   return x;
 }
 
@@ -86,7 +86,7 @@ void SerialLink::transmitValue(int n) const {
   transmitBuffer(&i, sizeof(int64_t));
 }
 
-void SerialLink::transmitValue(float x) const {
+void SerialLink::transmitValue(double x) const {
   Fixed f = static_cast<double>(x);
   //std::cout << "transmiting fixed "<< f.getDouble() << std::endl;
   int64_t i = f.getInternal();

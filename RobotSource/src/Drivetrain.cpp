@@ -26,7 +26,7 @@ void Drivetrain::move(Direction dir, int speed) const {
   transmitValue(speed);
 }
 
-void Drivetrain::nudge(Direction dir, float dist) {
+void Drivetrain::nudge(Direction dir, double dist) {
   std::cout << "nudging robot in direction " << static_cast<int>(dir) << " by " << dist << " inches" <<  std::endl;
   transmitChar('k');
   transmitBool(true);
@@ -37,7 +37,7 @@ void Drivetrain::nudge(Direction dir, float dist) {
   std::cout << "done nudging" << std::endl << std::endl;
 }
 
-void Drivetrain::travel(Direction dir, int speed, float dist, bool stopping) {
+void Drivetrain::travel(Direction dir, int speed, double dist, bool stopping) {
   std::cout << "travelling in direction " << static_cast<int>(dir) << " for " << dist << " inches at speed " << speed << std::endl;
   transmitChar('k');
   transmitBool(stopping);
@@ -50,7 +50,7 @@ void Drivetrain::travel(Direction dir, int speed, float dist, bool stopping) {
   std::cout << "done travelling" << std::endl << std::endl;
 }
 
-void Drivetrain::travel(float x, float y, float rot, float dist) {
+void Drivetrain::travel(double x, double y, double rot, double dist) {
   transmitChar('k');
   transmitBool(true);
   transmitChar('T');
