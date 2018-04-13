@@ -1,9 +1,26 @@
 #ifndef DIRECTION_H
 #define DIRECTION_H
 
-#include <stdint.h>
+//#include <stdint.h>
 
-enum class Direction : uint8_t {
+class Direction {
+  private:
+    double computeX() const;
+    double computeY() const;
+    double computeRot() const;
+    double computeOmega() const;
+    double computeTheta() const;
+    int computeOffset(double) const;
+  public:
+    const double x, y, rot;
+    const double theta, omega;
+    const int offset;
+    Direction(double, double);
+    Direction(double, double, double);
+};
+
+
+/*enum class Direction : uint8_t {
   NONE = 0,
   FRONT = 1,
   BACK = 2,
@@ -15,6 +32,6 @@ enum class Direction : uint8_t {
   BACK_RIGHT = 8,
   CLOCKWISE = 9,
   COUNTER_CLOCKWISE = 10
-};
+};*/
 
 #endif
