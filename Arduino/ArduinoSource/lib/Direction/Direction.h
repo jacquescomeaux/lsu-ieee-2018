@@ -4,6 +4,11 @@
 #include <ArduinoSTL.h>
 #include <stdint.h>
 
+class Direction {
+
+};
+
+
 enum class Direction : uint8_t {
   NONE = 0,
   FRONT = 1,

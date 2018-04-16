@@ -58,9 +58,8 @@ int main() {
     std::cout << i << std::endl;
     for(auto& fs : board_map[i]) std::cout << fs.first << ", " << fs.second << std::endl;
   }*/
-  robot.setCurrentIntersection(20);
-  robot.followPath(collection_path, true);
-  /*robot.setSpeed(30);
+  
+  robot.setSpeed(30);
   robot.toggleCalibration();
   robot.travel(Direction::FRONT, 30, 12, true);
   robot.snapToLine(Direction::LEFT, 6);
@@ -68,8 +67,13 @@ int main() {
   robot.toggleCalibration();
   robot.setSpeed(100);
   robot.snapToLine(Direction::LEFT, 6);
+
+  robot.followLine(Direction::LEFT);
+  robot.travel(Direction::LEFT, 70, 16, false);
+  robot.followUntilIntersection(Direction::LEFT);
   
-*/
+  robot.setCurrentIntersection(20);
+  robot.followPath(collection_path, true);
   
   return 0;
 }

@@ -19,6 +19,7 @@ class Robot : public Drivetrain, public LineFollower {
     int current_intersection;
     Camera int_cam, location_cam;
     int speed;
+    Direction determineDirection(Coord);
   public:
     Robot(Board*);
     Coord getLocation() const;

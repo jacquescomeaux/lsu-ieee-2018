@@ -8,6 +8,11 @@ Coord Robot::getLocation() const {
   return location_cam.determineLocation();
 }
 
+Direction Robot::determineDirection(Coord dest) const {
+  Coord diff(dest.x - location.x, dest.y - location.y);
+  diff 
+}
+
 void Robot::followLine(Direction dir) const {
   LineFollower::followLine(dir, speed);
 }
