@@ -12,11 +12,12 @@ bool SortingSystem::pickUpToken() {
   transmitChar('p');
   waitForChar('p');
   std::cout << "done waiting" << std::endl;
-  Color seen = static_cast<Color>(c);//token_cam.getTokenColor();
-  if(++c > 7) c = 1;
+  //Color seen = static_cast<Color>(c);
+  Color seen = token_cam.getTokenColor(); //uncommented for color detection testing
+  //if(++c > 7) c = 1;
   std::cout << "color checked" << std::endl;
   //if(seen == Color::NONE || seen == Color::WHITE || seen == Color::BLACK) return false;
-  if(seen == Color::NONE || seen == Color::WHITE || seen == Color::BLACK) seen = Color::GRAY;
+  //if(seen == Color::NONE || seen == Color::WHITE || seen == Color::BLACK) seen = Color::GRAY;
   held_token = new Token(seen);
   return true;
 }

@@ -1,4 +1,4 @@
-#include "../include/Camera.h"
+ #include "../include/Camera.h"
 #include <cmath>
 #include <iostream>
 #include <exception>
@@ -232,41 +232,41 @@ std::vector<cv::Vec3f> Camera::getCircle(int attempts = 1) { //Detects both inte
   /// Apply the Hough Transform to find the circles
   cv::HoughCircles(gray, circles, CV_HOUGH_GRADIENT, 2, 300, 50, 65, 60, 85); //60, 85
 
-  std::cout << "Circle Detected... x=" << circles[0] << " y=" << circles[1] << " r=" << circles[2] << std::endl;
+  //std::cout << "Circle Detected... x=" << circles[0] << " y=" << circles[1] << " r=" << circles[2] << std::endl;
 
   return circles;
 }
 
 Color Camera::getTokenColor() {
   static std::map<Color,std::pair<cv::Vec6d,std::string> > bgrhsv;
-  bgrhsv[Color::BLUE] = std::make_pair(cv::Vec6d(156, 83, 68, 114, 143, 96), "Blue"); // Prev: (87, 44, 36, 115, 137, 87) 
-  bgrhsv[Color::GREEN] = std::make_pair(cv::Vec6d(51, 80, 50, 46, 96, 116), "Green"); // Prev: H:61
-  bgrhsv[Color::RED] = std::make_pair(cv::Vec6d(38, 24, 85, 172, 183, 99), "Red");   // Prev: (38, 24, 85, 172, 183, 85)
-  bgrhsv[Color::CYAN] = std::make_pair(cv::Vec6d(79, 73, 52, 90, 87, 106), "Cyan");   // Prev: H:99    
-  bgrhsv[Color::MAGENTA] = std::make_pair(cv::Vec6d(80, 34, 70, 156, 144, 92), "Magenta"); // Prev: 170  
-  bgrhsv[Color::YELLOW] = std::make_pair(cv::Vec6d(69, 92, 95, 29, 92, 115), "Yellow");    // Prev: H:79
-  bgrhsv[Color::GRAY] = std::make_pair(cv::Vec6d(46, 35, 30, 105, 86, 55), "Gray");        // Prev: H115     
-  bgrhsv[Color::NONE] = std::make_pair(cv::Vec6d(29, 24, 25, 110, 54, 31), "None");       
+  bgrhsv[Color::BLUE] = std::make_pair(cv::Vec6d(82, 52, 12, 93, 207, 85), "Blue");
+  bgrhsv[Color::GREEN] = std::make_pair(cv::Vec6d(59, 109, 33, 71, 180, 110), "Green");
+  bgrhsv[Color::RED] = std::make_pair(cv::Vec6d(25, 30, 65, 50, 188, 73), "Red");
+  bgrhsv[Color::CYAN] = std::make_pair(cv::Vec6d(76, 81, 17, 79, 176, 81), "Cyan");
+  bgrhsv[Color::MAGENTA] = std::make_pair(cv::Vec6d(48, 40, 55, 116, 122, 62), "Magenta");
+  bgrhsv[Color::YELLOW] = std::make_pair(cv::Vec6d(39, 117, 101, 40, 173, 117), "Yellow");
+  bgrhsv[Color::GRAY] = std::make_pair(cv::Vec6d(37, 48, 25, 74, 129, 48), "Gray");
+  bgrhsv[Color::NONE] = std::make_pair(cv::Vec6d(29, 24, 25, 110, 54, 31), "None");
   int b, g, r, h, s, v, sum;
   b = g = r = h = s = v = sum = 0;
   cv::Mat src, bgr, hsv;
   cv::Rect roi;
-  roi.x = 128;
-  roi.y = 200;
-  roi.width = 490;
-  roi.height = 200;
-  
+  roi.x = 100;
+  roi.y = 100;
+  roi.width = 420;
+  roi.height = 220;
+
   for(int i = 0; i < 10; i++) cap >> bgr;
   cap >> bgr;
-  //cv::imwrite("token.jpg", bgr);
+  cv::imwrite("token.jpg", bgr);
   cv::Mat img = bgr(roi);
-  //cv::imwrite("tokencrop.jpg", img);
-  cv::cvtColor(bgr, hsv, cv::COLOR_BGR2HSV);
-  
-  for(int i = 220; i < 440; i++) for(int j = 290; j < 410; j++) {
-    b += bgr.at<cv::Vec3b>(j,i)[0];
-    g += bgr.at<cv::Vec3b>(j,i)[1];
-    r += bgr.at<cv::Vec3b>(j,i)[2];
+  cv::imwrite("crop.jpg", img);
+  cv::cvtColor(img, hsv, cv::COLOR_BGR2HSV);
+
+  for(int i = 0; i < img.cols; ++i) for(int j = 0; j < img.rows; ++j) {
+    b += img.at<cv::Vec3b>(j,i)[0]; //format is (y, x): j is y (height), i is x (width)
+    g += img.at<cv::Vec3b>(j,i)[1];
+    r += img.at<cv::Vec3b>(j,i)[2];
     h += hsv.at<cv::Vec3b>(j,i)[0];
     s += hsv.at<cv::Vec3b>(j,i)[1];
     v += hsv.at<cv::Vec3b>(j,i)[2];
@@ -296,7 +296,14 @@ Color Camera::getTokenColor() {
     min = kv.second;
     tokenColor = kv.first;
   }
-  std::cout << bgrhsv[tokenColor].second << " detected" << std::endl;
+
+  if (tokenColor == Color::BLUE) if(avgs[1] > 70) tokenColor = Color::CYAN;
+  else if(tokenColor == Color::CYAN) if(avgs[1] < 70) tokenColor = Color::BLUE;
+  
+
+  if(tokenColor == Color::BLUE) std::cout << "Blue Detected" << std::endl;
+  else if (tokenColor == Color::CYAN) std::cout << "Cyan Detected" << std::endl;
+  else std::cout << bgrhsv[tokenColor].second << " detected" << std::endl;
   std::cout << "(B, G, R): (" << avgs[0] << ", " << avgs[1] << ", " << avgs[2] << ")" << std::endl;
   std::cout << "(H, S, V): (" << avgs[3] << ", " << avgs[4] << ", " << avgs[5] << ")" << std::endl;
 

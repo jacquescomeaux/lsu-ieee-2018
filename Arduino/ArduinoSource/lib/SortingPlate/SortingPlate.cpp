@@ -25,14 +25,14 @@ void SortingPlate::stepBackward(unsigned int s) {
 
 void SortingPlate::quickstepForward(unsigned int s) {
   for(unsigned int t = 0; t < s; t++) {
-    motor->quickstep(FORWARD);
+    //motor->quickstep(FORWARD);
     delayMicroseconds(750);
   }
 }
 
 void SortingPlate::quickstepBackward(unsigned int s) {
   for(unsigned int t = 0; t < s; t++) {
-    motor->quickstep(BACKWARD);
+    //motor->quickstep(BACKWARD);
     delayMicroseconds(750);
   }
 }

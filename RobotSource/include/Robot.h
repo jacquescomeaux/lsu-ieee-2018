@@ -14,7 +14,7 @@
 class Robot : public Drivetrain, public LineFollower {
   private:
     //Coord location;
-    Camera int_cam, location_cam;
+    Camera int_cam;//, location_cam;
     int speed;
   public:
     Robot();
