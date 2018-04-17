@@ -38,7 +38,7 @@ void Drivetrain::nudge(Direction dir, double dist) {
 }
 
 void Drivetrain::travel(Direction dir, int speed, double dist, bool stopping) {
-  std::cout << "travelling in direction " << static_cast<int>(dir) << " for " << dist << " inches at speed " << speed << std::endl;
+//  std::cout << "travelling in direction " << static_cast<int>(dir) << " for " << dist << " inches at speed " << speed << std::endl;
   transmitChar('k');
   transmitBool(stopping);
   transmitChar('t');

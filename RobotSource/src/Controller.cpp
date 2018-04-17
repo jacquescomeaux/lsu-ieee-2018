@@ -8,7 +8,7 @@
 Controller::Controller(SortBot& r) :
   robot(r),
   NUM_LINES(6),
-  follow_sequence {
+  /*follow_sequence {
     Direction::LEFT,
     Direction::FRONT,
     Direction::FRONT,
@@ -24,12 +24,12 @@ Controller::Controller(SortBot& r) :
     Direction::LEFT,
     Direction::BACK_RIGHT
   },
-  type_sequence {false, true, false, false, true, false},
+  */type_sequence {false, true, false, false, true, false},
   offset_sequence {16, 0, 8, 0, 0, 24},
   dist_sequence {11.5, 6, 11.5, 11.5, 6, 11.5},
   travel_sequence {16, 3, 16, 12, 16, 3},
-  blind_sequence {22, 11, 22, 22, 11, 22},
-  drop_sequence {
+  blind_sequence {22, 11, 22, 22, 11, 22}//,
+  /*drop_sequence {
     Direction::BACK_RIGHT,
     Direction::RIGHT,
     Direction::FRONT_RIGHT,
@@ -43,7 +43,7 @@ Controller::Controller(SortBot& r) :
     Direction::LEFT,
     Direction::BACK,
     Direction::BACK
-  } {}
+  }*/ {}
 
 Controller::Controller(SortBot& r, Direction* f_seq, Direction* c_seq, int n) :
   robot(r),
