@@ -21,7 +21,7 @@ class LineSensor {
     LineSensor();
     void calibrateSensors();
     void getLineErrors(Fixed*, Fixed*, Fixed*, int offset, int range);
-    void getIntersectionErrors();
+    void getIntersectionErrors(Fixed*, Fixed*, Fixed*);
 };
 
 #endif//LINESENSOR_H

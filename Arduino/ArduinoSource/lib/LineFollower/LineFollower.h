@@ -14,8 +14,7 @@ class LineFollower {
   protected:
     LineFollower();
   public:
-   void calibrateSensors();
-    unsigned int resolveOffset(Direction dir);
+    void calibrateSensors();
     void correctErrors(Fixed, Fixed, Fixed, Fixed*, Fixed*, Fixed*);
     void getLineCorrections(Fixed*, Fixed*, Fixed*, unsigned int offset, unsigned int range);
     void getCenterCorrections(Fixed*, Fixed*, Fixed* /*, bool cross, unsigned int offset*/);

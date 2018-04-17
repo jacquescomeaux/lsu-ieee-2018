@@ -47,7 +47,7 @@ void LineFollower::correctErrors(Fixed xerr, Fixed yerr, Fixed rerr, Fixed* xcrr
 
 void LineFollower::getCenterCorrections(Fixed* x, Fixed* y, Fixed* rot/*, bool cross, unsigned int offset*/) {
   Fixed xerr, yerr, rerr;
-  line_sensor.getIntersectionErrors(&xerr, &yerr, &rerr)
+  line_sensor.getIntersectionErrors(&xerr, &yerr, &rerr);
   //if(cross) line_sensor.getCrossIntersectionErrors(&xerr, &yerr, &rerr, offset);
   //else line_sensor.getCornerIntersectionErrors(&xerr, &yerr, &rerr, offset);
   correctErrors(xerr, yerr, rerr, x, y, rot);

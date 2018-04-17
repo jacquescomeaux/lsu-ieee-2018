@@ -40,10 +40,11 @@ class Drivetrain {
     void nudge(VelocityVector, Fixed dist);
   
     //permanently adjust direction of movement
-    void steer(VelocityVector, Fixed amount);
+    void steer(VelocityVector);
    
     //temporarily adjust direction of movement
-    void veer(VelocityVector, Fixed amount);
+    void veer(Fixed, Fixed, Fixed);
+    void veer(VelocityVector);
    
     //change robot state
     void setAcceleration(Fixed);

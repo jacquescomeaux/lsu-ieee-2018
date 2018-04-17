@@ -52,17 +52,20 @@ void Drivetrain::move(VelocityVector v) {
 
 void Drivetrain::travel(VelocityVector v, Fixed dist) {
   static const Fixed STEPS_PER_INCH = 286.7, ZERO = 0;
+  Fixed x = v.x;
+  Fixed y = v.y;
+  Fixed rot = v.rot;
   if(dist < ZERO) {
     x = ZERO - x;
     y = ZERO - y;
     rot = ZERO - rot;
     dist = ZERO - dist;
   }
-  v = VelocityVector(x, y, rot);
+  VelocityVector vv(x, y, rot);
   steps_to_travel = dist * STEPS_PER_INCH;
   //for(Wheel& w : wheels) w.resetPosition();
   for(int i = 0; i < 2; i++) starting_positions[i] = wheels[i].getPosition();
-  move(v);
+  move(vv);
 }
 
 void Drivetrain::nudge(VelocityVector v, Fixed dist) {
@@ -76,15 +79,20 @@ void Drivetrain::nudge(VelocityVector v, Fixed dist) {
     rot = ZERO - rot;
     dist = ZERO - dist;
   }
-  v = VelocityVector(x, y, rot);
+  VelocityVector vv(x, y, rot);
   steps_to_travel = dist * STEPS_PER_INCH;
   //for(Wheel& w : wheels) w.resetPosition();
   for(int i = 0; i < 2; i++) starting_positions[i] = wheels[i].getPosition();
-  veer(v);
+  veer(vv);
 }
 
 void Drivetrain::steer(VelocityVector v) {
   const Fixed adjustments[4] = {v.y + v.x - v.rot, v.y - v.x - v.rot, v.y + v.x + v.rot, v.y - v.x + v.rot};
+  adjustWheelSpeeds(adjustments);
+}
+
+void Drivetrain::veer(Fixed x, Fixed y, Fixed rot) {
+  const Fixed adjustments[4] = {y + x - rot, y - x - rot, y + x + rot, y - x + rot};
   adjustWheelSpeeds(adjustments);
 }
 

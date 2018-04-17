@@ -29,8 +29,8 @@ unsigned int receiveIndex() {
 }
 
 VelocityVector receiveVelocityVector() {
-  Fixed x = recieveFixed();
-  Fixed y = recieveFixed();
+  Fixed x = receiveFixed();
+  Fixed y = receiveFixed();
   Fixed rot = receiveFixed();
   VelocityVector v(x, y, rot);
   return v;
@@ -93,9 +93,6 @@ void parseCommand() {
     case '/': robot->setCenterOffset(receiveIndex()); break;
     case '.': robot->setFollowRange(receiveIndex()); break;
     case 'k': robot->setTravelStop(receiveBool()); break;
-    case ',': robot->setBaseSpeed(receiveFixed()); break; 
-    //case '<': robot->adjustBaseSpeed(Fixed(-10)); break;
-    //case '>': robot->adjustBaseSpeed(Fixed(10)); break;
 
     case 'm': robot->move(receiveVelocityVector()); break;
     
@@ -115,15 +112,13 @@ void parseCommand() {
     
     case 's': {
       VelocityVector dv = receiveVelocityVector();
-      Fixed amount = receiveFixed();
-      robot->steer(dv, amount);
+      robot->steer(dv);
       break;
     }
     
     case 'v': {
       VelocityVector dv = receiveVelocityVector();
-      Fixed speed = receiveFixed();
-      robot->veer(dv, speed);
+      robot->veer(dv);
       break;
     }
     

@@ -6,9 +6,9 @@
 class VelocityVector {
   private:
     const Fixed RAD_TO_OFFSET;
-    Fixed computeAngle() const;
-    Fixed computeMagnitude() const;
-    unsigned int computeOffset() const;
+    Fixed computeAngle(Fixed, Fixed) const;
+    Fixed computeMagnitude(Fixed, Fixed) const;
+    unsigned int computeOffset(Fixed) const;
   public:
     const Fixed x, y, angle, magnitude, rot;
     const unsigned int offset;

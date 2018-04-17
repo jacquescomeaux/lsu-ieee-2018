@@ -55,7 +55,7 @@ void Robot::update() {
   if((dt[1] > 0) ? (last_ran[1] = time) : false) {
     if((flags & Flag::FOLLOWING_LINE) != Flag::NONE) {
       Fixed xcrr, ycrr, rcrr;
-      getLineCorrections(&xcrr, &ycrr, &rcrr, resolveOffset(current_direction), follow_range);
+      getLineCorrections(&xcrr, &ycrr, &rcrr, center_offset, follow_range);
       veer(xcrr, ycrr, rcrr);
     }
   }

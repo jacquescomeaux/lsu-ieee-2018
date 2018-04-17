@@ -5,7 +5,6 @@
 
 LineSensor::LineSensor() :
   NUM_PINS(32),
-  line_threshold(500),
   OFFSET_TO_RAD(3.141592653589793 / static_cast<double>(16)),
   pins {
     22, 23, 24, 25, 26, 27, 28, 29,
