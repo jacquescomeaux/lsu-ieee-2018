@@ -44,6 +44,7 @@ void LineSensor::calibrateSensors() {
 
 void LineSensor::getLineErrors(Fixed* x, Fixed* y, Fixed* rot, int offset, int range) {
   readSensors();
+  //Fixed x, y, rot;
   int fi = offset % 16;
   int bi = fi + 16;
   int li = ((offset + 24) % 16) + 8;
@@ -60,9 +61,21 @@ void LineSensor::getLineErrors(Fixed* x, Fixed* y, Fixed* rot, int offset, int r
   r = getLinePosition(ri, range, false);
   *x = (b - f) * SINES[fi];
   *y = (r - l)  * COSINES[ri];
+  //VelocityVector errors(x, y, rot);
+  //return errors;
 }
 
-void LineSensor::getCrossIntersectionErrors(Fixed* x, Fixed* y, Fixed* rot, int offset) {
+void LineSensor::getIntersectionErrors(Fixed* x, Fixed* y, Fixed* rot) {
+  static const Fixed ZERO = 0;
+  *x = ZERO;
+  *y = ZERO;
+  *rot = ZERO;
+  //VelocityVector errors(ZERO, ZERO, ZERO);
+  //return errors;
+}
+
+
+/*void LineSensor::getCrossIntersectionErrors(Fixed* x, Fixed* y, Fixed* rot, int offset) {
   readSensors();
   Fixed x_p, y_p, rot_p, x_s, y_s, rot_s;
   getLineErrors(&x_p, &y_p, &rot_p, offset, 4);
@@ -84,111 +97,4 @@ void LineSensor::getCornerIntersectionErrors(Fixed* x, Fixed* y, Fixed* rot, int
   *x = x_d + b * COSINES[di] + r * SINES[(di + 8) % 32];
   *y = y_d + b * SINES[di] + r * COSINES[(di + 8) % 32];
   *rot = Fixed(0);
-}
-
-int LineSensor::countLinePeaks(int range) {
-  readSensors();
-  int peak_count = 0;
-  for(int i = 0; i < NUM_PINS; i++) if(sensor_values[i] > line_threshold) {
-    int higher_values_in_range = 0;
-    for(int j = 0 - range; j <= range; j++) if(sensor_values[i] < sensor_values[(i + j + NUM_PINS) % NUM_PINS]) higher_values_in_range++;
-    if(higher_values_in_range == 0) peak_count++;
-  }
-  return peak_count;
-}
-
-void LineSensor::printReadings() {
-  /*
-  readSensors();
-  unsigned int total = 0;
-  for(unsigned int v : sensor_values) total += v;
-  Serial.print("Total line: ");
-  Serial.println(total);
-  unsigned int* front_mins = qtrrc1.calibratedMinimumOn;
-  unsigned int* back_mins = qtrrc2.calibratedMinimumOn;
-  unsigned int* front_maxs = qtrrc1.calibratedMaximumOn;
-  unsigned int* back_maxs = qtrrc2.calibratedMaximumOn;
-  for(int i = 0; i < 16; i++) {
-    Serial.print(front_mins[i]);
-    Serial.print(" ");
-  }
-  for(int i = 0; i < 16; i++) {
-    Serial.print(back_mins[i]);
-    Serial.print(" ");
-  }
-  Serial.println();
-  for(int i = 0; i < 16; i++) {
-    Serial.print(front_maxs[i]);
-    Serial.print(" ");
-  }
-  for(int i = 0; i < 16; i++) {
-    Serial.print(back_maxs[i]);
-    Serial.print(" ");
-  }
-  Serial.println();
-  for(int i = 0; i < 4; i++) {
-    for(int j = 0; j < 8; j++) {
-      int k = i*8+j;
-      Serial.print("S");
-      if(k<10) Serial.print("0");
-      Serial.print(k);
-      Serial.print(": p");
-      Serial.print(pins[k]);
-      unsigned int v = sensor_values[k];
-      Serial.print(" v: ");
-      if(v < 1000) Serial.print(" "); 
-      if(v < 100) Serial.print(" "); 
-      if(v < 10) Serial.print(" "); 
-      Serial.print(v);
-      Serial.print("   ");
-    }
-    Serial.println("");
-  }
-  Serial.println("\n------------------------------------------------------------------------------------------------");
-*/
-}
-
-void LineSensor::printLinePeaks() {
-  /*
-  Serial.print("Lines Seen: ");
-  Serial.println(countLinePeaks(3));
-  */
-}
-
-void LineSensor::printCalibratedValues() {
-  /*
-  long min = 1000;
-  long max = 0;
-  long testval = 0;
-
-  for(int i = 0; i < 16; i++) {
-    testval = qtrrc1.calibratedMinimumOn[i];
-    if (testval < min) min = testval;
-    testval = qtrrc2.calibratedMinimumOn[i];
-    if (testval < min) min = testval;
-
-   testval = qtrrc1.calibratedMaximumOn[i];
-   if (testval > max) max = testval;
-   testval = qtrrc2.calibratedMaximumOn[i];
-   if (testval > max) max = testval;
-  }
-
-  Serial.print("Calibrated Values (min,max) : (");
-  Serial.print(min);
-  Serial.print(",");
-  Serial.print(max);
-  Serial.println(")");
-  */
-}
-
-void LineSensor::printErrors(Fixed x, Fixed y, Fixed rot) {
-  /*
-  Serial.print("Errors (x, y, rot): (");
-  Serial.print(x.getInt());
-  Serial.print(" , ");
-  Serial.print(y.getInt());
-  Serial.print(" , ");
-  Serial.print(rot.getInt());
-  Serial.println(" )");
-  */
-}
+}*/

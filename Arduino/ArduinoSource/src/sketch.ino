@@ -2,10 +2,10 @@
 #include <Arduino.h>
 
 #include <Fixed.h>
-#include <Direction.h>
-#include <Color.h>
 
-#define moveSetDstAmt 4 //how far the robot moves via moveSetDistance (in inches)
+#include <VelocityVector.h>
+
+#include <Color.h>
 
 SortBot* robot;
 
@@ -28,9 +28,12 @@ unsigned int receiveIndex() {
   return i.number;
 }
 
-Direction receiveDirection() {
-  while(!Serial.available());
-  return static_cast<Direction>(Serial.read());
+VelocityVector receiveVelocityVector() {
+  Fixed x = recieveFixed();
+  Fixed y = recieveFixed();
+  Fixed rot = receiveFixed();
+  VelocityVector v(x, y, rot);
+  return v;
 }
 
 Color receiveColor() {
@@ -76,89 +79,69 @@ void receivePIDCommand(unsigned int var) {
 void parseCommand() {
   unsigned char command = Serial.read();
   switch(command) {
-    case 'c': robot->toggle(Flag::CALIBRATING_LINE); break;
+    case 'c': robot->toggleFlags(Flag::CALIBRATING_LINE); break;
     case 'f': robot->setFlags(Flag::FOLLOWING_LINE); break;
-    case 'F': robot->clearFlags(Flag::FOLLOWING_LINE); break;
+    //case 'F': robot->clearFlags(Flag::FOLLOWING_LINE); break;
     
-    case ',': robot->setBaseSpeed(receiveFixed()); break; 
-    case '<': robot->adjustBaseSpeed(Fixed(-10)); break;
-    case '>': robot->adjustBaseSpeed(Fixed(10)); break;
-   
-    case '/': robot->setCenterOffset(receiveIndex()); break;
+    /*
+    CASE FOR PICOCOM TESTING
     case '"': {
       robot->setTravelStop(true);
-      robot->travel(Direction::LEFT, 120, 5);
+      robot->travel(VelocityVector(-120, 0, 0), 5);
       break;
-    }
+    }*/
+    case '/': robot->setCenterOffset(receiveIndex()); break;
     case '.': robot->setFollowRange(receiveIndex()); break;
     case 'k': robot->setTravelStop(receiveBool()); break;
+    case ',': robot->setBaseSpeed(receiveFixed()); break; 
+    //case '<': robot->adjustBaseSpeed(Fixed(-10)); break;
+    //case '>': robot->adjustBaseSpeed(Fixed(10)); break;
 
-    case 'm': robot->move(receiveDirection()); break;
-    
-    case 'M': {
-      Direction dir = receiveDirection();
-      Fixed speed = receiveFixed();
-      robot->move(dir, speed);
-      break;
-    }
+    case 'm': robot->move(receiveVelocityVector()); break;
     
     case 'n': {
-      Direction dir = receiveDirection();
+      VelocityVector v = receiveVelocityVector();
       Fixed dist = receiveFixed();
-      robot->nudge(dir, dist);
+      robot->nudge(v, dist);
       break;
     }
     
     case 't': {
-      Direction dir = receiveDirection();
-      Fixed speed = receiveFixed();
+      VelocityVector v = receiveVelocityVector();
       Fixed dist = receiveFixed();
-      robot->travel(dir, speed, dist);
-      break;
-    }
-    
-    case 'T': {
-      Fixed x = receiveFixed();
-      Fixed y = receiveFixed();
-      Fixed rot  = receiveFixed();
-      Fixed dist = receiveFixed();
-      robot->travel(x, y, rot, dist);
+      robot->travel(v, dist);
       break;
     }
     
     case 's': {
-      Direction dir = receiveDirection();
+      VelocityVector dv = receiveVelocityVector();
       Fixed amount = receiveFixed();
-      robot->steer(dir, amount);
+      robot->steer(dv, amount);
       break;
     }
     
     case 'v': {
-      Direction dir = receiveDirection();
+      VelocityVector dv = receiveVelocityVector();
       Fixed speed = receiveFixed();
-      robot->veer(dir, speed);
+      robot->veer(dv, speed);
       break;
     }
     
-    case 'V': {
-      Fixed x = receiveFixed();
-      Fixed y = receiveFixed();
-      Fixed rot = receiveFixed();
-      robot->veer(x, y, rot);
-      break;
-    }
-    
-    case 'p': robot->pickUpToken(); break;
     case ' ': robot->stop(); break;
+
+    case 'p': robot->pickUpToken(); break;
     
     case 'r': {
       Color c = receiveColor();
       robot->storeToken(c);
       break;
     }
+
     case 'd': robot->dropNextTokenStack(); break;
-    case '|': robot->toggle(Flag::CENTERING_CROSS); break;
-    case '\\': robot->toggle(Flag::CENTERING_CORNER); break;
+    
+    case '|': robot->toggleFlags(Flag::CENTERING); break;
+    //case '|': robot->toggle(Flag::CENTERING_CROSS); break;
+    //case '\\': robot->toggle(Flag::CENTERING_CORNER); break;
 
     default: robot->stop();
   }

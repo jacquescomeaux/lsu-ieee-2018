@@ -1,7 +1,6 @@
 #ifndef LINEFOLLOWER_H
 #define LINEFOLLOWER_H
 
-#include <Direction.h>
 #include <Fixed.h>
 #include <Flag.h>
 
@@ -19,7 +18,7 @@ class LineFollower {
     unsigned int resolveOffset(Direction dir);
     void correctErrors(Fixed, Fixed, Fixed, Fixed*, Fixed*, Fixed*);
     void getLineCorrections(Fixed*, Fixed*, Fixed*, unsigned int offset, unsigned int range);
-    void getCenterCorrections(Fixed*, Fixed*, Fixed*, bool cross, unsigned int offset);
+    void getCenterCorrections(Fixed*, Fixed*, Fixed* /*, bool cross, unsigned int offset*/);
     void adjustPID(unsigned int var, unsigned int term, Fixed);
     void resetPIDData();
 };

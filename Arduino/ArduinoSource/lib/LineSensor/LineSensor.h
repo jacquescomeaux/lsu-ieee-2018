@@ -4,11 +4,12 @@
 #include <QTRSensors.h>
 
 #include <Fixed.h>
+#include <VelocityVector.h>
 
 class LineSensor {
   private:
     const int NUM_PINS;
-    const unsigned int line_threshold;
+    //const unsigned int line_threshold;
     const Fixed OFFSET_TO_RAD;
     unsigned char pins[32];
     QTRSensorsRC qtrrc1, qtrrc2;
@@ -19,14 +20,8 @@ class LineSensor {
   public:
     LineSensor();
     void calibrateSensors();
-    void getLineErrors(Fixed* x, Fixed* y, Fixed* rot, int, int);
-    void getCrossIntersectionErrors(Fixed* x, Fixed* y, Fixed* rot, int);
-    void getCornerIntersectionErrors(Fixed* x, Fixed* y, Fixed* rot, int);
-    int countLinePeaks(int range);
-    void printReadings();
-    void printLinePeaks();
-    void printCalibratedValues();
-    void printErrors(Fixed, Fixed, Fixed);
+    void getLineErrors(Fixed*, Fixed*, Fixed*, int offset, int range);
+    void getIntersectionErrors();
 };
 
 #endif//LINESENSOR_H

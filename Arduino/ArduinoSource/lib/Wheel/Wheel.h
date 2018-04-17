@@ -39,7 +39,6 @@ class Wheel {
     void resetPosition();
     Fixed getDistance();
     Fixed updateEncoderSpeed();
-
 };
 
 #endif//WHEEL_H

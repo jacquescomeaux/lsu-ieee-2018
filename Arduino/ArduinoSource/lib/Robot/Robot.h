@@ -3,6 +3,7 @@
 
 #include <Fixed.h>
 #include <Flag.h>
+#include <VelocityVector.h>
 
 #include <Drivetrain.h>
 #include <LineFollower.h>
@@ -29,18 +30,14 @@ class Robot : public Drivetrain, public LineFollower {
     //to be called in a loop
     void update();
     
-    //
-    void travel(Direction, Fixed dist);
-    void travel(Direction, Fixed speed, Fixed dist);
-    void travel(Fixed x, Fixed y, Fixed rot, Fixed dist);
-    
-    void nudge(Direction, Fixed dist);
-    void nudge(Fixed x, Fixed y, Fixed rot, Fixed dist);
+    //move a set distance
+    void travel(VelocityVector, Fixed dist);
+    void nudge(VelocityVector, Fixed dist);
 
     //change robot state
     void setFlags(Flag);
     void clearFlags(Flag);
-    void toggle(Flag);
+    void toggleFlags(Flag);
     void setCenterOffset(unsigned int);
     void setFollowRange(unsigned int);
     void setTravelStop(bool);

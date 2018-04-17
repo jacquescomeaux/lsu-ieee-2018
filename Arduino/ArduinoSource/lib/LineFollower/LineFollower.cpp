@@ -14,25 +14,6 @@ void LineFollower::calibrateSensors() {
   line_sensor.calibrateSensors();
 }
 
-unsigned int LineFollower::resolveOffset(Direction dir) {
-  unsigned int offset = 0;
-  switch(dir) {
-    case(Direction::NONE):  offset =  0; break;
-    case(Direction::FRONT): offset =  8; break;
-    case(Direction::BACK):  offset = 24; break;
-    case(Direction::LEFT):  offset = 16; break;
-    case(Direction::RIGHT): offset =  0; break;
-    case(Direction::FRONT_LEFT):  offset = 12; break;
-    case(Direction::FRONT_RIGHT): offset =  4; break;
-    case(Direction::BACK_LEFT):   offset = 20; break;
-    case(Direction::BACK_RIGHT):  offset = 28; break;
-    case(Direction::CLOCKWISE):         offset = 0; break;
-    case(Direction::COUNTER_CLOCKWISE): offset = 0; break;
-    default: break;
-  }
-    return offset;
-}
-
 void LineFollower::correctErrors(Fixed xerr, Fixed yerr, Fixed rerr, Fixed* xcrr, Fixed* ycrr, Fixed* rcrr) {
   static const Fixed FIFTH = 0.2;
   static unsigned long t = 0;
@@ -47,7 +28,7 @@ void LineFollower::correctErrors(Fixed xerr, Fixed yerr, Fixed rerr, Fixed* xcrr
   }
   if(array_filled) {
     //PID CONTROLLER
-    //        KP * current error        +  KI * accumulated error             +  KD * change in error
+    //         KP * current error        +  KI * accumulated error             +  KD * change in error
     *xcrr = (pid_terms[0][0]  * avgs[0]) + (pid_terms[0][1] * pid_terms[0][3]) + (pid_terms[0][2] * (avgs[0] - pid_terms[0][4])); //x correction
     *ycrr = (pid_terms[1][0]  * avgs[1]) + (pid_terms[1][1] * pid_terms[1][3]) + (pid_terms[1][2] * (avgs[1] - pid_terms[1][4])); //y correction
     *rcrr = (pid_terms[2][0]  * avgs[2]) + (pid_terms[2][1] * pid_terms[2][3]) + (pid_terms[2][2] * (avgs[2] - pid_terms[2][4]));  //rot correction
@@ -64,10 +45,11 @@ void LineFollower::correctErrors(Fixed xerr, Fixed yerr, Fixed rerr, Fixed* xcrr
   }
 }
 
-void LineFollower::getCenterCorrections(Fixed* x, Fixed* y, Fixed* rot, bool cross, unsigned int offset) {
+void LineFollower::getCenterCorrections(Fixed* x, Fixed* y, Fixed* rot/*, bool cross, unsigned int offset*/) {
   Fixed xerr, yerr, rerr;
-  if(cross) line_sensor.getCrossIntersectionErrors(&xerr, &yerr, &rerr, offset);
-  else line_sensor.getCornerIntersectionErrors(&xerr, &yerr, &rerr, offset);
+  line_sensor.getIntersectionErrors(&xerr, &yerr, &rerr)
+  //if(cross) line_sensor.getCrossIntersectionErrors(&xerr, &yerr, &rerr, offset);
+  //else line_sensor.getCornerIntersectionErrors(&xerr, &yerr, &rerr, offset);
   correctErrors(xerr, yerr, rerr, x, y, rot);
 }
 
