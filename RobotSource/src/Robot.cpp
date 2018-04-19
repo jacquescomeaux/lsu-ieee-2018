@@ -38,9 +38,9 @@ bool Robot::followUntilIntersection(Direction dir) {
   followLine(dir);
   for(int i = 0; i < 10; i++) int_cam.onLine();
   float x, y;
-  while(!int_cam.atIntersection());// || int_cam.getTokenErrors(&x, &y, 2));
-  std::cout << "stopped at intersection" << std::endl;
-  stop();
+    while(!int_cam.atIntersection());
+    std::cout << "stopped at intersection" << std::endl;
+    stop();
   if(!int_cam.getTokenErrors(&x, &y)) return false;
   return true;
 }

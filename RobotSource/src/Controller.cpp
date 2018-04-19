@@ -61,7 +61,7 @@ void Controller::coverLine(Direction dir, bool cross, int offset, int num_tokens
         break;
       }
       if(i != 0) robot.travel(dir, 60, 0.4, true);
-    }   
+    }
     robot.snapToLine(dir, cross ? 3 : 1);
     if(i == num_tokens - 1) break;
     waitForEnter();
@@ -81,11 +81,11 @@ void Controller::runAlgorithm() const {
   waitForEnter();
   #if 0
   while(true) {
-   robot.center(false, 16);
+   //robot.center(false, 16);
    robot.sortToken();
    waitForEnter();
   }
-  #else 
+  #else
   robot.setSpeed(30);
   robot.toggleCalibration();
   //robot.travel(Direction::FRONT, 30, 18, true);
@@ -93,19 +93,22 @@ void Controller::runAlgorithm() const {
   robot.snapToLine(Direction::LEFT, 6);
   robot.travel(Direction::CLOCKWISE, 90, 54, true);
   robot.toggleCalibration();
-  
+
   robot.setSpeed(100);
   robot.snapToLine(Direction::LEFT, 6);
-  
-  robot.setSpeed(90);
-  
+
+  robot.setSpeed(80);
+
   /*robot.followLine(Direction::RIGHT);
   robot.travel(Direction::RIGHT, 70, 16, false);
   robot.followUntilIntersection(Direction::RIGHT);
   */
   for(int i = 0; i < NUM_LINES; i++) {
+    int followspeed = 60;
+    if(follow_sequence[i] == Direction::LEFT || follow_sequence[i] == Direction::RIGHT) followspeed = 90;
     robot.followLine(follow_sequence[i]);
-    robot.travel(follow_sequence[i], 90, travel_sequence[i], false);
+    if(follow_sequence[i] == Direction::RIGHT) robot.travel(follow_sequence[i], followspeed, 30, false);
+    else {robot.travel(follow_sequence[i], followspeed, travel_sequence[i], false);}
     robot.followUntilIntersection(follow_sequence[i]);
     coverLine(cover_sequence[i], type_sequence[i], offset_sequence[i], 4, dist_sequence[i]);
     //coverLine(cover_sequence[i], type_sequence[i], offset_sequence[i], 3, dist_sequence[i]);

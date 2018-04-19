@@ -15,7 +15,7 @@ class Camera {
     cv::VideoCapture cap;
     cv::Mat M, M2;
     int countBlack();
-    std::vector<cv::Vec3f> getCircle(int); //looks for partial circle (token or intersection)
+    std::vector<cv::Vec3f> getCircle(unsigned int); //looks for partial circle (token or intersection)
   public:
     Camera(int n);
     bool onLine();
@@ -25,6 +25,7 @@ class Camera {
     bool getTokenErrors(float*, float*);
     bool getTokenErrors(float*, float*, int); //errors given in pixels, might need some conversion to real world units
     Color getTokenColor();
+    bool checkSortingPlate();
 };
 
 #endif//CAMERA_H
