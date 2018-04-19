@@ -3,6 +3,7 @@
 
 #include "Coord.h"
 #include "Direction.h"
+#include "VelocityVector.h"
 
 #include "Drivetrain.h"
 #include "LineFollower.h"
@@ -15,20 +16,29 @@
 class Robot : public Drivetrain, public LineFollower {
   private:
     Board* platform;
+    Camera int_cam, location_cam;
     Coord location;
     int current_intersection;
-    Camera int_cam, location_cam;
-    int speed;
-    Direction determineDirection(Coord);
+    double base_speed;
+    VelocityVector velocity;
+    VelocityVector determineVelocityVector(Coord);
+    VelocityVector resolveDirection(Direction);
   public:
     Robot(Board*);
     Coord getLocation() const;
-    void followLine(Direction) const;
     void setSpeed(int);
-    void moveUntilLine(Direction, int);
+    void move(Direction) const;
+    void nudge(Direction, double);
+    void travel(Direction, double, bool);
+    void followLine(Direction) const;
+    bool moveUntilLine(Direction);
+    bool moveUntilLine(VelocityVector);
     bool followUntilIntersection(Direction);
+    bool followUntilIntersection(VelocityVector);
+    bool followWhileIntersection(Direction);
+    bool followWhileIntersection(VelocityVector);
     bool tokenSeen();
-    //bool center(bool, int);
+    bool center();
     bool goToIntersection(int);
     bool setCurrentIntersection(int int_num);
     void recover();

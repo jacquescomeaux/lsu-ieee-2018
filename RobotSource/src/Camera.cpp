@@ -71,13 +71,12 @@ bool Camera::onLine() {
   else return false;
 }
 
-bool Camera::atIntersection() {
-  return true; //temp
-  if(countBlack() > 160) {
-  //std::cout << "stopped at int with blackness "<< checkvals[0] << " or " << checkvals[1] << std::endl;
-    return true;
+bool Camera::atIntersection(bool check_for_circle) {
+  if(check_for_circle) {}
+  else {
+    if(countBlack() > 160) return true;
+    else return false;
   }
-  else return false;
 }
 
 bool Camera::tokenSeen() {

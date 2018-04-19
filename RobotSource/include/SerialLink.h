@@ -3,7 +3,6 @@
 
 #include <libserialport.h>
 
-#include "Direction.h"
 #include "Color.h"
 
 #include <set>
@@ -25,7 +24,7 @@ class SerialLink {
     void receiveBuffer(void*, size_t) const;
     void transmitChar(char) const;
     void transmitIndex(unsigned int) const;
-    void transmitDirection(Direction) const;
+    void transmitVelocityVector(VelocityVector) const;
     void transmitColor(Color) const;
     void transmitBool(bool) const;
     void transmitValue(int) const;

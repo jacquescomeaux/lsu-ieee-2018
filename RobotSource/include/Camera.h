@@ -19,7 +19,7 @@ class Camera {
   public:
     Camera(int n);
     bool onLine();
-    bool atIntersection();
+    bool atIntersection(bool check_for_circle);
     bool tokenSeen();
     Coord determineLocation() const;
     bool getTokenErrors(double*, double*);

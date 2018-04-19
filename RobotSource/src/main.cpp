@@ -1,4 +1,6 @@
 #include "../include/Color.h"
+#include "../include/Direction.h"
+#include "../include/VelocityVector.h"
 
 #include "../include/Board.h"
 #include "../include/Robot.h"
@@ -62,18 +64,18 @@ int main() {
   robot.setSpeed(30);
   robot.toggleCalibration();
   robot.travel(Direction::FRONT, 30, 12, true);
-  robot.snapToLine(Direction::LEFT, 6);
+  robot.align(Direction::LEFT, 6);
   robot.travel(Direction::CLOCKWISE, 70, 54, true);
   robot.toggleCalibration();
   robot.setSpeed(100);
-  robot.snapToLine(Direction::LEFT, 6);
+  robot.align(Direction::LEFT, 6);
 
   robot.followLine(Direction::LEFT);
   robot.travel(Direction::LEFT, 70, 16, false);
   robot.followUntilIntersection(Direction::LEFT);
   
   robot.setCurrentIntersection(20);
-  robot.followPath(collection_path, true);
+  robot.followPath(collection_path, true); 
   
   return 0;
 }

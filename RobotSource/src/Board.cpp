@@ -69,20 +69,13 @@ void Board::checkTokens() const {
     Color c = tokens[i].getColor();
     std::string s;
     switch(c) {
-      case Color::RED : s = "Red";
-        break;
-      case Color::GREEN : s = "Green";
-        break;
-      case Color::BLUE : s = "Blue";
-        break;
-      case Color::CYAN : s = "Cyan";
-        break;
-      case Color::MAGENTA : s = "Magenta";
-        break;
-      case Color::YELLOW : s = "Yellow";
-        break;
-      case Color::GRAY : s = "Gray";
-        break;
+      case Color::RED : s = "Red"; break;
+      case Color::GREEN : s = "Green"; break;
+      case Color::BLUE : s = "Blue"; break;
+      case Color::CYAN : s = "Cyan"; break;
+      case Color::MAGENTA : s = "Magenta"; break;
+      case Color::YELLOW : s = "Yellow"; break;
+      case Color::GRAY : s = "Gray"; break;
       default : s = "Error";
     }
     if((std::abs(x-SQUARES[static_cast<int>(c)].x) < 0.5) && (std::abs(y-SQUARES[static_cast<int>(c)].y) < 0.5)) std::cout << "Correct:   ";

@@ -5,37 +5,17 @@
 
 LineFollower::LineFollower() {}
 
-void LineFollower::followLine(Direction dir, int speed, int range) const {
+void LineFollower::followLine(VelocityVector v, int range) const {
   transmitChar('.');
   transmitIndex(range);
-  transmitChar('M');
-  transmitDirection(dir);
-  transmitValue(speed);
-  transmitChar('f');
-}
-
-void LineFollower::followLine(Direction dir) const {
-  transmitChar('.');
-  transmitIndex(2);
   transmitChar('m');
-  transmitDirection(dir);
+  transmitVelocityVector(v);
   transmitChar('f');
 }
 
-void LineFollower::followLine(Direction dir, int speed) const {
-  transmitChar('.');
-  transmitIndex(2);
-  transmitChar('M');
-  transmitDirection(dir);
-  transmitValue(speed);
-  transmitChar('f');
-}
-
-void LineFollower::snapToLine(Direction dir, int range) const {
+void LineFollower::align(VelocityVector v, int range) const {
   std::cout << "Snapping to line" << std::endl;
-  followLine(dir);
-  transmitChar('.');
-  transmitIndex(range);
+  followLine(v, range);
   transmitChar(' ');
   transmitChar('f');
   std::this_thread::sleep_for(std::chrono::seconds(2));
@@ -47,23 +27,21 @@ void LineFollower::toggleCalibration() const {
   transmitChar('c');
 }
 
-void LineFollower::startCentering(bool cross, int offset) const {
+/*void LineFollower::startCentering(bool cross, int offset) const {
   transmitChar('/');
   transmitIndex(offset);
   char centerChar = cross ? '|' : '\\';
   transmitChar(centerChar);
   
-/*  std::this_thread::sleep_for(std::chrono::seconds(6)); //prev 6 secs
-  transmitChar(centerChar);
+  //std::this_thread::sleep_for(std::chrono::seconds(6)); //prev 6 secs
+  //transmitChar(centerChar);
+  //transmitChar(' ');
+}
+*/
+
+void LineFollower::center() const {
+  transmitChar('|');
+  std::this_thread::sleep_for(std::chrono::seconds(6)); //prev 6 secs
+  transmitChar('|');
   transmitChar(' ');
-*/}
-
-
-/*bool LineFollower::atIntersection() const {
-  static char last_char = 'y';
-  transmitChar('?');
-  char current_char = receiveChar();
-  bool atInt = (current_char == 'y' && last_char == 'n');
-  last_char = current_char;
-  return atInt;
-}*/
+}

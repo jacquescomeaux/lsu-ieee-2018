@@ -62,9 +62,12 @@ void SerialLink::transmitIndex(unsigned int n) const {
   transmitBuffer(&twobytes, sizeof(uint16_t));
 }
 
-void SerialLink::transmitDirection(Direction d) const {
+void SerialLink::transmitVelocityVector(VelocityVector v) const {
   //uint8_t i = static_cast<uint8_t>(d);
   //int out = static_cast<int>(i);
+  transmitValue(v.x);
+  transmitValue(v.y);
+  transmitValue(v.rot);
   //transmitBuffer(&i, sizeof(uint8_t));
   //std::cout << "Writing Direction " << out << std::endl;
 }
