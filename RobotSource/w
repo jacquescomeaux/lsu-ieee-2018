@@ -72,12 +72,7 @@ bool Camera::onLine() {
 }
 
 bool Camera::atIntersection(bool check_for_circle) {
-  if(check_for_circle) {
-    double x, y;
-    int seen = 0;
-    for(int i = 0; i < 10; i++) if(getTokenErrors(*x, *y)) seen++;
-    return seen > 8;
-  }
+  if(check_for_circle) {}
   else {
     if(countBlack() > 160) return true;
     else return false;
@@ -148,11 +143,15 @@ bool Camera::tokenSeen() {
 
 Coord Camera::determineLocation() const {return Coord(0,0);}
 
+bool Camera::getTokenErrors(double* x, double* y) {
+  return getTokenErrors(x, y, 1);
+}
+
 bool Camera::getTokenErrors(double* x, double*y) {
   static const int xtarget = 75; //prev 105
   static const int ytarget = 150; //prev 120
 
-  cv::Vec3f circles = getCircles();
+  cv::Vec3f circle = getCircle();
   if(!circles.empty()) {
     double currentx = xtarget - circles[circles.size() - 1][0];
     double currenty = circles[circles.size() - 1][1] - ytarget;

@@ -15,7 +15,7 @@ class Camera {
     cv::VideoCapture cap;
     cv::Mat M, M2;
     int countBlack();
-    std::vector<cv::Vec3f> getCircle(int); //looks for partial circle (token or intersection)
+    std::vector<cv::Vec3f> getCircles(); //looks for partial circle (token or intersection)
   public:
     Camera(int n);
     bool onLine();
