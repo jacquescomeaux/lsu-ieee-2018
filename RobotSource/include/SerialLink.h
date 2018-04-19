@@ -4,6 +4,7 @@
 #include <libserialport.h>
 
 #include "Color.h"
+#include "VelocityVector.h"
 
 #include <set>
 
