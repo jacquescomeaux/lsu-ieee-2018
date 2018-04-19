@@ -11,7 +11,6 @@
 
 #include "Board.h"
 #include "Camera.h"
-#include "Controller.h"
 
 class Robot : public Drivetrain, public LineFollower {
   private:
@@ -23,13 +22,14 @@ class Robot : public Drivetrain, public LineFollower {
     VelocityVector velocity;
     VelocityVector determineVelocityVector(Coord) const;
     VelocityVector resolveDirection(Direction) const;
+    VelocityVector resolveDirection(Direction, double) const;
   public:
     Robot(Board*);
     Coord getLocation() const;
     void setSpeed(int);
     void move(Direction) const;
     void nudge(Direction, double);
-    void travel(Direction, double, bool);
+    void travel(Direction, double, double, bool);
     void followLine(Direction) const;
     bool moveUntilLine(Direction);
     bool moveUntilLine(VelocityVector);

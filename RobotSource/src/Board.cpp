@@ -37,7 +37,7 @@ Coord Board::getIntersectionLocation(int n) const {
 bool Board::getShortestPath(std::vector<int>* path, int src, int dest) {
   //Dijkstra's shortest path algorithm
   std::set<int> Q;
-  for(int i = 0; i < HOLES.size(); i++) Q.insert(i);
+  for(unsigned int i = 0; i < HOLES.size(); i++) Q.insert(i);
   std::vector<double> dist(HOLES.size(), LENGTH + WIDTH);
   std::vector<int> prev(HOLES.size(), -1);
   dist[dest] = 0;
@@ -63,7 +63,7 @@ bool Board::getShortestPath(std::vector<int>* path, int src, int dest) {
 }
 
 void Board::checkTokens() const {
-  for(int i = 0; i < tokens.size(); i++) {
+  for(unsigned int i = 0; i < tokens.size(); i++) {
     double x = tokens[i].getLocation().x;
     double y = tokens[i].getLocation().y;
     Color c = tokens[i].getColor();

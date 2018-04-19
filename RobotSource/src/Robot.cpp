@@ -22,17 +22,21 @@ VelocityVector Robot::determineVelocityVector(Coord dest) const {
 }
 
 VelocityVector Robot::resolveDirection(Direction dir) const {
+  return resolveDirection(dir, base_speed);
+}
+
+VelocityVector Robot::resolveDirection(Direction dir, double speed) const {
   switch(dir) {
-    case(Direction::FRONT): return VelocityVector(0, base_speed, 0); break;
-    case(Direction::BACK): return VelocityVector(0, -1 * base_speed, 0); break;
-    case(Direction::LEFT): return VelocityVector(-1 * base_speed, 0, 0); break;
-    case(Direction::RIGHT): return VelocityVector(base_speed, 0, 0); break;
-    case(Direction::FRONT_RIGHT): return VelocityVector(0.5 * sqrt(2) * base_speed, 0.5 * sqrt(2) * base_speed, 0); break;
-    case(Direction::FRONT_LEFT): return VelocityVector(-0.5 * sqrt(2) * base_speed, 0.5 * sqrt(2) * base_speed, 0); break;
-    case(Direction::BACK_RIGHT): return VelocityVector(0.5 * sqrt(2) * base_speed, -0.5 * sqrt(2) * base_speed, 0); break;
-    case(Direction::BACK_LEFT): return VelocityVector(-0.5 * sqrt(2) * base_speed, -0.5 * sqrt(2) * base_speed, 0); break;
-    case(Direction::CLOCKWISE): return VelocityVector(0, 0, -1 * base_speed); break;
-    case(Direction::COUNTER_CLOCKWISE): return VelocityVector(0, 0, base_speed); break;
+    case(Direction::FRONT): return VelocityVector(0, speed, 0); break;
+    case(Direction::BACK): return VelocityVector(0, -1 * speed, 0); break;
+    case(Direction::LEFT): return VelocityVector(-1 * speed, 0, 0); break;
+    case(Direction::RIGHT): return VelocityVector(speed, 0, 0); break;
+    case(Direction::FRONT_RIGHT): return VelocityVector(0.5 * sqrt(2) * speed, 0.5 * sqrt(2) * speed, 0); break;
+    case(Direction::FRONT_LEFT): return VelocityVector(-0.5 * sqrt(2) * speed, 0.5 * sqrt(2) * speed, 0); break;
+    case(Direction::BACK_RIGHT): return VelocityVector(0.5 * sqrt(2) * speed, -0.5 * sqrt(2) * speed, 0); break;
+    case(Direction::BACK_LEFT): return VelocityVector(-0.5 * sqrt(2) * speed, -0.5 * sqrt(2) * speed, 0); break;
+    case(Direction::CLOCKWISE): return VelocityVector(0, 0, -1 * speed); break;
+    case(Direction::COUNTER_CLOCKWISE): return VelocityVector(0, 0, speed); break;
     default: return VelocityVector(0, 0, 0); break;
   }
 }
@@ -49,8 +53,8 @@ void Robot::nudge(Direction dir, double dist) {
   Drivetrain::nudge(resolveDirection(dir), dist);
 }
 
-void Robot::travel(Direction dir, double dist, bool stopping) {
-  Drivetrain::travel(resolveDirection(dir), dist, stopping);
+void Robot::travel(Direction dir, double speed, double dist, bool stopping) {
+  Drivetrain::travel(resolveDirection(dir, speed), dist, stopping);
 }
 
 void Robot::followLine(Direction dir) const {
@@ -83,7 +87,7 @@ bool Robot::followUntilIntersection(Direction dir) {
 
 bool Robot::followUntilIntersection(VelocityVector v) {
   std::cout << "following until intersection" << std::endl;
-  LineFollower::followLine(v);
+  LineFollower::followLine(v, 2);
   for(int i = 0; i < 5; i++) int_cam.onLine();
   double x, y;
   while(!int_cam.atIntersection(false));
@@ -129,7 +133,7 @@ bool Robot::goToIntersection(int int_num) {
   std::vector<int> shortest_route;
   if(!platform->getShortestPath(&shortest_route, current_intersection, int_num)) return false;
   std::cout << std::endl << "in route to " << int_num << std::endl;
-  for(int i = 0; i < shortest_route.size(); i++) {
+  for(unsigned int i = 0; i < shortest_route.size(); i++) {
     Coord new_loc = platform->getIntersectionLocation(shortest_route[i]);
     VelocityVector follow_vect = determineVelocityVector(new_loc);
     std::cout << "going to int " << shortest_route[i] << std::endl;
@@ -138,7 +142,7 @@ bool Robot::goToIntersection(int int_num) {
     followUntilIntersection(follow_vect);
     location = new_loc;
     current_intersection = shortest_route[i];
-    if(!robot.center()) return false;
+    if(!center()) return false;
   }
   return true;
 }
@@ -156,7 +160,7 @@ void Robot::recover() {
 SortBot::SortBot(Board* b) : Robot(b), control(*this) {}
 
 int SortBot::followPath(std::vector<int>& path, bool sorting) {
-  for(int i = 0; i < path.size(); i++) {
+  for(unsigned int i = 0; i < path.size(); i++) {
     goToIntersection(path[i]);
     if(sorting) sortToken();
   }

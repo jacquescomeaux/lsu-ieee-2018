@@ -75,7 +75,7 @@ bool Camera::atIntersection(bool check_for_circle) {
   if(check_for_circle) {
     double x, y;
     int seen = 0;
-    for(int i = 0; i < 10; i++) if(getTokenErrors(*x, *y)) seen++;
+    for(int i = 0; i < 10; i++) if(getTokenErrors(&x, &y)) seen++;
     return seen > 8;
   }
   else {
@@ -152,7 +152,7 @@ bool Camera::getTokenErrors(double* x, double*y) {
   static const int xtarget = 75; //prev 105
   static const int ytarget = 150; //prev 120
 
-  cv::Vec3f circles = getCircles();
+  std::vector<cv::Vec3f> circles = getCircles();
   if(!circles.empty()) {
     double currentx = xtarget - circles[circles.size() - 1][0];
     double currenty = circles[circles.size() - 1][1] - ytarget;
