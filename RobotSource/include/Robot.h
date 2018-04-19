@@ -21,8 +21,8 @@ class Robot : public Drivetrain, public LineFollower {
     int current_intersection;
     double base_speed;
     VelocityVector velocity;
-    VelocityVector determineVelocityVector(Coord);
-    VelocityVector resolveDirection(Direction);
+    VelocityVector determineVelocityVector(Coord) const;
+    VelocityVector resolveDirection(Direction) const;
   public:
     Robot(Board*);
     Coord getLocation() const;

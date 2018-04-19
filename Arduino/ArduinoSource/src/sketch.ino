@@ -81,8 +81,6 @@ void parseCommand() {
   switch(command) {
     case 'c': robot->toggleFlags(Flag::CALIBRATING_LINE); break;
     case 'f': robot->setFlags(Flag::FOLLOWING_LINE); break;
-    //case 'F': robot->clearFlags(Flag::FOLLOWING_LINE); break;
-    
     /*
     CASE FOR PICOCOM TESTING
     case '"': {
@@ -93,39 +91,31 @@ void parseCommand() {
     case '/': robot->setCenterOffset(receiveIndex()); break;
     case '.': robot->setFollowRange(receiveIndex()); break;
     case 'k': robot->setTravelStop(receiveBool()); break;
-
     case 'm': robot->move(receiveVelocityVector()); break;
-    
     case 'n': {
       VelocityVector v = receiveVelocityVector();
       Fixed dist = receiveFixed();
       robot->nudge(v, dist);
       break;
     }
-    
     case 't': {
       VelocityVector v = receiveVelocityVector();
       Fixed dist = receiveFixed();
       robot->travel(v, dist);
       break;
     }
-    
     case 's': {
       VelocityVector dv = receiveVelocityVector();
       robot->steer(dv);
       break;
     }
-    
     case 'v': {
       VelocityVector dv = receiveVelocityVector();
       robot->veer(dv);
       break;
     }
-    
     case ' ': robot->stop(); break;
-
     case 'p': robot->pickUpToken(); break;
-    
     case 'r': {
       Color c = receiveColor();
       robot->storeToken(c);

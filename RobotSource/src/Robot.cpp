@@ -21,7 +21,7 @@ VelocityVector Robot::determineVelocityVector(Coord dest) const {
   return diff;
 }
 
-VelocityVector Robot::resolveDirection(Direction) const {
+VelocityVector Robot::resolveDirection(Direction dir) const {
   switch(dir) {
     case(Direction::FRONT): return VelocityVector(0, base_speed, 0); break;
     case(Direction::BACK): return VelocityVector(0, -1 * base_speed, 0); break;
@@ -31,7 +31,7 @@ VelocityVector Robot::resolveDirection(Direction) const {
     case(Direction::FRONT_LEFT): return VelocityVector(-0.5 * sqrt(2) * base_speed, 0.5 * sqrt(2) * base_speed, 0); break;
     case(Direction::BACK_RIGHT): return VelocityVector(0.5 * sqrt(2) * base_speed, -0.5 * sqrt(2) * base_speed, 0); break;
     case(Direction::BACK_LEFT): return VelocityVector(-0.5 * sqrt(2) * base_speed, -0.5 * sqrt(2) * base_speed, 0); break;
-    case(Direction::CLOCKWISE): return VelocityVector(0, 0, -1 * base_speed) break;
+    case(Direction::CLOCKWISE): return VelocityVector(0, 0, -1 * base_speed); break;
     case(Direction::COUNTER_CLOCKWISE): return VelocityVector(0, 0, base_speed); break;
     default: return VelocityVector(0, 0, 0); break;
   }
@@ -67,8 +67,8 @@ bool Robot::moveUntilLine(Direction dir) {
 bool Robot::moveUntilLine(VelocityVector v) {
   std::cout << "following until line" << std::endl;
   for(int i = 0; i < 5; i++) int_cam.onLine();
-  travel(v, 2, false);
-  move(v);
+  Drivetrain::travel(v, 2, false);
+  Drivetrain::move(v);
   while(!int_cam.onLine());
   stop();
   std::cout << "stopped at line" << std::endl;
@@ -83,7 +83,7 @@ bool Robot::followUntilIntersection(Direction dir) {
 
 bool Robot::followUntilIntersection(VelocityVector v) {
   std::cout << "following until intersection" << std::endl;
-  followLine(v);
+  LineFollower::followLine(v);
   for(int i = 0; i < 5; i++) int_cam.onLine();
   double x, y;
   while(!int_cam.atIntersection(false));
@@ -97,17 +97,6 @@ bool Robot::followWhileIntersection(Direction dir) {
   if(dir == Direction::CLOCKWISE) return false;
   if(dir == Direction::COUNTER_CLOCKWISE) return false;
   return followWhileIntersection(resolveDirection(dir));
-}
-
-bool Robot::followUntilIntersection(VelocityVector v) {
-  std::cout << "following until intersection" << std::endl;
-  followLine(v);
-  for(int i = 0; i < 5; i++) int_cam.onLine();
-  double x, y;
-  while(int_cam.atIntersection(false));
-  stop();
-  std::cout << "stopped at intersection" << std::endl;
-  return int_cam.atIntersection(true);
 }
 
 bool Robot::tokenSeen() {
@@ -142,11 +131,11 @@ bool Robot::goToIntersection(int int_num) {
   std::cout << std::endl << "in route to " << int_num << std::endl;
   for(int i = 0; i < shortest_route.size(); i++) {
     Coord new_loc = platform->getIntersectionLocation(shortest_route[i]);
-    VelocityVector follow_vect = robot.determineVelocityVector(new_loc);
+    VelocityVector follow_vect = determineVelocityVector(new_loc);
     std::cout << "going to int " << shortest_route[i] << std::endl;
-    robot.align(follow_vect.offset, 2);
-    robot.followWhileIntersection(follow_vect);
-    robot.followUntilIntersection(follow_vect);
+    LineFollower::align(follow_vect, 2);
+    followWhileIntersection(follow_vect);
+    followUntilIntersection(follow_vect);
     location = new_loc;
     current_intersection = shortest_route[i];
     if(!robot.center()) return false;

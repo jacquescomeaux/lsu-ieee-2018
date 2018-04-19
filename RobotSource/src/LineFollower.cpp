@@ -6,6 +6,8 @@
 LineFollower::LineFollower() {}
 
 void LineFollower::followLine(VelocityVector v, int range) const {
+  transmitChar('/');
+  transmitIndex(v.offset);
   transmitChar('.');
   transmitIndex(range);
   transmitChar('m');
