@@ -57,6 +57,10 @@ void Robot::travel(Direction dir, double speed, double dist, bool stopping) {
   Drivetrain::travel(resolveDirection(dir, speed), dist, stopping);
 }
 
+void Robot::align(Direction dir, int range) const {
+  LineFollower::align(resolveDirection(dir), range);
+} 
+
 void Robot::followLine(Direction dir) const {
   LineFollower::followLine(resolveDirection(dir), 2);
 }
@@ -101,6 +105,17 @@ bool Robot::followWhileIntersection(Direction dir) {
   if(dir == Direction::CLOCKWISE) return false;
   if(dir == Direction::COUNTER_CLOCKWISE) return false;
   return followWhileIntersection(resolveDirection(dir));
+}
+
+bool Robot::followWhileIntersection(VelocityVector v) {
+  std::cout << "following until intersection" << std::endl;
+  LineFollower::followLine(v, 2);
+  for(int i = 0; i < 5; i++) int_cam.onLine();
+  double x, y;
+  while(int_cam.atIntersection(false));
+  stop();
+  std::cout << "stopped at intersection" << std::endl;
+  return int_cam.atIntersection(true);
 }
 
 bool Robot::tokenSeen() {
@@ -157,7 +172,7 @@ void Robot::recover() {
   return;
 }
 
-SortBot::SortBot(Board* b) : Robot(b), control(*this) {}
+SortBot::SortBot(Board* b) : Robot(b) {}
 
 int SortBot::followPath(std::vector<int>& path, bool sorting) {
   for(unsigned int i = 0; i < path.size(); i++) {

@@ -30,6 +30,7 @@ class Robot : public Drivetrain, public LineFollower {
     void move(Direction) const;
     void nudge(Direction, double);
     void travel(Direction, double, double, bool);
+    void align(Direction, int) const;
     void followLine(Direction) const;
     bool moveUntilLine(Direction);
     bool moveUntilLine(VelocityVector);
@@ -47,7 +48,6 @@ class Robot : public Drivetrain, public LineFollower {
 class SortBot : public Robot, public SortingSystem {
   public:
     SortBot(Board*);
-    const Controller control;
     int followPath(std::vector<int>&, bool);
 };
 
