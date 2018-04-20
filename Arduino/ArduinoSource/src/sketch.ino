@@ -81,11 +81,11 @@ void parseCommand() {
   switch(command) {
     case 'c': robot->toggleFlags(Flag::CALIBRATING_LINE); break;
     case 'f': robot->setFlags(Flag::FOLLOWING_LINE); break;
-    /*
-    CASE FOR PICOCOM TESTING
-    case '"': {
-      robot->setTravelStop(true);
-      robot->travel(VelocityVector(-120, 0, 0), 5);
+    
+    /*case '"': {
+      //robot->move(VelocityVector(0, 50, 0));
+      //robot->setTravelStop(true);
+      //robot->travel(VelocityVector(-120, 0, 0), 5);
       break;
     }*/
     case '/': robot->setCenterOffset(receiveIndex()); break;

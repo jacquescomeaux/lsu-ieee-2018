@@ -18,6 +18,7 @@ Flag Drivetrain::checkDestination(bool stopping) {
     if(stopping) stop();
     const Fixed speeds[4] = {0, 0, 0, 0};
     correctWheelSpeeds(speeds);
+    //adjustWheelSpeeds(speeds); //changed this
     Serial.write('+');
     return Flag::TRAVELLING;
   }
@@ -93,7 +94,7 @@ void Drivetrain::steer(VelocityVector v) {
 
 void Drivetrain::veer(Fixed x, Fixed y, Fixed rot) {
   const Fixed adjustments[4] = {y + x - rot, y - x - rot, y + x + rot, y - x + rot};
-  adjustWheelSpeeds(adjustments);
+  correctWheelSpeeds(adjustments);
 }
 
 void Drivetrain::veer(VelocityVector v) {

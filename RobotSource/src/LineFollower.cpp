@@ -13,6 +13,7 @@ void LineFollower::followLine(VelocityVector v, int range) const {
   transmitChar('m');
   transmitVelocityVector(v);
   transmitChar('f');
+  std::cout << "Sending follow line command" << std::endl;
 }
 
 void LineFollower::align(VelocityVector v, int range) const {
@@ -21,6 +22,7 @@ void LineFollower::align(VelocityVector v, int range) const {
   transmitChar(' ');
   transmitChar('f');
   std::this_thread::sleep_for(std::chrono::seconds(2));
+  //std::this_thread::sleep_for(std::chrono::seconds(10));
   transmitChar(' ');
   std::cout << "Done snapping to line" << std::endl << std::endl;
 }

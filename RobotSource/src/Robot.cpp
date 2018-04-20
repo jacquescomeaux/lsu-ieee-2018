@@ -5,8 +5,8 @@
 
 Robot::Robot(Board* b) :
   platform(b),
-  int_cam(2),
-  location_cam(1),
+  int_cam(1),
+  location_cam(2),
   location(platform->getStart()),
   current_intersection(-1),
   base_speed(70),
@@ -18,7 +18,12 @@ Coord Robot::getLocation() const {
 
 VelocityVector Robot::determineVelocityVector(Coord dest) const {
   VelocityVector diff(dest.x - location.x, dest.y - location.y, 0);
-  return diff;
+  VelocityVector v(base_speed * cos(diff.angle), base_speed * sin(diff.angle), 0);
+  std::cout << "current location: " << location.x << "<-x y->" << location.y << std::endl;
+  std::cout << "destination: "<< dest.x << "<-x y->" << dest.y << std::endl;
+  std::cout << "diff: " << diff.x << "<-x y->" << diff.y << std::endl;
+  std::cout << "v   : "<< v.x << "<-x y->" << v.y << std::endl;
+  return v;
 }
 
 VelocityVector Robot::resolveDirection(Direction dir) const {
@@ -80,6 +85,7 @@ bool Robot::moveUntilLine(VelocityVector v) {
   while(!int_cam.onLine());
   stop();
   std::cout << "stopped at line" << std::endl;
+  return int_cam.onLine();
 }
 
 bool Robot::followUntilIntersection(Direction dir) {
@@ -108,13 +114,13 @@ bool Robot::followWhileIntersection(Direction dir) {
 }
 
 bool Robot::followWhileIntersection(VelocityVector v) {
-  std::cout << "following until intersection" << std::endl;
+  std::cout << "following while intersection" << std::endl;
   LineFollower::followLine(v, 2);
   for(int i = 0; i < 5; i++) int_cam.onLine();
   double x, y;
   while(int_cam.atIntersection(false));
-  stop();
-  std::cout << "stopped at intersection" << std::endl;
+  //stop();
+  std::cout << "intersection out of view" << std::endl;
   return int_cam.atIntersection(true);
 }
 
@@ -143,8 +149,14 @@ bool Robot::center() {
 }
 
 bool Robot::goToIntersection(int int_num) {
-  if(!int_cam.atIntersection(true)) recover();
-  if(current_intersection == -1) return false;
+  if(!int_cam.atIntersection(true)) {
+  std::cout << "Calling recover\n";
+  recover();
+  }
+  if(current_intersection == -1) {
+    std::cout << "Error: Current intersection is -1\n";
+    return false;
+  }
   std::vector<int> shortest_route;
   if(!platform->getShortestPath(&shortest_route, current_intersection, int_num)) return false;
   std::cout << std::endl << "in route to " << int_num << std::endl;
@@ -152,7 +164,7 @@ bool Robot::goToIntersection(int int_num) {
     Coord new_loc = platform->getIntersectionLocation(shortest_route[i]);
     VelocityVector follow_vect = determineVelocityVector(new_loc);
     std::cout << "going to int " << shortest_route[i] << std::endl;
-    LineFollower::align(follow_vect, 2);
+    //LineFollower::align(follow_vect, 2);
     followWhileIntersection(follow_vect);
     followUntilIntersection(follow_vect);
     location = new_loc;
@@ -165,6 +177,7 @@ bool Robot::goToIntersection(int int_num) {
 bool Robot::setCurrentIntersection(int int_num) {
   if(!int_cam.atIntersection(true)) return false;
   current_intersection = int_num;
+  location = platform->getIntersectionLocation(int_num);
   return true;
 }
 

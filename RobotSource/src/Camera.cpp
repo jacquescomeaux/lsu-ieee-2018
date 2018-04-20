@@ -60,7 +60,6 @@ int Camera::countBlack() {
   img = img(cv::Rect(10, 0, 180, 170));
   cv::resize(img, img, cv::Size(), 0.1, 0.1);
   int black = cv::countNonZero(img);
-  t = ((double)cv::getTickCount() - t)/cv::getTickFrequency(); //num secs to complete function
   //if(t > 1) std::cout << t << " sec\n";
   //std::cout << "Blackness: " << black << std::endl;
   return black;
@@ -72,13 +71,17 @@ bool Camera::onLine() {
 }
 
 bool Camera::atIntersection(bool check_for_circle) {
+  //std::cout << "Checking atIntersection" << std::endl;
   if(check_for_circle) {
+    std::cout << "At least one circle found" << std::endl;
     double x, y;
     int seen = 0;
-    for(int i = 0; i < 10; i++) if(getTokenErrors(&x, &y)) seen++;
-    return seen > 8;
+    for(int i = 0; i < 5; i++) if(getTokenErrors(&x, &y)) seen++;
+    std::cout << "seen = " << seen << std::endl;
+    return seen > 3;
   }
   else {
+    //std::cout << countBlack() << std::endl;
     if(countBlack() > 160) return true;
     else return false;
   }
@@ -169,7 +172,7 @@ std::vector<cv::Vec3f> Camera::getCircles() { //Detects both intersection and to
   int Y1 = 150;
   int X1 = 195;
   int X2 = 440;
-  
+
   cv::Mat image, img;
   for(int i = 0; i < 5; i++) cap >> image;
   img = image(cv::Rect(X1, Y1, X2-X1, 283)); //crop
@@ -188,7 +191,6 @@ std::vector<cv::Vec3f> Camera::getCircles() { //Detects both intersection and to
 
   /// Apply the Hough Transform to find the circles
   cv::HoughCircles(gray, circles, CV_HOUGH_GRADIENT, 2, 300, 50, 65, 60, 85); //60, 85
-
   return circles;
 }
 

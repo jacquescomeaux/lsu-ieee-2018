@@ -37,8 +37,8 @@ int main() {
   };
   
   std::vector<int> collection_path = {20, 14, 8, 2, 1, 7, 13, 19, 18, 12, 6, 0, 5, 11, 17, 23, 22, 16, 10, 4, 3, 9, 15, 21};
-  Coord start(-3.5, 0);
-  Coord end(-3.5, 0); 
+  Coord start(0, -3.5);
+  Coord end(0, -3.5); 
   
   std::vector<std::list<std::pair<int,double> > > board_map(token_holes.size());
   for(int ring = 0; ring < 4; ring++) for(int line = 0; line < 6; line++) {
@@ -60,22 +60,24 @@ int main() {
     std::cout << i << std::endl;
     for(auto& fs : board_map[i]) std::cout << fs.first << ", " << fs.second << std::endl;
   }*/
-  
-  robot.setSpeed(30);
+ 
+  std::cout << "press enter after the noise" << std::endl; 
+  getchar();
+  std::cout << "press the green button" << std::endl; 
+  robot.setSpeed(50);
   robot.toggleCalibration();
-  robot.travel(Direction::FRONT, 30, 12, true);
-  robot.align(Direction::LEFT, 6);
-  robot.travel(Direction::CLOCKWISE, 70, 54, true);
+  robot.travel(Direction::FRONT, 40, 11, true);
+  robot.travel(Direction::CLOCKWISE, 90, 54, true);
   robot.toggleCalibration();
-  robot.setSpeed(100);
+  robot.setSpeed(70);
   robot.align(Direction::LEFT, 6);
-
-  robot.followLine(Direction::LEFT);
-  robot.travel(Direction::LEFT, 70, 16, false);
+  std::cout << "hi" << std::endl;
+  //robot.followLine(Direction::LEFT);
+  //robot.travel(Direction::LEFT, 70, 16, false);
   robot.followUntilIntersection(Direction::LEFT);
   
-  robot.setCurrentIntersection(20);
-  robot.followPath(collection_path, true); 
+  if(!robot.setCurrentIntersection(20)) std::cout << "setCurrentIntersection failed";
+  if(!robot.followPath(collection_path, false)) std::cout << "followPath failed";
   
   return 0;
 }
