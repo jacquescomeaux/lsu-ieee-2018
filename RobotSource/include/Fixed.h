@@ -57,6 +57,22 @@ inline bool operator!=(const Fixed& lhs, const Fixed& rhs) {
   return !operator==(lhs,rhs);
 }
 
+inline bool operator< (const Fixed& lhs, const Fixed& rhs) {
+  return (lhs.getInternal() - rhs.getInternal()) < 0;
+}
+
+inline bool operator> (const Fixed& lhs, const Fixed& rhs) {
+  return  operator< (rhs,lhs);
+}
+
+inline bool operator<=(const Fixed& lhs, const Fixed& rhs) {
+  return !operator> (lhs,rhs);
+}
+
+inline bool operator>=(const Fixed& lhs, const Fixed& rhs) {
+  return !operator< (lhs,rhs);
+} 
+
 inline Fixed operator+(Fixed lhs, const Fixed& rhs) {
   lhs += rhs;
   return lhs;
