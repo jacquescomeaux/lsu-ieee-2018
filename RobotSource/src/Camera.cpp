@@ -73,16 +73,18 @@ bool Camera::onLine() {
 bool Camera::atIntersection(bool check_for_circle) {
   //std::cout << "Checking atIntersection" << std::endl;
   if(check_for_circle) {
-    std::cout << "At least one circle found" << std::endl;
+    //std::cout << "At least one circle found" << std::endl;
     double x, y;
     int seen = 0;
     for(int i = 0; i < 5; i++) if(getTokenErrors(&x, &y)) seen++;
-    std::cout << "seen = " << seen << std::endl;
+    //std::cout << "seen = " << seen << std::endl;
     return seen > 3;
   }
   else {
     //std::cout << countBlack() << std::endl;
-    if(countBlack() > 160) return true;
+    //if(countBlack() > 155) return true;
+    //if(countBlack() > 160) return true;
+    if(countBlack() > 165) return true;
     else return false;
   }
 }
@@ -161,7 +163,7 @@ bool Camera::getTokenErrors(double* x, double*y) {
     double currenty = circles[circles.size() - 1][1] - ytarget;
     *x = currentx * INCHES_PER_PIXEL;
     *y = currenty * INCHES_PER_PIXEL;
-   std::cout << "getTokenErrors() x:" << *x << "  y:" << *y << std::endl;
+   //std::cout << "getTokenErrors() x:" << *x << "  y:" << *y << std::endl;
     return true;
   }
   //std::cout << "getTokenErrors Returned False" << std::endl;
@@ -253,9 +255,9 @@ Color Camera::getTokenColor() {
     min = kv.second;
     tokenColor = kv.first;
   }
-  std::cout << bgrhsv[tokenColor].second << " detected" << std::endl;
-  std::cout << "(B, G, R): (" << avgs[0] << ", " << avgs[1] << ", " << avgs[2] << ")" << std::endl;
-  std::cout << "(H, S, V): (" << avgs[3] << ", " << avgs[4] << ", " << avgs[5] << ")" << std::endl;
+  //std::cout << bgrhsv[tokenColor].second << " detected" << std::endl;
+  //std::cout << "(B, G, R): (" << avgs[0] << ", " << avgs[1] << ", " << avgs[2] << ")" << std::endl;
+  //std::cout << "(H, S, V): (" << avgs[3] << ", " << avgs[4] << ", " << avgs[5] << ")" << std::endl;
 
   return tokenColor;
 }

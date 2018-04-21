@@ -45,7 +45,7 @@ void LineFollower::toggleCalibration() const {
 
 void LineFollower::center() const {
   transmitChar('|');
-  std::this_thread::sleep_for(std::chrono::seconds(6)); //prev 6 secs
+  std::this_thread::sleep_for(std::chrono::seconds(6));
   transmitChar('|');
   transmitChar(' ');
 }

@@ -16,14 +16,14 @@ void Drivetrain::move(VelocityVector v) const {
 }
 
 void Drivetrain::nudge(VelocityVector v, double dist) {
-  std::cout << "nudging" << std::endl << std::endl;
+  //std::cout << "nudging" << std::endl << std::endl;
   transmitChar('k');
   transmitBool(true);
   transmitChar('n');
   transmitVelocityVector(v);
   transmitValue(dist);
   waitForChar('+');
-  std::cout << "done nudging" << std::endl << std::endl;
+  //std::cout << "done nudging" << std::endl << std::endl;
 }
 
 void Drivetrain::travel(VelocityVector v, double dist, bool stopping) {

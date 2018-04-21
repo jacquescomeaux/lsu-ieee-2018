@@ -27,6 +27,8 @@ class Robot : public Drivetrain, public LineFollower {
     Robot(Board*);
     Coord getLocation() const;
     void setSpeed(int);
+    int getSpeed() const;
+    void adjustSpeed(int);
     void move(Direction) const;
     void nudge(Direction, double);
     void travel(Direction, double, double, bool);
@@ -34,6 +36,7 @@ class Robot : public Drivetrain, public LineFollower {
     void followLine(Direction) const;
     bool moveUntilLine(Direction);
     bool moveUntilLine(VelocityVector);
+    bool findIntersection(VelocityVector);
     bool followUntilIntersection(Direction);
     bool followUntilIntersection(VelocityVector);
     bool followWhileIntersection(Direction);

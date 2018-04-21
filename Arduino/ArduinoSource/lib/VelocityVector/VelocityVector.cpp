@@ -6,9 +6,9 @@ VelocityVector::VelocityVector(Fixed x_speed, Fixed y_speed, Fixed rot_speed) :
   RAD_TO_OFFSET(static_cast<double>(16) / 3.141592653589793),
   x(x_speed),
   y(y_speed),
-  rot(rot_speed),
   angle(computeAngle(x, y)),
   magnitude(computeMagnitude(x, y)),
+  rot(rot_speed),
   offset(computeOffset(angle)) {}
 
 Fixed VelocityVector::computeAngle(Fixed x_speed, Fixed y_speed) const {

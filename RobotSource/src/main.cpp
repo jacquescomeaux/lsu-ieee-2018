@@ -66,16 +66,16 @@ int main() {
   std::cout << "press the green button" << std::endl; 
   robot.setSpeed(50);
   robot.toggleCalibration();
-  robot.travel(Direction::FRONT, 40, 12, true);
+  robot.travel(Direction::FRONT, 40, 12.5, true);
+  robot.travel(Direction::CLOCKWISE, 90, 54, true);
   robot.travel(Direction::CLOCKWISE, 90, 54, true);
   robot.toggleCalibration();
-  robot.setSpeed(70);
+  robot.setSpeed(80);
   robot.align(Direction::LEFT, 6);
   std::cout << "hi" << std::endl;
   //robot.followLine(Direction::LEFT);
   //robot.travel(Direction::LEFT, 70, 16, false);
-  if(!robot.followUntilIntersection(Direction::LEFT)) robot.followUntilIntersection(Direction::LEFT);
-  
+  while(!robot.followUntilIntersection(Direction::LEFT)) robot.travel(Direction::LEFT, 80, -0.75, false);
   robot.center();
   if(!robot.setCurrentIntersection(20)) std::cout << "setCurrentIntersection failed";
   if(!robot.followPath(collection_path, false)) std::cout << "followPath failed";

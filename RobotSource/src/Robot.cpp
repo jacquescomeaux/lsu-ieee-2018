@@ -50,6 +50,14 @@ void Robot::setSpeed(int s) {
   base_speed = s;
 }
 
+int Robot::getSpeed() const {
+  return base_speed;
+}
+
+void Robot::adjustSpeed(int s) {
+  base_speed += s;
+}
+
 void Robot::move(Direction dir) const {
   Drivetrain::move(resolveDirection(dir));
 }
@@ -99,7 +107,6 @@ bool Robot::followUntilIntersection(VelocityVector v) {
   std::cout << "following until intersection" << std::endl;
   LineFollower::followLine(v, 2);
   for(int i = 0; i < 5; i++) int_cam.onLine();
-  double x, y;
   while(!int_cam.atIntersection(false));
   stop();
   std::cout << "stopped at intersection" << std::endl;
@@ -139,12 +146,22 @@ bool Robot::center() {
   if(!int_cam.atIntersection(true)) return false;
   for(bool found = int_cam.getTokenErrors(&x, &y); (iter++ < 100) && (std::abs(x) >= x_tol || std::abs(y) >= y_tol); found = int_cam.getTokenErrors(&x, &y)) {
     if(!found) continue;
-    std::cout << "nudging" << std::endl;
+    //std::cout << "nudging" << std::endl;
     nudge(Direction::RIGHT, x);
     nudge(Direction::FRONT, y);
   }
   std::cout << "Robot.center() Done" << std::endl << std::endl;
   return int_cam.atIntersection(true);
+}
+
+bool Robot::findIntersection(VelocityVector v) {
+  //for(int speed = getSpeed(); getSpeed() > 0; adjustSpeed(-10)) {
+   // Drivetrain::travel(
+  for(double backtrack_amount = 1.2; backtrack_amount > 0; backtrack_amount -= 0.1) {
+    Drivetrain::travel(v, -1 * backtrack_amount, false);
+    if(followUntilIntersection(v)) return true;
+  }
+  return false;
 }
 
 bool Robot::goToIntersection(int int_num) {
@@ -161,13 +178,14 @@ bool Robot::goToIntersection(int int_num) {
   std::cout << std::endl << "in route to " << int_num << std::endl;
   for(unsigned int i = 0; i < shortest_route.size(); i++) {
     Coord new_loc = platform->getIntersectionLocation(shortest_route[i]);
+    double distance = 12 * location.dist(new_loc);
+    std::cout << "distance is " << distance << std::endl;
     VelocityVector follow_vect = determineVelocityVector(new_loc);
     std::cout << "going to int " << shortest_route[i] << std::endl;
     LineFollower::followLine(follow_vect, 2);
+    Drivetrain::travel(follow_vect, distance/2, true);
     LineFollower::align(follow_vect, 2);
-    //followWhileIntersection(follow_vect);
-    Drivetrain::travel(follow_vect, 4, false);
-    while(true) if(followUntilIntersection(follow_vect)) break;//if(!followUntilIntersection(follow_vect)) followUntilIntersection(follow_vect);
+    if(!followUntilIntersection(follow_vect)) while(!findIntersection(follow_vect));
     location = new_loc;
     current_intersection = shortest_route[i];
     if(!center()) return false;
@@ -189,6 +207,7 @@ void Robot::recover() {
 SortBot::SortBot(Board* b) : Robot(b) {}
 
 int SortBot::followPath(std::vector<int>& path, bool sorting) {
+  setSpeed(80);
   for(unsigned int i = 0; i < path.size(); i++) {
     goToIntersection(path[i]);
     if(sorting) sortToken();

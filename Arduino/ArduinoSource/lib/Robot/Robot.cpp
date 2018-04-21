@@ -2,7 +2,7 @@
 
 Robot::Robot() :
   stopped(true),
-  center_offset(8),
+  center_offset(0),
   follow_range(2),
   flags(Flag::NONE),
   edge_detectors {
