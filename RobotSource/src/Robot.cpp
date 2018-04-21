@@ -217,7 +217,7 @@ SortBot::SortBot(Board* b) : Robot(b) {}
 
 int SortBot::followPath(std::vector<int>& path, bool sorting) {
   setSpeed(80);
-  int visited;
+  int visited = 0;
   for(unsigned int i = 0; i < path.size(); i++) {
     if(!goToIntersection(path[i])) break;
     if(sorting) sortToken();
