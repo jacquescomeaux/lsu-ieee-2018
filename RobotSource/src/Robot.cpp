@@ -50,8 +50,8 @@ bool Robot::tokenSeen() {
 }
 
 bool Robot::center(bool cross, int offset) {
-  static const float x_tol = 0.1;
-  static const float y_tol = 0.1;
+  static const float x_tol = 0.05;
+  static const float y_tol = 0.05;
   float x = x_tol;
   float y = y_tol;
   //if(!int_cam.getTokenErrors(&x, &y, 5)) followUntilIntersection(dir)
@@ -59,7 +59,7 @@ bool Robot::center(bool cross, int offset) {
   if(cross) {
     LineFollower::startCentering(cross, offset);
     while(!int_cam.getTokenErrors(&x, &y, 1));
-    //for(int i = 0; i < 100; i++) 
+    //for(int i = 0; i < 100; i++)
     stop();
     if(!int_cam.getTokenErrors(&x, &y, 1)) {
       LineFollower::startCentering(cross, offset);

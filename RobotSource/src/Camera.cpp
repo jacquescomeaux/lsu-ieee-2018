@@ -79,8 +79,8 @@ bool Camera::getTokenErrors(float* x, float* y) {
 }
 
 bool Camera::getTokenErrors(float* x, float*y, int att) {
-  static const int xtarget = 75; //prev 105
-  static const int ytarget = 150; //prev 120
+  static const int xtarget = 100; //prev 75
+  static const int ytarget = 110; //prev 150
 
   std::vector<cv::Vec3f> circles = getCircle(att);
   if(!circles.empty()) {
@@ -136,7 +136,7 @@ Color Camera::getTokenColor() {
   cv::Rect roi;
   roi.x = 100;
   roi.y = 100;
-  roi.width = 420;
+  roi.width = 350; //prev 420
   roi.height = 220;
 
   for(int i = 0; i < 10; i++) cap >> bgr;
@@ -182,7 +182,7 @@ Color Camera::getTokenColor() {
 
   if (tokenColor == Color::BLUE) if(avgs[1] > 70) tokenColor = Color::CYAN;
   else if(tokenColor == Color::CYAN) if(avgs[1] < 70) tokenColor = Color::BLUE;
-  
+
 
   if(tokenColor == Color::BLUE) std::cout << "Blue Detected" << std::endl;
   else if (tokenColor == Color::CYAN) std::cout << "Cyan Detected" << std::endl;
@@ -196,6 +196,6 @@ Color Camera::getTokenColor() {
 bool Camera::checkSortingPlate() {
   cv::Mat img;
   for(int i = 0; i < 5; i++) cap >> img;
-  cv::imwrite("tokenarmclear.jpg", img);
+  //cv::imwrite("tokenarmclear.jpg", img);
   return true;
 }
