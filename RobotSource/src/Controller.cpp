@@ -27,8 +27,10 @@ Controller::Controller(SortBot& r) :
   type_sequence {false, true, false, false, true, false},
   offset_sequence {16, 0, 8, 0, 0, 24},
   dist_sequence {11.5, 6, 11.5, 11.5, 6, 11.5},
-  travel_sequence {16, 3, 16, 12, 16, 3},
+  //travel_sequence {16, 3, 16, 12, 16, 3},
+  travel_sequence{26, 8, 26, 20, 26, 8}, //theoretical distances: {30, 12, 30, 24, 30, 12}
   blind_sequence {22, 11, 22, 22, 11, 22},
+  follow_speed {80, 50, 90, 70, 90, 50}, //{left long, front short, front long, right short, back long, back short} {2.5/30, 1/12, 2.5/30, 2/24, 2.5/30, 1/12}
   drop_sequence {
     Direction::BACK_RIGHT,
     Direction::RIGHT,
@@ -93,25 +95,17 @@ void Controller::runAlgorithm() const {
   //robot.snapToLine(Direction::LEFT, 6);
   robot.travel(Direction::CLOCKWISE, 90, 54, true);
   robot.toggleCalibration();
-
   robot.setSpeed(100);
   robot.snapToLine(Direction::LEFT, 6);
-
   robot.setSpeed(50);
 
-  /*robot.followLine(Direction::RIGHT);
-  robot.travel(Direction::RIGHT, 70, 16, false);
-  robot.followUntilIntersection(Direction::RIGHT);
-  */
   for(int i = 0; i < NUM_LINES; i++) {
-    int followspeed = 60;
-    if(follow_sequence[i] == Direction::LEFT || follow_sequence[i] == Direction::RIGHT) followspeed = 70;
     robot.followLine(follow_sequence[i]);
-    if(follow_sequence[i] == Direction::RIGHT) robot.travel(follow_sequence[i], followspeed, 30, false);
-    else {robot.travel(follow_sequence[i], followspeed, travel_sequence[i], false);}
+    //if(follow_sequence[i] == Direction::RIGHT) robot.travel(follow_sequence[i], follow_speed[i], travel_sequence[i], false);
+    //else {robot.travel(follow_sequence[i], followspeed, travel_sequence[i], false);}
+    robot.travel(follow_sequence[i], follow_speed[i], travel_sequence[i], false);
     robot.followUntilIntersection(follow_sequence[i]);
     coverLine(cover_sequence[i], type_sequence[i], offset_sequence[i], 4, dist_sequence[i]);
-    //coverLine(cover_sequence[i], type_sequence[i], offset_sequence[i], 3, dist_sequence[i]);
   }
   for(int i = 0; i < NUM_LINES; i++) {
     robot.travel(drop_sequence[i], 70, blind_sequence[i], true);
@@ -136,6 +130,6 @@ void Controller::runAlgorithm() const {
   }
   robot.dropTokenStack(Color::RED);
   robot.stop();
-  robot.travel(Direction::FRONT, 50, 38, true);
+  robot.travel(Direction::FRONT, 50, 40, true); //go to white square
   #endif
 }
