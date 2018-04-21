@@ -216,10 +216,12 @@ void Robot::recover() {
 SortBot::SortBot(Board* b) : Robot(b) {}
 
 int SortBot::followPath(std::vector<int>& path, bool sorting) {
-  setSpeed(90);
+  setSpeed(80);
+  int visited;
   for(unsigned int i = 0; i < path.size(); i++) {
-    goToIntersection(path[i]);
+    if(!goToIntersection(path[i])) break;
     if(sorting) sortToken();
+    visited = i + 1;
   }
-  return 0;
+  return visited;
 }

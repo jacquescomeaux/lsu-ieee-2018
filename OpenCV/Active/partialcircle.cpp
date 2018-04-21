@@ -29,7 +29,7 @@ int main(int argc, char* argv[])
   
   cv::VideoCapture cam(1);
   while(true) {
-    //double t = cv::getTickCount();
+    double t = cv::getTickCount();
     runcount++;
     cv::Mat image, img;
     cam >> image;
@@ -60,12 +60,12 @@ int main(int argc, char* argv[])
     for( size_t i = 0; i < circles.size(); i++ ) 
     {
         cv::Point center(cvRound(circles[i][0]), cvRound(circles[i][1]));
-        std::cout << "Run: " << runcount <<  "  Circle Center:  X:" << circles[i][0] << "  Y: " << circles[i][1] << std::endl;
+        std::cout << "Run: " << runcount <<  "  Circle Detected:  X:" << circles[i][0] << "  Y: " << circles[i][1] << " Radius: " << circles[i][2];
         int radius = cvRound(circles[i][2]);
         cv::circle( img, center, 3, cv::Scalar(0,255,255), -1);
         cv::circle( img, center, radius, cv::Scalar(0,0,255), 1 );
     }
-
+/*
     //compute distance transform:
     cv::Mat dt;
     cv::distanceTransform(255-(canny>0), dt, CV_DIST_L2 ,3);
@@ -94,24 +94,24 @@ int main(int argc, char* argv[])
             float cX = radius*cos(t) + circles[i][0];
             float cY = radius*sin(t) + circles[i][1];
 
-            if(dt.at<float>(cY,cX) < maxInlierDist) 
+            if(dt.at<float>(cY,cX) < maxInlierDist)
             {
                 inlier++;
                 cv::circle(img, cv::Point2i(cX,cY),3, cv::Scalar(0,255,0));
-            } 
+            }
            else
                 cv::circle(img, cv::Point2i(cX,cY),3, cv::Scalar(255,0,0));
         }
         std::cout << 100.0f*(float)inlier/(float)counter << " % of a circle with radius " << radius << " detected" << std::endl;
     }
-    
-    //t = (cv::getTickCount() - t)/cv::getTickFrequency();
-    //std::cout << "Time: " << t << std::endl;
+*/
+    t = (cv::getTickCount() - t)/cv::getTickFrequency();
+    std::cout << "   Time: " << t << std::endl;
 
     cv::namedWindow("output"); cv::imshow("output", img);
     //cv::imwrite("houghLinesComputed.png", color);
 
-    cv::waitKey(25);
+    cv::waitKey(50);
     //return 0;
   }
 }

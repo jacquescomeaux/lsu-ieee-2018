@@ -4,7 +4,7 @@
 
 #include <iostream>
 
-Drivetrain::Drivetrain() : nudge_speed(70) {}
+Drivetrain::Drivetrain() : nudge_speed(60) {}
 
 void Drivetrain::stop() const {
   transmitChar(' ');
