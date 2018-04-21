@@ -25,7 +25,7 @@ void SortingSystem::storeToken(Token* t) {
   std::cout << "storing token" << std::endl;
   transmitChar('r');
   transmitColor(t->getColor());
-  //waitForChar('r');
+  waitForChar('r');
   token_stacks[COLOR_POSITIONS[static_cast<int>(t->getColor())] - 1].push_back(t);
 }
 

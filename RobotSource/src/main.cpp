@@ -78,7 +78,7 @@ int main() {
   while(!robot.followUntilIntersection(Direction::LEFT)) robot.travel(Direction::LEFT, 80, -0.75, false);
   robot.center();
   if(!robot.setCurrentIntersection(20)) std::cout << "setCurrentIntersection failed";
-  int visited = robot.followPath(collection_path, false);
+  int visited = robot.followPath(collection_path, true);
   std::cout << "followPath finished, visited " << visited << " tokens" << std::endl;
   return 0;
 }

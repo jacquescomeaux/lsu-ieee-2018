@@ -1,4 +1,4 @@
-[Sat Apr 21 18:00:26 2018] Processing megaatmega2560 (platform: atmelavr; board: megaatmega2560; framework: arduino)
+[Sat Apr 21 18:13:59 2018] Processing megaatmega2560 (platform: atmelavr; board: megaatmega2560; framework: arduino)
 --------------------------------------------------------------------------------------------------------------------------------------------------------------
 Verbose mode can be enabled via `-v, --verbose` option
 PLATFORM: Atmel AVR > Arduino Mega or Mega 2560 ATmega2560 (Mega 2560)
@@ -11,6 +11,9 @@ Scanning dependencies...
 Dependency Graph
 |-- <Fixed>
 |   |-- <ArduinoSTL> v1.1.0
+|-- <VelocityVector>
+|   |-- <Fixed>
+|   |   |-- <ArduinoSTL> v1.1.0
 |-- <Robot>
 |   |-- <ProximitySensor>
 |   |-- <SortingSystem>
@@ -23,10 +26,10 @@ Dependency Graph
 |   |   |-- <ArduinoSTL> v1.1.0
 |   |   |-- <Adafruit Motor Shield V2 Library> v1.0.5
 |   |   |   |-- <Wire> v1.0
+|   |   |-- <Color>
 |   |   |-- <MagnetArm>
 |   |   |   |-- <Adafruit Motor Shield V2 Library> v1.0.5
 |   |   |   |   |-- <Wire> v1.0
-|   |   |-- <Color>
 |   |-- <Flag>
 |   |-- <MotorShield>
 |   |   |-- <Adafruit Motor Shield V2 Library> v1.0.5
@@ -63,156 +66,23 @@ Dependency Graph
 |   |   |   |-- <ArduinoSTL> v1.1.0
 |   |-- <Fixed>
 |   |   |-- <ArduinoSTL> v1.1.0
-|-- <VelocityVector>
-|   |-- <Fixed>
-|   |   |-- <ArduinoSTL> v1.1.0
 |-- <Color>
 Compiling .pioenvs/megaatmega2560/src/sketch.ino.cpp.o
-Compiling .pioenvs/megaatmega2560/lib440/ArduinoSTL_ID750/iostream.cpp.o
-Compiling .pioenvs/megaatmega2560/lib440/ArduinoSTL_ID750/istream.cpp.o
-Compiling .pioenvs/megaatmega2560/lib440/ArduinoSTL_ID750/iterator.cpp.o
-Compiling .pioenvs/megaatmega2560/lib440/ArduinoSTL_ID750/limits.cpp.o
-In file included from .piolibdeps/ArduinoSTL_ID750/src/limits.cpp:20:0:
-.piolibdeps/ArduinoSTL_ID750/src/limits:24:2: warning: #warning limits header is nowhere complete or accurate [-Wcpp]
-#warning limits header is nowhere complete or accurate
-^
-Compiling .pioenvs/megaatmega2560/lib440/ArduinoSTL_ID750/list.cpp.o
-Compiling .pioenvs/megaatmega2560/lib440/ArduinoSTL_ID750/locale.cpp.o
-Compiling .pioenvs/megaatmega2560/lib440/ArduinoSTL_ID750/map.cpp.o
-Compiling .pioenvs/megaatmega2560/lib440/ArduinoSTL_ID750/new_handler.cpp.o
-Compiling .pioenvs/megaatmega2560/lib440/ArduinoSTL_ID750/new_op.cpp.o
-Compiling .pioenvs/megaatmega2560/lib440/ArduinoSTL_ID750/new_opnt.cpp.o
-Compiling .pioenvs/megaatmega2560/lib440/ArduinoSTL_ID750/new_opv.cpp.o
-Compiling .pioenvs/megaatmega2560/lib440/ArduinoSTL_ID750/new_opvnt.cpp.o
-Compiling .pioenvs/megaatmega2560/lib440/ArduinoSTL_ID750/numeric.cpp.o
-Compiling .pioenvs/megaatmega2560/lib440/ArduinoSTL_ID750/ostream.cpp.o
-Compiling .pioenvs/megaatmega2560/lib440/ArduinoSTL_ID750/ostream_helpers.cpp.o
-Compiling .pioenvs/megaatmega2560/lib440/ArduinoSTL_ID750/queue.cpp.o
-Compiling .pioenvs/megaatmega2560/lib440/ArduinoSTL_ID750/set.cpp.o
-Compiling .pioenvs/megaatmega2560/lib440/ArduinoSTL_ID750/sstream.cpp.o
-Compiling .pioenvs/megaatmega2560/lib440/ArduinoSTL_ID750/stack.cpp.o
-Compiling .pioenvs/megaatmega2560/lib440/ArduinoSTL_ID750/stdexcept.cpp.o
-Compiling .pioenvs/megaatmega2560/lib440/ArduinoSTL_ID750/streambuf.cpp.o
-Compiling .pioenvs/megaatmega2560/lib440/ArduinoSTL_ID750/string.cpp.o
-Compiling .pioenvs/megaatmega2560/lib440/ArduinoSTL_ID750/support.cpp.o
-.piolibdeps/ArduinoSTL_ID750/src/support.cpp:25:2: warning: "/*" within comment [-Wcomment]
-/*The amount of data needed is the size of the object *PLUS*
-^
-Compiling .pioenvs/megaatmega2560/lib440/ArduinoSTL_ID750/typeinfo.cpp.o
-Compiling .pioenvs/megaatmega2560/lib440/ArduinoSTL_ID750/utility.cpp.o
-Compiling .pioenvs/megaatmega2560/lib440/ArduinoSTL_ID750/valarray.cpp.o
-Compiling .pioenvs/megaatmega2560/lib440/ArduinoSTL_ID750/vector.cpp.o
-Compiling .pioenvs/megaatmega2560/libaf4/Fixed/Fixed.cpp.o
-Compiling .pioenvs/megaatmega2560/lib1e5/Wire/Wire.cpp.o
-Compiling .pioenvs/megaatmega2560/lib1e5/Wire/utility/twi.c.o
-Archiving .pioenvs/megaatmega2560/lib440/libArduinoSTL_ID750.a
-Indexing .pioenvs/megaatmega2560/lib440/libArduinoSTL_ID750.a
-Compiling .pioenvs/megaatmega2560/lib168/Adafruit Motor Shield V2 Library_ID783/Adafruit_MotorShield.cpp.o
-Compiling .pioenvs/megaatmega2560/lib168/Adafruit Motor Shield V2 Library_ID783/utility/Adafruit_MS_PWMServoDriver.cpp.o
-.piolibdeps/Adafruit Motor Shield V2 Library_ID783/Adafruit_MotorShield.cpp: In member function 'void Adafruit_StepperMotor::step(uint16_t, uint8_t, uint8_t)':
-.piolibdeps/Adafruit Motor Shield V2 Library_ID783/Adafruit_MotorShield.cpp:295:11: warning: variable 'ret' set but not used [-Wunused-but-set-variable]
-uint8_t ret = 0;
-^
-.piolibdeps/Adafruit Motor Shield V2 Library_ID783/Adafruit_MotorShield.cpp: In member function 'uint8_t Adafruit_StepperMotor::onestep(uint8_t, uint8_t)':
-.piolibdeps/Adafruit Motor Shield V2 Library_ID783/Adafruit_MotorShield.cpp:328:11: warning: unused variable 'a' [-Wunused-variable]
-uint8_t a, b, c, d;
-^
-.piolibdeps/Adafruit Motor Shield V2 Library_ID783/Adafruit_MotorShield.cpp:328:14: warning: unused variable 'b' [-Wunused-variable]
-uint8_t a, b, c, d;
-^
-.piolibdeps/Adafruit Motor Shield V2 Library_ID783/Adafruit_MotorShield.cpp:328:17: warning: unused variable 'c' [-Wunused-variable]
-uint8_t a, b, c, d;
-^
-.piolibdeps/Adafruit Motor Shield V2 Library_ID783/Adafruit_MotorShield.cpp:328:20: warning: unused variable 'd' [-Wunused-variable]
-uint8_t a, b, c, d;
-^
-Archiving .pioenvs/megaatmega2560/lib1e5/libWire.a
-Indexing .pioenvs/megaatmega2560/lib1e5/libWire.a
-Compiling .pioenvs/megaatmega2560/libe33/SortingPlate/SortingPlate.cpp.o
-Archiving .pioenvs/megaatmega2560/lib168/libAdafruit Motor Shield V2 Library_ID783.a
-Indexing .pioenvs/megaatmega2560/lib168/libAdafruit Motor Shield V2 Library_ID783.a
-Compiling .pioenvs/megaatmega2560/lib92a/MotorShield/MotorShield.cpp.o
-Compiling .pioenvs/megaatmega2560/lib989/MagnetArm/MagnetArm.cpp.o
-Archiving .pioenvs/megaatmega2560/libe33/libSortingPlate.a
-Indexing .pioenvs/megaatmega2560/libe33/libSortingPlate.a
-Archiving .pioenvs/megaatmega2560/lib450/libColor.a
-Indexing .pioenvs/megaatmega2560/lib450/libColor.a
-Archiving .pioenvs/megaatmega2560/lib92a/libMotorShield.a
-Indexing .pioenvs/megaatmega2560/lib92a/libMotorShield.a
 Compiling .pioenvs/megaatmega2560/lib15e/SortingSystem/SortingSystem.cpp.o
-Archiving .pioenvs/megaatmega2560/libaf4/libFixed.a
-Archiving .pioenvs/megaatmega2560/lib989/libMagnetArm.a
-Indexing .pioenvs/megaatmega2560/libaf4/libFixed.a
-Archiving .pioenvs/megaatmega2560/libac4/libFlag.a
-Indexing .pioenvs/megaatmega2560/lib989/libMagnetArm.a
-Indexing .pioenvs/megaatmega2560/libac4/libFlag.a
-Compiling .pioenvs/megaatmega2560/lib1ef/Encoder_ID129/Encoder.cpp.o
-Compiling .pioenvs/megaatmega2560/lib409/Wheel/Wheel.cpp.o
-Compiling .pioenvs/megaatmega2560/lib438/VelocityVector/VelocityVector.cpp.o
-Archiving .pioenvs/megaatmega2560/lib1ef/libEncoder_ID129.a
-Indexing .pioenvs/megaatmega2560/lib1ef/libEncoder_ID129.a
-Compiling .pioenvs/megaatmega2560/libe17/Drivetrain/Drivetrain.cpp.o
 Archiving .pioenvs/megaatmega2560/lib15e/libSortingSystem.a
 Indexing .pioenvs/megaatmega2560/lib15e/libSortingSystem.a
-Compiling .pioenvs/megaatmega2560/lib5b3/QTRSensors_ID978/QTRSensors.cpp.o
-Archiving .pioenvs/megaatmega2560/lib438/libVelocityVector.a
-Indexing .pioenvs/megaatmega2560/lib438/libVelocityVector.a
-Compiling .pioenvs/megaatmega2560/libd9e/LineSensor/LineSensor.cpp.o
-Archiving .pioenvs/megaatmega2560/lib409/libWheel.a
-Indexing .pioenvs/megaatmega2560/lib409/libWheel.a
-Compiling .pioenvs/megaatmega2560/lib1ac/LineFollower/LineFollower.cpp.o
-Archiving .pioenvs/megaatmega2560/lib5b3/libQTRSensors_ID978.a
-Archiving .pioenvs/megaatmega2560/libe17/libDrivetrain.a
-Indexing .pioenvs/megaatmega2560/lib5b3/libQTRSensors_ID978.a
-Indexing .pioenvs/megaatmega2560/libe17/libDrivetrain.a
-Compiling .pioenvs/megaatmega2560/libdeb/Robot/Robot.cpp.o
-Archiving .pioenvs/megaatmega2560/libFrameworkArduinoVariant.a
-Indexing .pioenvs/megaatmega2560/libFrameworkArduinoVariant.a
-Compiling .pioenvs/megaatmega2560/FrameworkArduino/CDC.cpp.o
-Compiling .pioenvs/megaatmega2560/FrameworkArduino/HardwareSerial.cpp.o
-Compiling .pioenvs/megaatmega2560/FrameworkArduino/HardwareSerial0.cpp.o
-Compiling .pioenvs/megaatmega2560/FrameworkArduino/HardwareSerial1.cpp.o
-Compiling .pioenvs/megaatmega2560/FrameworkArduino/HardwareSerial2.cpp.o
-Archiving .pioenvs/megaatmega2560/libd9e/libLineSensor.a
-Indexing .pioenvs/megaatmega2560/libd9e/libLineSensor.a
-Archiving .pioenvs/megaatmega2560/lib1ac/libLineFollower.a
-Indexing .pioenvs/megaatmega2560/lib1ac/libLineFollower.a
-Compiling .pioenvs/megaatmega2560/FrameworkArduino/HardwareSerial3.cpp.o
-Compiling .pioenvs/megaatmega2560/FrameworkArduino/IPAddress.cpp.o
-Compiling .pioenvs/megaatmega2560/FrameworkArduino/PluggableUSB.cpp.o
-Compiling .pioenvs/megaatmega2560/FrameworkArduino/Print.cpp.o
-Compiling .pioenvs/megaatmega2560/FrameworkArduino/Stream.cpp.o
-Compiling .pioenvs/megaatmega2560/FrameworkArduino/Tone.cpp.o
-Archiving .pioenvs/megaatmega2560/libdeb/libRobot.a
-Indexing .pioenvs/megaatmega2560/libdeb/libRobot.a
-Compiling .pioenvs/megaatmega2560/FrameworkArduino/USBCore.cpp.o
-Compiling .pioenvs/megaatmega2560/FrameworkArduino/WInterrupts.c.o
-Compiling .pioenvs/megaatmega2560/FrameworkArduino/WMath.cpp.o
-Compiling .pioenvs/megaatmega2560/FrameworkArduino/WString.cpp.o
-Compiling .pioenvs/megaatmega2560/FrameworkArduino/_wiring_pulse.S.o
-Compiling .pioenvs/megaatmega2560/FrameworkArduino/abi.cpp.o
-Compiling .pioenvs/megaatmega2560/FrameworkArduino/hooks.c.o
-Compiling .pioenvs/megaatmega2560/FrameworkArduino/main.cpp.o
-Compiling .pioenvs/megaatmega2560/FrameworkArduino/new.cpp.o
-Compiling .pioenvs/megaatmega2560/FrameworkArduino/wiring.c.o
-Compiling .pioenvs/megaatmega2560/FrameworkArduino/wiring_analog.c.o
-Compiling .pioenvs/megaatmega2560/FrameworkArduino/wiring_digital.c.o
-Compiling .pioenvs/megaatmega2560/FrameworkArduino/wiring_pulse.c.o
-Compiling .pioenvs/megaatmega2560/FrameworkArduino/wiring_shift.c.o
-Archiving .pioenvs/megaatmega2560/libFrameworkArduino.a
-Indexing .pioenvs/megaatmega2560/libFrameworkArduino.a
 Linking .pioenvs/megaatmega2560/firmware.elf
 Checking program size
 text	   data	    bss	    dec	    hex	filename
-34882	    120	    636	  35638	   8b36	.pioenvs/megaatmega2560/firmware.elf
+34898	    120	    636	  35654	   8b46	.pioenvs/megaatmega2560/firmware.elf
 Building .pioenvs/megaatmega2560/firmware.hex
+
 Configuring upload protocol...
+Warning! Please install `99-platformio-udev.rules` and check that your board's PID and VID are listed in the rules.
 AVAILABLE: wiring
+http://docs.platformio.org/en/latest/faq.html#platformio-udev-rules
 CURRENT: upload_protocol = wiring
 Looking for upload port...
-
-Warning! Please install `99-platformio-udev.rules` and check that your board's PID and VID are listed in the rules.
-http://docs.platformio.org/en/latest/faq.html#platformio-udev-rules
 Auto-detected: /dev/ttyACM0
 Uploading .pioenvs/megaatmega2560/firmware.hex
 
@@ -222,23 +92,23 @@ Reading | ################################################## | 100% 0.01s
 
 avrdude: Device signature = 0x1e9801 (probably m2560)
 avrdude: reading input file ".pioenvs/megaatmega2560/firmware.hex"
-avrdude: writing flash (35002 bytes):
+avrdude: writing flash (35018 bytes):
 
-Writing | ################################################## | 100% 6.16s
+Writing | ################################################## | 100% 6.17s
 
-avrdude: 35002 bytes of flash written
+avrdude: 35018 bytes of flash written
 avrdude: verifying flash memory against .pioenvs/megaatmega2560/firmware.hex:
 avrdude: load data flash data from input file .pioenvs/megaatmega2560/firmware.hex:
-avrdude: input file .pioenvs/megaatmega2560/firmware.hex contains 35002 bytes
+avrdude: input file .pioenvs/megaatmega2560/firmware.hex contains 35018 bytes
 avrdude: reading on-chip flash data:
 
 Reading | ################################################## | 100% 4.49s
 
 avrdude: verifying ...
-avrdude: 35002 bytes of flash verified
+avrdude: 35018 bytes of flash verified
 
 avrdude: safemode: Fuses OK (E:FD, H:D8, L:FF)
 
 avrdude done.  Thank you.
 
-================================================================ [SUCCESS] Took 37.27 seconds ================================================================
+================================================================ [SUCCESS] Took 25.40 seconds ================================================================

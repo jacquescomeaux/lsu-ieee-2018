@@ -27,7 +27,7 @@ SerialLink::~SerialLink() {
 char SerialLink::receiveChar() const {
   char c;
   receiveBuffer(&c, sizeof(char));
-  //std::cout << "Receiving " << c << std::endl;
+  std::cout << "Receiving " << c << std::endl;
   return c;
 }
 
