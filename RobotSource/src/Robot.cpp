@@ -50,8 +50,8 @@ bool Robot::tokenSeen() {
 }
 
 bool Robot::center(bool cross, int offset) {
-  static const float x_tol = 0.05;
-  static const float y_tol = 0.05;
+  static const float x_tol = 0.1;
+  static const float y_tol = 0.1;
   float x = x_tol;
   float y = y_tol;
   //if(!int_cam.getTokenErrors(&x, &y, 5)) followUntilIntersection(dir)
