@@ -66,7 +66,7 @@ int main() {
   std::cout << "press the green button" << std::endl; 
   robot.setSpeed(50);
   robot.toggleCalibration();
-  robot.travel(Direction::FRONT, 40, 11, true);
+  robot.travel(Direction::FRONT, 40, 12, true);
   robot.travel(Direction::CLOCKWISE, 90, 54, true);
   robot.toggleCalibration();
   robot.setSpeed(70);
@@ -74,8 +74,9 @@ int main() {
   std::cout << "hi" << std::endl;
   //robot.followLine(Direction::LEFT);
   //robot.travel(Direction::LEFT, 70, 16, false);
-  robot.followUntilIntersection(Direction::LEFT);
+  if(!robot.followUntilIntersection(Direction::LEFT)) robot.followUntilIntersection(Direction::LEFT);
   
+  robot.center();
   if(!robot.setCurrentIntersection(20)) std::cout << "setCurrentIntersection failed";
   if(!robot.followPath(collection_path, false)) std::cout << "followPath failed";
   

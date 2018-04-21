@@ -117,9 +117,8 @@ bool Robot::followWhileIntersection(VelocityVector v) {
   std::cout << "following while intersection" << std::endl;
   LineFollower::followLine(v, 2);
   for(int i = 0; i < 5; i++) int_cam.onLine();
-  double x, y;
   while(int_cam.atIntersection(false));
-  //stop();
+  stop();
   std::cout << "intersection out of view" << std::endl;
   return int_cam.atIntersection(true);
 }
@@ -134,7 +133,7 @@ bool Robot::center() {
   double x = x_tol;
   double y = y_tol;
   if(!int_cam.atIntersection(true)) return false;
-  LineFollower::center();
+  //LineFollower::center();
   std::cout << "Done with line follow centering, starting camera centering" << std::endl;
   int iter = 0;
   if(!int_cam.atIntersection(true)) return false;
@@ -164,9 +163,11 @@ bool Robot::goToIntersection(int int_num) {
     Coord new_loc = platform->getIntersectionLocation(shortest_route[i]);
     VelocityVector follow_vect = determineVelocityVector(new_loc);
     std::cout << "going to int " << shortest_route[i] << std::endl;
-    //LineFollower::align(follow_vect, 2);
-    followWhileIntersection(follow_vect);
-    followUntilIntersection(follow_vect);
+    LineFollower::followLine(follow_vect, 2);
+    LineFollower::align(follow_vect, 2);
+    //followWhileIntersection(follow_vect);
+    Drivetrain::travel(follow_vect, 4, false);
+    while(true) if(followUntilIntersection(follow_vect)) break;//if(!followUntilIntersection(follow_vect)) followUntilIntersection(follow_vect);
     location = new_loc;
     current_intersection = shortest_route[i];
     if(!center()) return false;
