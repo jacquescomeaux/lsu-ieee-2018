@@ -27,7 +27,7 @@ int main(int argc, char* argv[])
   pts2.push_back(cv::Point2f(74,283));
   pts2.push_back(cv::Point2f(140,283));
   
-  cv::VideoCapture cam(2);
+  cv::VideoCapture cam(1);
   while(true) {
     //double t = cv::getTickCount();
     runcount++;
@@ -72,7 +72,7 @@ int main(int argc, char* argv[])
     //cv::namedWindow("distance transform"); cv::imshow("distance transform", dt/255.0f);
 
     // test for semi-circles:
-   /* float minInlierDist = 2.0f;
+    float minInlierDist = 2.0f;
     for( size_t i = 0; i < circles.size(); i++ ) 
     {
         // test inlier percentage:
@@ -103,7 +103,7 @@ int main(int argc, char* argv[])
                 cv::circle(img, cv::Point2i(cX,cY),3, cv::Scalar(255,0,0));
         }
         std::cout << 100.0f*(float)inlier/(float)counter << " % of a circle with radius " << radius << " detected" << std::endl;
-    }*/
+    }
     
     //t = (cv::getTickCount() - t)/cv::getTickFrequency();
     //std::cout << "Time: " << t << std::endl;
