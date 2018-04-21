@@ -155,14 +155,17 @@ bool Robot::center() {
 }
 
 bool Robot::findIntersection(VelocityVector v) {
-  //for(int speed = getSpeed(); getSpeed() > 0; adjustSpeed(-10)) {
-   // Drivetrain::travel(
-  for(double backtrack_amount = 1.2; backtrack_amount > 0; backtrack_amount -= 0.1) {
+  for(double speed_scalar = 1; speed_scalar > 0.3; speed_scalar -= 0.1) {
+    Drivetrain::travel(v, -1.2, true);
+    if(followUntilIntersection(speed_scalar * v)) return true;
+  }
+  return false;
+  /*for(double backtrack_amount = 1.2; backtrack_amount > 0; backtrack_amount -= 0.1) {
     Drivetrain::travel(v, -1 * backtrack_amount, false);
     if(followUntilIntersection(v)) return true;
   }
   return false;
-}
+*/}
 
 bool Robot::goToIntersection(int int_num) {
   if(!int_cam.atIntersection(true)) {
@@ -207,7 +210,7 @@ void Robot::recover() {
 SortBot::SortBot(Board* b) : Robot(b) {}
 
 int SortBot::followPath(std::vector<int>& path, bool sorting) {
-  setSpeed(80);
+  setSpeed(90);
   for(unsigned int i = 0; i < path.size(); i++) {
     goToIntersection(path[i]);
     if(sorting) sortToken();
