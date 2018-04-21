@@ -6,6 +6,8 @@
 #include "SerialLink.h"
 
 class Drivetrain : private SerialLink {
+  private:
+    const int nudge_speed;
   protected:
     Drivetrain();
   public:

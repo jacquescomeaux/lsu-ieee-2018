@@ -4,7 +4,7 @@
 
 #include <iostream>
 
-Drivetrain::Drivetrain() {}
+Drivetrain::Drivetrain() : nudge_speed(70) {}
 
 void Drivetrain::stop() const {
   transmitChar(' ');
@@ -20,7 +20,7 @@ void Drivetrain::nudge(VelocityVector v, double dist) {
   transmitChar('k');
   transmitBool(true);
   transmitChar('n');
-  transmitVelocityVector(v);
+  transmitVelocityVector(nudge_speed * v / v.magnitude);
   transmitValue(dist);
   waitForChar('+');
   //std::cout << "done nudging" << std::endl << std::endl;

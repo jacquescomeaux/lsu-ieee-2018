@@ -68,7 +68,7 @@ int main(int argc, char* argv[])
 
     //compute distance transform:
     cv::Mat dt;
-    //cv::distanceTransform(255-(canny>0), dt, CV_DIST_L2 ,3);
+    cv::distanceTransform(255-(canny>0), dt, CV_DIST_L2 ,3);
     //cv::namedWindow("distance transform"); cv::imshow("distance transform", dt/255.0f);
 
     // test for semi-circles:

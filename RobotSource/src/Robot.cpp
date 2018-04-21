@@ -59,6 +59,9 @@ void Robot::adjustSpeed(int s) {
 }
 
 void Robot::move(Direction dir) const {
+  std::cout << "resolving direction" << std::endl;
+  VelocityVector v = resolveDirection(dir);
+  std::cout << "x" << v.x << "y" << v.y << "rot" << v.rot << "mag" << v.magnitude << "angle" << v.angle << "offset" << v.offset << std::endl;
   Drivetrain::move(resolveDirection(dir));
 }
 
@@ -75,6 +78,9 @@ void Robot::align(Direction dir, int range) const {
 } 
 
 void Robot::followLine(Direction dir) const {
+  std::cout << "resolving direction" << std::endl;
+  VelocityVector v = resolveDirection(dir);
+  std::cout << "x" << v.x << "y" << v.y << "rot" << v.rot << "mag" << v.magnitude << "angle" << v.angle << "offset" << v.offset << std::endl;
   LineFollower::followLine(resolveDirection(dir), 2);
 }
 

@@ -22,5 +22,6 @@ double VelocityVector::computeMagnitude(double x_speed, double y_speed) const {
 }
 
 unsigned int VelocityVector::computeOffset(double a) const {
-  return static_cast<unsigned int>(a * RAD_TO_OFFSET);
+  int offset = static_cast<int>(a * RAD_TO_OFFSET);
+  return static_cast<unsigned int>((offset + 32) % 32);
 }

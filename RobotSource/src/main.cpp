@@ -73,14 +73,12 @@ int main() {
   robot.setSpeed(80);
   robot.align(Direction::LEFT, 6);
   std::cout << "hi" << std::endl;
-  getchar();
-  robot.followLine(Direction::BACK_RIGHT,)
   //robot.followLine(Direction::LEFT);
   //robot.travel(Direction::LEFT, 70, 16, false);
-  //while(!robot.followUntilIntersection(Direction::LEFT)) robot.travel(Direction::LEFT, 80, -0.75, false);
-  //robot.center();
-  //if(!robot.setCurrentIntersection(20)) std::cout << "setCurrentIntersection failed";
-  //if(!robot.followPath(collection_path, false)) std::cout << "followPath failed";
+  while(!robot.followUntilIntersection(Direction::LEFT)) robot.travel(Direction::LEFT, 80, -0.75, false);
+  robot.center();
+  if(!robot.setCurrentIntersection(20)) std::cout << "setCurrentIntersection failed";
+  if(!robot.followPath(collection_path, false)) std::cout << "followPath failed";
   
   return 0;
 }
