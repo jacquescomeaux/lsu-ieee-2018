@@ -18,7 +18,7 @@ class MagnetArm {
     void reset();
     void pickUpToken();
     void storeToken();
-    //void goToTop();
+    void goToTop();
 };
 
 #endif//MAGNETARM_H
