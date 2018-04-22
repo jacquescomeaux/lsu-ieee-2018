@@ -30,12 +30,15 @@ void SortingSystem::storeToken(Token* t) {
   token_stacks[COLOR_POSITIONS[static_cast<int>(t->getColor())] - 1].push_back(t);
 }
 
-void SortingSystem::sortToken() {
+void SortingSystem::sortToken1() {
   std::cout << "picking up token my man" << std::endl;
-  if(pickUpToken()) {
-    storeToken(held_token);
-    held_token = NULL;
-  }
+  pickUpToken();
+}
+
+void SortingSystem::sortToken2() {
+  std::cout << "storing token my guy" << std::endl;
+  storeToken(held_token);
+  held_token = NULL;
 }
 
 bool SortingSystem::dropTokenStack(Color c) {

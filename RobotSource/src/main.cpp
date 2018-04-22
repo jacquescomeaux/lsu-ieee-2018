@@ -68,7 +68,7 @@ int main() {
   //calibrate line sensors
   robot.setSpeed(50);
   robot.toggleCalibration();
-  robot.travel(Direction::FRONT, 40, 12.5, true);
+  robot.travel(Direction::FRONT, 40, 13, true);
   robot.travel(Direction::CLOCKWISE, 90, 54, true);
   robot.travel(Direction::CLOCKWISE, 90, 54, true);
   robot.toggleCalibration();
@@ -86,9 +86,8 @@ int main() {
   if(visited != collection_path.size()) return 0;
   
   
-  //TEMP get to last intersection
-  /*
-  robot.setSpeed(80);
+  //TEMP get to last intersection 
+  /*robot.setSpeed(80);
   robot.align(Direction::RIGHT, 6);
   while(!robot.followUntilIntersection(Direction::RIGHT)) robot.travel(Direction::RIGHT, 80, -0.75, false);
   robot.center();
@@ -122,7 +121,9 @@ int main() {
   //get to center square
   //if(!robot.setCurrentIntersection(20)) std::cout << "setCurrentIntersection failed";
   robot.followLine(Direction::FRONT_RIGHT);
-  robot.travel(Direction::FRONT_RIGHT, 70, 46, true);
+  robot.travel(Direction::FRONT_RIGHT, 70, 34, true);
+  robot.stop();
+  robot.travel(Direction::FRONT_RIGHT, 70, 10, true);
   //robot.goToIntersection(2, false);
   //robot.travel(Direction::FRONT_RIGHT, 70, 18, true);
   robot.dropTokenStack(color_sequence[6]);

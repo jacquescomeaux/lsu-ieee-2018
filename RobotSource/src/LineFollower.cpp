@@ -27,7 +27,7 @@ void LineFollower::align(VelocityVector v, int range) {
   //followLine(v, range);
   transmitChar(' ');
   transmitChar('f');
-  std::this_thread::sleep_for(std::chrono::seconds(1));
+  std::this_thread::sleep_for(std::chrono::milliseconds(1000));
   transmitChar(' ');
   std::cout << "Done snapping to line" << std::endl << std::endl;
   waitForChar('f');

@@ -151,8 +151,8 @@ bool Robot::center() {
   for(bool found = int_cam.getTokenErrors(&x, &y); (iter++ < 100) && (std::abs(x) >= x_tol || std::abs(y) >= y_tol); found = int_cam.getTokenErrors(&x, &y)) {
     if(!found) {
       //std::cout << "circle not found; undoing previous nudge" << std::endl;
-      x *= -1;
-      y *= -1;
+      x *= -1.1;
+      y *= -1.1;
       nudge(Direction::RIGHT, x);
       nudge(Direction::FRONT, y);
       continue;
@@ -201,7 +201,7 @@ bool Robot::goToIntersection(int int_num, bool centering) {
     std::cout << "going to int " << shortest_route[i] << std::endl;
     LineFollower::followLine(follow_vect, 2);
     if(distance < 18) {
-      Drivetrain::travel(follow_vect, distance/2, true);
+      Drivetrain::travel(follow_vect, distance / 2, true);
       LineFollower::align(follow_vect, 2);
     }
     else Drivetrain::travel(follow_vect, 10, false);
@@ -227,13 +227,16 @@ void Robot::recover() {
 SortBot::SortBot(Board* b) : Robot(b) {}
 
 int SortBot::followPath(std::vector<int>& path, bool sorting) {
-  setSpeed(80);
+  setSpeed(70);
   int visited = 0;
+  if(sorting) sortToken1();
   for(unsigned int i = 0; i < path.size(); i++) {
     if(!goToIntersection(path[i], true)) break;
+    if(sorting) sortToken2();
     if(!center()) break;
-    if(sorting) sortToken();
+    if(sorting) sortToken1();
     visited = i + 1;
   }
+  if(sorting) sortToken2();
   return visited;
 }

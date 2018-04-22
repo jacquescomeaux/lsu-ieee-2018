@@ -20,7 +20,8 @@ class SortingSystem : private SerialLink {
   protected:
     SortingSystem();
   public:
-    void sortToken();
+    void sortToken1();
+    void sortToken2();
     bool dropTokenStack(Color);
 };
 

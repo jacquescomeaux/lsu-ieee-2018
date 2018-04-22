@@ -1,4 +1,4 @@
-[Sun Apr 22 12:04:31 2018] Processing megaatmega2560 (platform: atmelavr; board: megaatmega2560; framework: arduino)
+[Sun Apr 22 12:53:32 2018] Processing megaatmega2560 (platform: atmelavr; board: megaatmega2560; framework: arduino)
 --------------------------------------------------------------------------------------------------------------------------------------------------------------
 Verbose mode can be enabled via `-v, --verbose` option
 PLATFORM: Atmel AVR > Arduino Mega or Mega 2560 ATmega2560 (Mega 2560)
@@ -9,11 +9,11 @@ LDF MODES: FINDER(chain) COMPATIBILITY(light)
 Collected 43 compatible libraries
 Scanning dependencies...
 Dependency Graph
-|-- <Fixed>
-|   |-- <ArduinoSTL> v1.1.0
 |-- <VelocityVector>
 |   |-- <Fixed>
 |   |   |-- <ArduinoSTL> v1.1.0
+|-- <Fixed>
+|   |-- <ArduinoSTL> v1.1.0
 |-- <Robot>
 |   |-- <ProximitySensor>
 |   |-- <SortingSystem>
@@ -68,8 +68,9 @@ Dependency Graph
 |   |   |-- <ArduinoSTL> v1.1.0
 |-- <Color>
 Compiling .pioenvs/megaatmega2560/src/sketch.ino.cpp.o
-Archiving .pioenvs/megaatmega2560/lib15e/libSortingSystem.a
-Indexing .pioenvs/megaatmega2560/lib15e/libSortingSystem.a
+Compiling .pioenvs/megaatmega2560/libe33/SortingPlate/SortingPlate.cpp.o
+Archiving .pioenvs/megaatmega2560/libe33/libSortingPlate.a
+Indexing .pioenvs/megaatmega2560/libe33/libSortingPlate.a
 Linking .pioenvs/megaatmega2560/firmware.elf
 Checking program size
 text	   data	    bss	    dec	    hex	filename
@@ -93,7 +94,7 @@ avrdude: Device signature = 0x1e9801 (probably m2560)
 avrdude: reading input file ".pioenvs/megaatmega2560/firmware.hex"
 avrdude: writing flash (34818 bytes):
 
-Writing | ################################################## | 100% 6.17s
+Writing | ################################################## | 100% 6.16s
 
 avrdude: 34818 bytes of flash written
 avrdude: verifying flash memory against .pioenvs/megaatmega2560/firmware.hex:
@@ -110,4 +111,4 @@ avrdude: safemode: Fuses OK (E:FD, H:D8, L:FF)
 
 avrdude done.  Thank you.
 
-================================================================ [SUCCESS] Took 33.42 seconds ================================================================
+================================================================ [SUCCESS] Took 31.64 seconds ================================================================

@@ -2,7 +2,7 @@
 
 SortingPlate::SortingPlate(Adafruit_StepperMotor* m) :
   RPM(450),
-  step_amount(50),
+  step_amount(10),
   target_step(250),
   total_steps(2000),
   moving(false),
