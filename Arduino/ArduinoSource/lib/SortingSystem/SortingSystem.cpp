@@ -55,7 +55,7 @@ void SortingSystem::continueSorting() {
     else {
       state = 0;
       task_buffer.pop();
-      Serial.write('r');
+      //Serial.write('r');
     }
   }
 }

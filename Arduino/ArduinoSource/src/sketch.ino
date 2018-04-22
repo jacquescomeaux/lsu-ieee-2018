@@ -120,6 +120,7 @@ void parseCommand() {
     case 'r': {
       Color c = receiveColor();
       robot->storeToken(c);
+      Serial.write('r');
       break;
     }
 

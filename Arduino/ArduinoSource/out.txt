@@ -1,4 +1,4 @@
-[Sun Apr 22 11:40:00 2018] Processing megaatmega2560 (platform: atmelavr; board: megaatmega2560; framework: arduino)
+[Sun Apr 22 12:04:31 2018] Processing megaatmega2560 (platform: atmelavr; board: megaatmega2560; framework: arduino)
 --------------------------------------------------------------------------------------------------------------------------------------------------------------
 Verbose mode can be enabled via `-v, --verbose` option
 PLATFORM: Atmel AVR > Arduino Mega or Mega 2560 ATmega2560 (Mega 2560)
@@ -9,11 +9,11 @@ LDF MODES: FINDER(chain) COMPATIBILITY(light)
 Collected 43 compatible libraries
 Scanning dependencies...
 Dependency Graph
+|-- <Fixed>
+|   |-- <ArduinoSTL> v1.1.0
 |-- <VelocityVector>
 |   |-- <Fixed>
 |   |   |-- <ArduinoSTL> v1.1.0
-|-- <Fixed>
-|   |-- <ArduinoSTL> v1.1.0
 |-- <Robot>
 |   |-- <ProximitySensor>
 |   |-- <SortingSystem>
@@ -68,10 +68,12 @@ Dependency Graph
 |   |   |-- <ArduinoSTL> v1.1.0
 |-- <Color>
 Compiling .pioenvs/megaatmega2560/src/sketch.ino.cpp.o
+Archiving .pioenvs/megaatmega2560/lib15e/libSortingSystem.a
+Indexing .pioenvs/megaatmega2560/lib15e/libSortingSystem.a
 Linking .pioenvs/megaatmega2560/firmware.elf
 Checking program size
 text	   data	    bss	    dec	    hex	filename
-34700	    120	    620	  35440	   8a70	.pioenvs/megaatmega2560/firmware.elf
+34698	    120	    620	  35438	   8a6e	.pioenvs/megaatmega2560/firmware.elf
 Building .pioenvs/megaatmega2560/firmware.hex
 Configuring upload protocol...
 AVAILABLE: wiring
@@ -89,23 +91,23 @@ Reading | ################################################## | 100% 0.01s
 
 avrdude: Device signature = 0x1e9801 (probably m2560)
 avrdude: reading input file ".pioenvs/megaatmega2560/firmware.hex"
-avrdude: writing flash (34820 bytes):
+avrdude: writing flash (34818 bytes):
 
 Writing | ################################################## | 100% 6.17s
 
-avrdude: 34820 bytes of flash written
+avrdude: 34818 bytes of flash written
 avrdude: verifying flash memory against .pioenvs/megaatmega2560/firmware.hex:
 avrdude: load data flash data from input file .pioenvs/megaatmega2560/firmware.hex:
-avrdude: input file .pioenvs/megaatmega2560/firmware.hex contains 34820 bytes
+avrdude: input file .pioenvs/megaatmega2560/firmware.hex contains 34818 bytes
 avrdude: reading on-chip flash data:
 
 Reading | ################################################## | 100% 4.49s
 
 avrdude: verifying ...
-avrdude: 34820 bytes of flash verified
+avrdude: 34818 bytes of flash verified
 
 avrdude: safemode: Fuses OK (E:FD, H:D8, L:FF)
 
 avrdude done.  Thank you.
 
-================================================================ [SUCCESS] Took 33.94 seconds ================================================================
+================================================================ [SUCCESS] Took 33.42 seconds ================================================================
