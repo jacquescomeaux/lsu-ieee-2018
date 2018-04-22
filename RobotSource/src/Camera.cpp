@@ -10,20 +10,6 @@
 #include "opencv2/core/core.hpp"
 #include "opencv2/imgproc.hpp"
 
-/* Approximate values of Blackness for countBlack(Threshold: 120,255)
-Corner Intersection (with token)
-	Centered: 20,500 +/- 250
-	Off-centered: >= 14,000
------------------------------------------------
-Cross Intersection (with token)
-	Centered: 16,000 +/- 50
-	Off-centered: Min:13,000 || Max: 18,300
------------------------------------------------
-Lines
-	Parallel: 9,950 (MAX)
-	Perpendicular: 11,950 (MAX)
-*/
-
 Camera::Camera(int n) : INCHES_PER_PIXEL(0.006), /*INCHES_PER_PIXEL(0.00839223)*/ cap(n) {
   std::vector<cv::Point2f> pts_src, pts_dst;
   pts_src.push_back(cv::Point2f(88, 0));
@@ -71,18 +57,13 @@ bool Camera::onLine() {
 }
 
 bool Camera::atIntersection(bool check_for_circle) {
-  //std::cout << "Checking atIntersection" << std::endl;
   if(check_for_circle) {
-    //std::cout << "At least one circle found" << std::endl;
     double x, y;
     int seen = 0;
     for(int i = 0; i < 5; i++) if(getTokenErrors(&x, &y)) seen++;
-    //std::cout << "seen = " << seen << std::endl;
     return seen > 3;
   }
   else {
-    //std::cout << countBlack() << std::endl;
-    //if(countBlack() > 155) return true;
     //if(countBlack() > 160) return true;
     if(countBlack() > 165) return true;
     else return false;
@@ -154,8 +135,8 @@ bool Camera::tokenSeen() {
 Coord Camera::determineLocation() const {return Coord(0,0);}
 
 bool Camera::getTokenErrors(double* x, double*y) {
-  static const int xtarget = 75; //prev 105
-  static const int ytarget = 150; //prev 120
+  static const int xtarget = 100;
+  static const int ytarget = 110;
 
   std::vector<cv::Vec3f> circles = getCircles();
   if(!circles.empty()) {
@@ -163,31 +144,27 @@ bool Camera::getTokenErrors(double* x, double*y) {
     double currenty = circles[circles.size() - 1][1] - ytarget;
     *x = currentx * INCHES_PER_PIXEL;
     *y = currenty * INCHES_PER_PIXEL;
-   //std::cout << "getTokenErrors() x:" << *x << "  y:" << *y << std::endl;
     return true;
   }
-  //std::cout << "getTokenErrors Returned False" << std::endl;
   return false;
 }
 
 std::vector<cv::Vec3f> Camera::getCircles() { //Detects both intersection and token circles
-  int Y1 = 150;
-  int X1 = 195;
-  int X2 = 440;
+  static const int X1 = 195;
+  static const int X2 = 440;
+  static const int Y1 = 150;
+  static const int Y2 = 433;
 
   cv::Mat image, img;
   for(int i = 0; i < 5; i++) cap >> image;
-  img = image(cv::Rect(X1, Y1, X2-X1, 283)); //crop
+  img = image(cv::Rect(X1, Y1, X2 - X1, Y2 - Y1)); //crop
   cv::warpPerspective(img, img, M2, img.size());
 
   cv::Mat canny, canny2;
   cv::Mat gray, grayBI;
 
-  /// Convert it to gray
   cv::cvtColor(img, gray, CV_BGR2GRAY);
-
   cv::GaussianBlur(gray, grayBI, cv::Size(0,0), 4);
-  // compute canny (don't blur with that image quality!!)
   cv::Canny(grayBI, canny, 30, 40); //prev 200, 20
   std::vector<cv::Vec3f> circles;
 
@@ -206,23 +183,30 @@ Color Camera::getTokenColor() {
   bgrhsv[Color::YELLOW] =  std::make_pair(cv::Vec6d( 69, 92, 95,  29,  92, 115), "Yellow");  // Prev: H:79
   bgrhsv[Color::GRAY] =    std::make_pair(cv::Vec6d( 46, 35, 30, 105,  86,  55), "Gray");    // Prev: H115     
   bgrhsv[Color::NONE] =    std::make_pair(cv::Vec6d( 29, 24, 25, 110,  54,  31), "None");       
-  int b, g, r, h, s, v, sum;
-  b = g = r = h = s = v = sum = 0;
+  //int b, g, r, h, s, v, sum;
+  //b = g = r = h = s = v = sum = 0;
+  int sum = 0;
   cv::Mat src, bgr, hsv;
-  cv::Rect roi;
-  roi.x = 128;
-  roi.y = 200;
-  roi.width = 490;
-  roi.height = 200;
+  cv::Rect roi(128, 200, 490, 200);
+  //cv::Rect roi;
+  //roi.x = 128;
+  //roi.y = 200;
+  //roi.width = 490;
+  //roi.height = 200;
   
   for(int i = 0; i < 10; i++) cap >> bgr;
-  cap >> bgr;
   //cv::imwrite("token.jpg", bgr);
   cv::Mat img = bgr(roi);
   //cv::imwrite("tokencrop.jpg", img);
   cv::cvtColor(bgr, hsv, cv::COLOR_BGR2HSV);
-  
+  std::vector<double> avgs(6);
   for(int i = 220; i < 440; i++) for(int j = 290; j < 410; j++) {
+    for(int k = 0; k < 3; k++) avgs[k] += bgr.at<cv::Vec3b>(j, i)[k];
+    for(int k = 0; k < 3; k++) avgs[k + 3] += bgr.at<cv::Vec3b>(j, i)[k];
+    sum++;
+  }
+  for(double& s : avgs) s /= sum;
+  /*for(int i = 220; i < 440; i++) for(int j = 290; j < 410; j++) {
     b += bgr.at<cv::Vec3b>(j,i)[0];
     g += bgr.at<cv::Vec3b>(j,i)[1];
     r += bgr.at<cv::Vec3b>(j,i)[2];
@@ -230,25 +214,28 @@ Color Camera::getTokenColor() {
     s += hsv.at<cv::Vec3b>(j,i)[1];
     v += hsv.at<cv::Vec3b>(j,i)[2];
     sum++;
-  }
-  std::vector<double> avgs; //to hold average values of (B, G, R, H, S, V) for current image
+  }*/
+  /*std::vector<double> avgs; //to hold average values of (B, G, R, H, S, V) for current image
   avgs.push_back(b/sum);
   avgs.push_back(g/sum);
   avgs.push_back(r/sum);
   avgs.push_back(h/sum);
   avgs.push_back(s/sum);
   avgs.push_back(v/sum);
-  double diff = 0;
+  */
+  //double diff = 0;
   std::map<Color,double> distances;
-  for(auto& kv : bgrhsv) {
-    double total = 0;
-    for(int j = 0; j < 6; j++) {
-      diff = avgs[j] - kv.second.first[j];
-      total += diff * diff;
-    }
-    total = std::sqrt(total);
-    distances[kv.first] = total;
-  }
+  for(auto& kv : bgrhsv) //{
+    //double total = 0;
+    for(int j = 0; j < 6; j++) distances[kv.first] += std::pow(avgs[j] - kv.second.first[j], 2);//{
+    //for(int j = 0; j < 6; j++) {
+      //diff = avgs[j] - kv.second.first[j];
+      //total += diff * diff;
+    //}
+    //total = std::sqrt(total);
+    //distances[kv.first] = total;
+  //}
+  for(auto& kv : bgrhsv) distances[kv.first] = std::sqrt(distances[kv.first]);
   Color tokenColor;
   double min = 700;
   for(auto& kv : distances) if(kv.second < min) {
