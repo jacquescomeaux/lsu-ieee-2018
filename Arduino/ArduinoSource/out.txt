@@ -1,4 +1,4 @@
-[Sat Apr 21 23:05:06 2018] Processing megaatmega2560 (platform: atmelavr; board: megaatmega2560; framework: arduino)
+[Sun Apr 22 10:30:10 2018] Processing megaatmega2560 (platform: atmelavr; board: megaatmega2560; framework: arduino)
 --------------------------------------------------------------------------------------------------------------------------------------------------------------
 Verbose mode can be enabled via `-v, --verbose` option
 PLATFORM: Atmel AVR > Arduino Mega or Mega 2560 ATmega2560 (Mega 2560)
@@ -26,10 +26,10 @@ Dependency Graph
 |   |   |-- <ArduinoSTL> v1.1.0
 |   |   |-- <Adafruit Motor Shield V2 Library> v1.0.5
 |   |   |   |-- <Wire> v1.0
+|   |   |-- <Color>
 |   |   |-- <MagnetArm>
 |   |   |   |-- <Adafruit Motor Shield V2 Library> v1.0.5
 |   |   |   |   |-- <Wire> v1.0
-|   |   |-- <Color>
 |   |-- <Flag>
 |   |-- <MotorShield>
 |   |   |-- <Adafruit Motor Shield V2 Library> v1.0.5
@@ -68,25 +68,18 @@ Dependency Graph
 |   |   |-- <ArduinoSTL> v1.1.0
 |-- <Color>
 Compiling .pioenvs/megaatmega2560/src/sketch.ino.cpp.o
-Compiling .pioenvs/megaatmega2560/libd9e/LineSensor/LineSensor.cpp.o
-Archiving .pioenvs/megaatmega2560/lib1ac/libLineFollower.a
-Indexing .pioenvs/megaatmega2560/lib1ac/libLineFollower.a
-Archiving .pioenvs/megaatmega2560/libdeb/libRobot.a
-Indexing .pioenvs/megaatmega2560/libdeb/libRobot.a
-Archiving .pioenvs/megaatmega2560/libd9e/libLineSensor.a
-Indexing .pioenvs/megaatmega2560/libd9e/libLineSensor.a
 Linking .pioenvs/megaatmega2560/firmware.elf
 Checking program size
 text	   data	    bss	    dec	    hex	filename
-34732	    120	    620	  35472	   8a90	.pioenvs/megaatmega2560/firmware.elf
+34924	    120	    620	  35664	   8b50	.pioenvs/megaatmega2560/firmware.elf
 Building .pioenvs/megaatmega2560/firmware.hex
+
+Warning! Please install `99-platformio-udev.rules` and check that your board's PID and VID are listed in the rules.
+http://docs.platformio.org/en/latest/faq.html#platformio-udev-rules
 Configuring upload protocol...
 AVAILABLE: wiring
 CURRENT: upload_protocol = wiring
 Looking for upload port...
-
-Warning! Please install `99-platformio-udev.rules` and check that your board's PID and VID are listed in the rules.
-http://docs.platformio.org/en/latest/faq.html#platformio-udev-rules
 Auto-detected: /dev/ttyACM0
 Uploading .pioenvs/megaatmega2560/firmware.hex
 
@@ -96,23 +89,23 @@ Reading | ################################################## | 100% 0.01s
 
 avrdude: Device signature = 0x1e9801 (probably m2560)
 avrdude: reading input file ".pioenvs/megaatmega2560/firmware.hex"
-avrdude: writing flash (34852 bytes):
+avrdude: writing flash (35044 bytes):
 
 Writing | ################################################## | 100% 6.17s
 
-avrdude: 34852 bytes of flash written
+avrdude: 35044 bytes of flash written
 avrdude: verifying flash memory against .pioenvs/megaatmega2560/firmware.hex:
 avrdude: load data flash data from input file .pioenvs/megaatmega2560/firmware.hex:
-avrdude: input file .pioenvs/megaatmega2560/firmware.hex contains 34852 bytes
+avrdude: input file .pioenvs/megaatmega2560/firmware.hex contains 35044 bytes
 avrdude: reading on-chip flash data:
 
-Reading | ################################################## | 100% 4.49s
+Reading | ################################################## | 100% 4.50s
 
 avrdude: verifying ...
-avrdude: 34852 bytes of flash verified
+avrdude: 35044 bytes of flash verified
 
 avrdude: safemode: Fuses OK (E:FD, H:D8, L:FF)
 
 avrdude done.  Thank you.
 
-================================================================ [SUCCESS] Took 32.46 seconds ================================================================
+================================================================ [SUCCESS] Took 25.10 seconds ================================================================

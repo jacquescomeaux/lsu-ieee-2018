@@ -10,6 +10,8 @@
 #include <list>
 #include <tuple>
 
+#include <chrono>
+#include <thread>
 int main() {
   
   int num_colors = 7;
@@ -72,7 +74,7 @@ int main() {
   robot.toggleCalibration();
   
   //get to first intersection
-  robot.setSpeed(80);
+  /*robot.setSpeed(80);
   robot.align(Direction::LEFT, 6);
   while(!robot.followUntilIntersection(Direction::LEFT)) robot.travel(Direction::LEFT, 80, -0.75, false);
   robot.center();
@@ -82,6 +84,14 @@ int main() {
   unsigned int visited = robot.followPath(collection_path, true);
   std::cout << "followPath finished, visited " << visited << " tokens" << std::endl;
   if(visited != collection_path.size()) return 0;
+ */ 
+  
+  //TEMP get to last intersection
+  robot.setSpeed(80);
+  robot.align(Direction::RIGHT, 6);
+  while(!robot.followUntilIntersection(Direction::RIGHT)) robot.travel(Direction::RIGHT, 80, -0.75, false);
+  robot.center();
+  if(!robot.setCurrentIntersection(21)) std::cout << "setCurrentIntersection failed";
   
   //drop off tokens
   Direction drop_sequence[6] = {
@@ -89,20 +99,22 @@ int main() {
     Direction::FRONT_LEFT, Direction::LEFT, Direction::BACK_LEFT
   };
   Direction box_sequence[6] = {
-    Direction::FRONT, Direction::FRONT, Direction::LEFT,
-    Direction::BACK, Direction::BACK, Direction::LEFT
+    Direction::BACK, Direction::BACK, Direction::RIGHT,
+    Direction::FRONT, Direction::FRONT, Direction::LEFT
   };
   double dist_sequence[6] = {16.97, 12, 16.97, 16.97, 12, 16.97};
   Color color_sequence[7] = {Color::YELLOW, Color::MAGENTA, Color::CYAN, Color::RED, Color::GREEN, Color::BLUE, Color::GRAY};
+  int int_sequence[6] = {21, 22, 23, 18, 19, 20};
   for(int i = 0; i < 6; i++) {
+    robot.goToIntersection(int_sequence[i]);
     robot.travel(drop_sequence[i], 70, dist_sequence[i], true);
     robot.dropTokenStack(color_sequence[i]);
+    robot.travel(box_sequence[i], 70, -10, true);
     robot.setSpeed(70);
-    robot.travel(box_sequence[i], 70, 10, true);
-    robot.moveUntilLine(drop_sequence[(i+3)%6]);
+    while(!robot.moveUntilLine(drop_sequence[(i+3)%6]));
     robot.align(box_sequence[i], 5);
     robot.followLine(box_sequence[i]);
-    robot.travel(box_sequence[i], 70, 8, false);
+    robot.travel(box_sequence[i], 70, 10, true);
     if(!robot.followUntilIntersection(box_sequence[i])) while(!robot.findIntersection(box_sequence[i]));
     robot.center();
   }
@@ -110,7 +122,7 @@ int main() {
   //get to center square
   if(!robot.setCurrentIntersection(20)) std::cout << "setCurrentIntersection failed";
   robot.goToIntersection(2);
-  robot.travel(Direction::FRONT_RIGHT, 65, 6, true);
+  robot.travel(Direction::FRONT_RIGHT, 70, 16.97, true);
 
   //return to start
   robot.travel(Direction::FRONT, 65, 40, true);

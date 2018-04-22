@@ -58,11 +58,11 @@ bool Camera::onLine() {
 
 bool Camera::atIntersection(bool check_for_circle) {
   if(check_for_circle) {
-    std::cout << "checking for cirlc:" << std::endl;
+    std::cout << "checking for circle:" << std::endl;
     double x, y;
     int seen = 0;
-    for(int i = 0; i < 3; i++) if(getTokenErrors(&x, &y)) seen++;
-    std::cout << "seen: " << seen << std::endl;
+    for(int i = 0; i < 5; i++) if(getTokenErrors(&x, &y)) seen++;
+    std::cout << "seen: " << seen << std::endl << std::endl;
     return seen >= 2;
   }
   else {
@@ -198,52 +198,16 @@ Color Camera::getTokenColor() {
     sum++;
   }
   for(double& s : avgs) s /= sum;
-  /*int b, g, r, h, s, v, sum;
-  b = g = r = h = s = v = sum = 0;
-  cv::Mat src, bgr, hsv;
-  cv::Rect roi;
-  roi.x = 100;
-  roi.y = 100;
-  roi.width = 350; //prev 420
-  roi.height = 220;
-
-  for(int i = 0; i < 10; i++) cap >> bgr;
-  cap >> bgr;
-  cv::imwrite("token.jpg", bgr);
-  cv::Mat img = bgr(roi);
-  cv::imwrite("crop.jpg", img);
-  cv::cvtColor(img, hsv, cv::COLOR_BGR2HSV);
-
-  for(int i = 0; i < img.cols; ++i) for(int j = 0; j < img.rows; ++j) {
-    b += img.at<cv::Vec3b>(j,i)[0]; //format is (y, x): j is y (height), i is x (width)
-    g += img.at<cv::Vec3b>(j,i)[1];
-    r += img.at<cv::Vec3b>(j,i)[2];
-    h += hsv.at<cv::Vec3b>(j,i)[0];
-    s += hsv.at<cv::Vec3b>(j,i)[1];
-    v += hsv.at<cv::Vec3b>(j,i)[2];
-    sum++;
-  }
-  std::vector<double> avgs; //to hold average values of (B, G, R, H, S, V) for current image
-  avgs.push_back(b/sum);
-  avgs.push_back(g/sum);
-  avgs.push_back(r/sum);
-  avgs.push_back(h/sum);
-  avgs.push_back(s/sum);
-  avgs.push_back(v/sum);
-*/
   std::map<Color,double> distances;
   for(auto& kv : bgrhsv) for(int j = 0; j < 6; j++) distances[kv.first] += std::pow(avgs[j] - kv.second.first[j], 2);
   for(auto& kv : bgrhsv) distances[kv.first] = std::sqrt(distances[kv.first]);
- 
   Color token_color;
   double min = 700;
   for(auto& kv : distances) if(kv.second < min) {
     min = kv.second;
     token_color = kv.first;
   }
-
   if(token_color == Color::BLUE || token_color == Color::CYAN) token_color = (avgs[1] > 70) ? Color::CYAN : Color::BLUE;
-
   std::cout << bgrhsv[token_color].second << " detected" << std::endl;
   std::cout << "(B, G, R): (" << avgs[0] << ", " << avgs[1] << ", " << avgs[2] << ")" << std::endl;
   std::cout << "(H, S, V): (" << avgs[3] << ", " << avgs[4] << ", " << avgs[5] << ")" << std::endl;

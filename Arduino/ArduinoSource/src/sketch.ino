@@ -28,6 +28,14 @@ unsigned int receiveIndex() {
   return i.number;
 }
 
+Fixed receiveFixed() {
+  union eight_byte_object x;
+  unsigned long start = millis();
+  while(Serial.available() < 8) if((millis() - start) > 20000) Serial.write(Serial.read());
+  Serial.readBytes(x.chars, 8);
+  return Fixed(x.number);
+}
+
 VelocityVector receiveVelocityVector() {
   Fixed x = receiveFixed();
   Fixed y = receiveFixed();
@@ -39,13 +47,6 @@ VelocityVector receiveVelocityVector() {
 Color receiveColor() {
   while(!Serial.available());
   return static_cast<Color>(Serial.read());
-}
-
-Fixed receiveFixed() {
-  union eight_byte_object x;
-  while(Serial.available() < 8);
-  Serial.readBytes(x.chars, 8);
-  return Fixed(x.number);
 }
 
 bool receiveBool() {
@@ -79,8 +80,8 @@ void receivePIDCommand(unsigned int var) {
 void parseCommand() {
   unsigned char command = Serial.read();
   switch(command) {
-    case 'c': robot->toggleFlags(Flag::CALIBRATING_LINE); break;
-    case 'f': robot->setFlags(Flag::FOLLOWING_LINE); break;
+    case 'c': robot->toggleFlags(Flag::CALIBRATING_LINE); Serial.write('c'); break;
+    case 'f': robot->setFlags(Flag::FOLLOWING_LINE); Serial.write('f'); break;
    
     //picocom testing case — changing this will not break stuff — use it for whatever is needed
     case '"': {
@@ -100,9 +101,13 @@ void parseCommand() {
       break;
     }
     case 't': {
+      Serial.write('0');
       VelocityVector v = receiveVelocityVector();
+      Serial.write('1');
       Fixed dist = receiveFixed();
+      Serial.write('2');
       robot->travel(v, dist);
+      Serial.write('3');
       break;
     }
     case 's': {
@@ -123,7 +128,7 @@ void parseCommand() {
       break;
     }
 
-    case 'd': robot->dropNextTokenStack(); break;
+    case 'd': robot->dropNextTokenStack(); Serial.write('d'); break;
     
     default: robot->stop();
   }

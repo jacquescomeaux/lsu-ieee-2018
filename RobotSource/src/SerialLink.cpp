@@ -5,6 +5,7 @@
 #include "../include/Fixed.h"
 
 #include <iostream>
+#include <iomanip>
 
 int SerialLink::object_count = 0;
 struct sp_port* SerialLink::port;
@@ -53,11 +54,12 @@ void SerialLink::receiveBuffer(void* buf, size_t size) const {
 }
 
 void SerialLink::transmitChar(char c) const {
-  //std::cout << "Writing " << c << std::endl;
+  std::cout << "Writing " << c << std::endl;
   transmitBuffer(&c, sizeof(char));
 }
 
 void SerialLink::transmitIndex(unsigned int n) const {
+  std::cout << "sending index" << n << std::endl;
   uint16_t twobytes = static_cast<uint16_t>(n);
   transmitBuffer(&twobytes, sizeof(uint16_t));
 }
@@ -85,17 +87,21 @@ void SerialLink::transmitBool(bool b) const {
 
 void SerialLink::transmitValue(int n) const {
   Fixed f = n;
+  std::cout << "transmiting fixed "<< f.getInt() << std::endl;
   int64_t i = f.getInternal();
   transmitBuffer(&i, sizeof(int64_t));
 }
 
 void SerialLink::transmitValue(double x) const {
   Fixed f = static_cast<double>(x);
-  //std::cout << "transmiting fixed "<< f.getDouble() << std::endl;
+  std::cout << "transmiting fixed "<< f.getDouble() << std::endl;
   int64_t i = f.getInternal();
   transmitBuffer(&i, sizeof(int64_t));
 }
 
 void SerialLink::transmitBuffer(void* buf, size_t size) const {
+  std::cout << "transmitting buffer of size " << size << std::endl;
+  for(size_t s = 0; s < size; s++) std::cout << std::hex << std::setfill('0') << std::setw(2) << static_cast<int>(static_cast<unsigned char*>(buf)[s]) << " ";
+  std::cout << std::endl;
   sp_blocking_write(port, buf, size, 0);
 }

@@ -43,6 +43,7 @@ bool SortingSystem::dropTokenStack(Color c) {
   //next_pos %= 8;
   //if(next_pos != COLOR_POSITIONS[static_cast<int>(c)]) return false;
   transmitChar('d');
+  waitForChar('d');
   //plate_position = next_pos;
   return true;
 }

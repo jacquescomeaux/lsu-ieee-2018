@@ -6,13 +6,15 @@
 
 Drivetrain::Drivetrain() : nudge_speed(60) {}
 
-void Drivetrain::stop() const {
+void Drivetrain::stop() {
   transmitChar(' ');
+  waitForChar(' ');
 }
 
-void Drivetrain::move(VelocityVector v) const {
+void Drivetrain::move(VelocityVector v) {
   transmitChar('m');
   transmitVelocityVector(v);
+  waitForChar('m');
 }
 
 void Drivetrain::nudge(VelocityVector v, double dist) {
@@ -28,6 +30,8 @@ void Drivetrain::nudge(VelocityVector v, double dist) {
 
 void Drivetrain::travel(VelocityVector v, double dist, bool stopping) {
   std::cout << "travelling" << std::endl << std::endl;
+  std::cout << "x" << v.x << "y" << v.y << "rot" << v.rot << "mag" << v.magnitude << "angle" << v.angle << "offset" << v.offset << std::endl;
+  std::cout << "DIST " << dist << std::endl;
   transmitChar('k');
   transmitBool(stopping);
   transmitChar('t');

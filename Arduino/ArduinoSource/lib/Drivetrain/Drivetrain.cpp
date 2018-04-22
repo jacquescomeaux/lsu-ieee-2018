@@ -40,12 +40,14 @@ void Drivetrain::approachSpeed() {
 
 void Drivetrain::stop() {
   for(Wheel& w : wheels) w.stop();
+  Serial.write(' ');
 }
 
 
 void Drivetrain::move(VelocityVector v) {
   const Fixed speeds[4] = {v.y + v.x - v.rot, v.y - v.x - v.rot, v.y + v.x + v.rot, v.y - v.x + v.rot};
   setWheelSpeeds(speeds);
+  Serial.write('m');
 }
 
 void Drivetrain::travel(VelocityVector v, Fixed dist) {

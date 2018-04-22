@@ -58,7 +58,7 @@ void Robot::adjustSpeed(int s) {
   base_speed += s;
 }
 
-void Robot::move(Direction dir) const {
+void Robot::move(Direction dir) {
   std::cout << "resolving direction" << std::endl;
   VelocityVector v = resolveDirection(dir);
   std::cout << "x" << v.x << "y" << v.y << "rot" << v.rot << "mag" << v.magnitude << "angle" << v.angle << "offset" << v.offset << std::endl;
@@ -73,14 +73,14 @@ void Robot::travel(Direction dir, double speed, double dist, bool stopping) {
   Drivetrain::travel(resolveDirection(dir, speed), dist, stopping);
 }
 
-void Robot::align(Direction dir, int range) const {
+void Robot::align(Direction dir, int range) {
   LineFollower::align(resolveDirection(dir), range);
 } 
 
-void Robot::followLine(Direction dir) const {
+void Robot::followLine(Direction dir) {
   std::cout << "resolving direction" << std::endl;
-  VelocityVector v = resolveDirection(dir);
-  std::cout << "x" << v.x << "y" << v.y << "rot" << v.rot << "mag" << v.magnitude << "angle" << v.angle << "offset" << v.offset << std::endl;
+  //VelocityVector v = resolveDirection(dir);
+  //std::cout << "x" << v.x << "y" << v.y << "rot" << v.rot << "mag" << v.magnitude << "angle" << v.angle << "offset" << v.offset << std::endl;
   LineFollower::followLine(resolveDirection(dir), 2);
 }
 
@@ -92,7 +92,7 @@ bool Robot::moveUntilLine(Direction dir) {
 }
 
 bool Robot::moveUntilLine(VelocityVector v) {
-  std::cout << "following until line" << std::endl;
+  std::cout << "moving until line" << std::endl;
   for(int i = 0; i < 5; i++) int_cam.onLine();
   Drivetrain::travel(v, 2, false);
   Drivetrain::move(v);
@@ -150,16 +150,18 @@ bool Robot::center() {
   if(!int_cam.atIntersection(true)) return false;
   for(bool found = int_cam.getTokenErrors(&x, &y); (iter++ < 100) && (std::abs(x) >= x_tol || std::abs(y) >= y_tol); found = int_cam.getTokenErrors(&x, &y)) {
     if(!found) {
-      std::cout << "circle not found; undoing previous nudge" << std::endl;
-      nudge(Direction::LEFT, x);
-      nudge(Direction::BACK, y);
+      //std::cout << "circle not found; undoing previous nudge" << std::endl;
+      x *= -1;
+      y *= -1;
+      nudge(Direction::RIGHT, x);
+      nudge(Direction::FRONT, y);
       continue;
     }
-    std::cout << "nudging" << std::endl;
+   // std::cout << "nudging" << std::endl;
     nudge(Direction::RIGHT, x);
     nudge(Direction::FRONT, y);
   }
-  if(iter == 100) std::cout << "iter = 100" << std::endl;
+  if(iter == 99) std::cout << "iter = 100" << std::endl;
   std::cout << "Robot.center() Done" << std::endl << std::endl;
   return int_cam.atIntersection(true);
 }
@@ -172,23 +174,18 @@ bool Robot::findIntersection(Direction dir) {
 }
 
 bool Robot::findIntersection(VelocityVector v) {
-  for(double speed_scalar = 1; speed_scalar > 0.3; speed_scalar -= 0.1) {
-    Drivetrain::travel(v, -1.2, true);
+  for(double backtrack_amount = 1.2; backtrack_amount > 0; backtrack_amount -= 0.1) for(double speed_scalar = 1; speed_scalar > 0.6; speed_scalar -= 0.1) {
+    Drivetrain::travel(v, -1 * backtrack_amount, true);
     if(followUntilIntersection(speed_scalar * v)) return true;
   }
   return false;
-  /*for(double backtrack_amount = 1.2; backtrack_amount > 0; backtrack_amount -= 0.1) {
-    Drivetrain::travel(v, -1 * backtrack_amount, false);
-    if(followUntilIntersection(v)) return true;
-  }
-  return false;
-*/}
+}
 
 bool Robot::goToIntersection(int int_num) {
-  if(!int_cam.atIntersection(true)) {
+  /*if(!int_cam.atIntersection(true)) {
   std::cout << "Calling recover\n";
   recover();
-  }
+  }*/
   if(current_intersection == -1) {
     std::cout << "Error: Current intersection is -1\n";
     return false;

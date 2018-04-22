@@ -11,8 +11,8 @@ class Drivetrain : private SerialLink {
   protected:
     Drivetrain();
   public:
-    void stop() const;
-    void move(VelocityVector) const;
+    void stop();
+    void move(VelocityVector);
     void nudge(VelocityVector, double);
     void travel(VelocityVector, double, bool);
 };

@@ -7,9 +7,9 @@ class LineFollower : private SerialLink {
   protected:
     LineFollower();
   public:
-    void followLine(VelocityVector, int) const;
-    void toggleCalibration() const;
-    void align(VelocityVector, int) const;
+    void followLine(VelocityVector, int);
+    void toggleCalibration();
+    void align(VelocityVector, int);
 };
 
 #endif//LINEFOLLOWER_H

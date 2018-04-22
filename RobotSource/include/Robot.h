@@ -29,11 +29,11 @@ class Robot : public Drivetrain, public LineFollower {
     void setSpeed(int);
     int getSpeed() const;
     void adjustSpeed(int);
-    void move(Direction) const;
+    void move(Direction);
     void nudge(Direction, double);
     void travel(Direction, double, double, bool);
-    void align(Direction, int) const;
-    void followLine(Direction) const;
+    void align(Direction, int);
+    void followLine(Direction);
     bool moveUntilLine(Direction);
     bool moveUntilLine(VelocityVector);
     bool findIntersection(Direction);
