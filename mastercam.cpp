@@ -1,4 +1,4 @@
-#include "../include/Camera.h"
+ #include "../include/Camera.h"
 #include <cmath>
 #include <iostream>
 #include <exception>
@@ -11,6 +11,8 @@
 #include "opencv2/imgproc.hpp"
 
 Camera::Camera(int n) : INCHES_PER_PIXEL(0.006), /*INCHES_PER_PIXEL(0.00839223)*/ cap(n) {
+  //cap.set(CV_CAP_PROP_FRAME_WIDTH, 320);
+  //cap.set(CV_CAP_PROP_FRAME_HEIGHT, 240);
   std::vector<cv::Point2f> pts_src, pts_dst;
   pts_src.push_back(cv::Point2f(88, 0));
   pts_src.push_back(cv::Point2f(143, 0));
@@ -21,6 +23,7 @@ Camera::Camera(int n) : INCHES_PER_PIXEL(0.006), /*INCHES_PER_PIXEL(0.00839223)*
   pts_dst.push_back(cv::Point2f(69, 233));
   pts_dst.push_back(cv::Point2f(139, 233));
   M = cv::getPerspectiveTransform(pts_src, pts_dst);
+  //for(int i = 0; i < 50; i++) countBlack();
   std::vector<cv::Point2f> pts12, pts22;
   pts12.push_back(cv::Point2f(92,0));
   pts12.push_back(cv::Point2f(148,0));
@@ -46,6 +49,7 @@ int Camera::countBlack() {
   img = img(cv::Rect(10, 0, 180, 170));
   cv::resize(img, img, cv::Size(), 0.1, 0.1);
   int black = cv::countNonZero(img);
+  t = ((double)cv::getTickCount() - t)/cv::getTickFrequency(); //num secs to complete function
   //if(t > 1) std::cout << t << " sec\n";
   //std::cout << "Blackness: " << black << std::endl;
   return black;
@@ -56,122 +60,63 @@ bool Camera::onLine() {
   else return false;
 }
 
-bool Camera::atIntersection(bool check_for_circle) {
-  if(check_for_circle) {
-    std::cout << "checking for cirlc:" << std::endl;
-    double x, y;
-    int seen = 0;
-    for(int i = 0; i < 3; i++) if(getTokenErrors(&x, &y)) seen++;
-    std::cout << "seen: " << seen << std::endl;
-    return seen >= 2;
+bool Camera::atIntersection() {
+  if(countBlack() > 170) {
+    std::cout << "Intersection Detected... Blackness:" << countBlack() << std::endl;
+    return true;
   }
-  else {
-    //if(countBlack() > 160) return true;
-    if(countBlack() > 165) return true;
-    else return false;
-  }
+  else return false;
 }
 
 bool Camera::tokenSeen() {
   return true;
-  //if(tokenInFrame(2)) return true;
-  //else return false;
-
-  //static int count = 0;
-
-  //std::vector<int> compression_params;
-  //compression_params.push_back(CV_IMWRITE_PNG_COMPRESSION);
-  //compression_params.push_back(9);
-
-  /*cv::Mat image, img, hsvImg, mask;
-  cap >> image;
-  image = cv::imread("Token.png", CV_LOAD_IMAGE_COLOR);
-  static const unsigned int upperBound[3] = {64,67,80};
-  img = image(cv::Rect(195,150,245,283));
-  cv::cvtColor(img, hsvImg, cv::COLOR_BGR2HSV);
-  cv::warpPerspective(hsvImg, hsvImg, M2, hsvImg.size());
-  std::vector<cv::Vec3f> circles=getCircle(7);
-
-  if(circles.empty()) return false;
-
-  //double x = circles[0][0];
-  //double y = circles[0][1];
-  //double r = circles[0][2];
-
-  //const unsigned char hue_shift = 80;
-
-  //for (int j = 0; j < hsv.rows; j++) {
-  //  for (int i = 0; i < hsv.cols; i++) {
-  //    unsigned char s = hsv.at<Vec3b>(j,i)[1];
-
-  //    if (s + hue_shift > 255)
-  //      s = (s + hue_shift) - 255;
-  //    else
-  //      s = s + hue_shift;
-
-    //  hsv.at<Vec3b>(j,i)[1] = s;
-  //  }
-  //}
-
-  //std::string imFile = "Inter" + std::to_string(count) + ".png";
-  //cv::imwrite(imFile, img, compression_params);
-
-  mask = cv::Mat(283, 245, CV_64F, double(0)); //Look here
-  //cv::circle(hsvImg, (x,y), r, (255,255,255), -1);
-  cv::Scalar hsvAverage = cv::mean(hsvImg, mask);
-
-  double h = hsvAverage[0];
-  double s = hsvAverage[1];
-  double v = hsvAverage[2];
-
-  //count++;
-
-  if(h <= upperBound[0] && s <= upperBound[1] && v <= upperBound[2]) return true;
-
-  else return false;
-
-  return true;
-*/
 }
 
 Coord Camera::determineLocation() const {return Coord(0,0);}
 
-bool Camera::getTokenErrors(double* x, double*y) {
-  static const int xtarget = 100;
-  static const int ytarget = 110;
+bool Camera::getTokenErrors(float* x, float* y) {
+  return getTokenErrors(x, y, 1);
+}
 
-  std::vector<cv::Vec3f> circles = getCircles();
+bool Camera::getTokenErrors(float* x, float*y, int att) {
+  static const int xtarget = 100; //prev 75
+  static const int ytarget = 110; //prev 150
+
+  std::vector<cv::Vec3f> circles = getCircle(att);
   if(!circles.empty()) {
-    double currentx = xtarget - circles[circles.size() - 1][0];
-    double currenty = circles[circles.size() - 1][1] - ytarget;
+    float currentx = xtarget - circles[circles.size() - 1][0];
+    float currenty = circles[circles.size() - 1][1] - ytarget;
     *x = currentx * INCHES_PER_PIXEL;
     *y = currenty * INCHES_PER_PIXEL;
+   std::cout << "getTokenErrors() x:" << *x << "  y:" << *y << std::endl;
     return true;
   }
   return false;
 }
 
-std::vector<cv::Vec3f> Camera::getCircles() { //Detects both intersection and token circles
-  static const int X1 = 195;
-  static const int X2 = 440;
-  static const int Y1 = 150;
-  static const int Y2 = 433;
+std::vector<cv::Vec3f> Camera::getCircle(unsigned int attempts = 1) { //Detects both intersection and token circles
+  int Y1 = 150;
+  int X1 = 195;
+  int X2 = 440;
+  unsigned int runcount;
 
-  cv::Mat image, img;
-  for(int i = 0; i < 5; i++) cap >> image;
-  img = image(cv::Rect(X1, Y1, X2 - X1, Y2 - Y1)); //crop
-  cv::warpPerspective(img, img, M2, img.size());
-
-  cv::Mat canny, canny2;
-  cv::Mat gray, grayBI;
-
-  cv::cvtColor(img, gray, CV_BGR2GRAY);
-  cv::GaussianBlur(gray, grayBI, cv::Size(0,0), 4);
-  cv::Canny(grayBI, canny, 30, 40); //prev 200, 20
+  //double t = cv::getTickCount();
+  cv::Mat image, img, canny, gray, grayBI;
   std::vector<cv::Vec3f> circles;
+  for(int i = 0; i < 10; i++) cap >> image;
+  for(runcount = 0; runcount < attempts; runcount++) {
+    cap >> image;
+    img = image(cv::Rect(X1, Y1, X2-X1, 283)); //crop
+    cv::warpPerspective(img, img, M2, img.size());
+    cv::cvtColor(img, gray, CV_BGR2GRAY);
+    //cv::bilateralFilter(gray, grayBI, 5, 75, 75);
+    cv::GaussianBlur(gray, grayBI, cv::Size(0,0), 4);
+    cv::Canny(grayBI, canny, 30, 40);
+    cv::HoughCircles(gray, circles, CV_HOUGH_GRADIENT, 2, 300, 50, 65, 60, 85); //60, 85
 
-  /// Apply the Hough Transform to find the circles
-  cv::HoughCircles(gray, circles, CV_HOUGH_GRADIENT, 2, 300, 50, 65, 60, 85); //60, 85
+    if(!circles.empty()) break;
+  }
+
   return circles;
 }
 
@@ -185,20 +130,7 @@ Color Camera::getTokenColor() {
   bgrhsv[Color::YELLOW] = std::make_pair(cv::Vec6d(39, 117, 101, 40, 173, 117), "Yellow");
   bgrhsv[Color::GRAY] = std::make_pair(cv::Vec6d(37, 48, 25, 74, 129, 48), "Gray");
   bgrhsv[Color::NONE] = std::make_pair(cv::Vec6d(29, 24, 25, 110, 54, 31), "None");
-  int sum = 0;
-  cv::Mat img, bgr, hsv;
-  for(int i = 0; i < 10; i++) cap >> img;
-  cv::Rect roi(100, 100, 350, 220);
-  bgr = img(roi);
-  cv::cvtColor(bgr, hsv, cv::COLOR_BGR2HSV);
-  std::vector<double> avgs(6, 0);
-  for(int i = 0; i < bgr.cols; i++) for(int j = 0; j < bgr.rows; j++) {
-    for(int k = 0; k < 3; k++) avgs[k] += bgr.at<cv::Vec3b>(j, i)[k];
-    for(int k = 0; k < 3; k++) avgs[k + 3] += hsv.at<cv::Vec3b>(j, i)[k];
-    sum++;
-  }
-  for(double& s : avgs) s /= sum;
-  /*int b, g, r, h, s, v, sum;
+  int b, g, r, h, s, v, sum;
   b = g = r = h = s = v = sum = 0;
   cv::Mat src, bgr, hsv;
   cv::Rect roi;
@@ -230,22 +162,40 @@ Color Camera::getTokenColor() {
   avgs.push_back(h/sum);
   avgs.push_back(s/sum);
   avgs.push_back(v/sum);
-*/
+  double diff = 0;
   std::map<Color,double> distances;
-  for(auto& kv : bgrhsv) for(int j = 0; j < 6; j++) distances[kv.first] += std::pow(avgs[j] - kv.second.first[j], 2);
-  for(auto& kv : bgrhsv) distances[kv.first] = std::sqrt(distances[kv.first]);
- 
-  Color token_color;
+  for(auto& kv : bgrhsv) {
+    double total = 0;
+    for(int j = 0; j < 6; j++) {
+      diff = avgs[j] - kv.second.first[j];
+      total += diff * diff;
+    }
+    total = std::sqrt(total);
+    distances[kv.first] = total;
+  }
+  Color tokenColor;
   double min = 700;
   for(auto& kv : distances) if(kv.second < min) {
     min = kv.second;
-    token_color = kv.first;
+    tokenColor = kv.first;
   }
 
-  if(token_color == Color::BLUE || token_color == Color::CYAN) token_color = (avgs[1] > 70) ? Color::CYAN : Color::BLUE;
+  if (tokenColor == Color::BLUE) if(avgs[1] > 70) tokenColor = Color::CYAN;
+  else if(tokenColor == Color::CYAN) if(avgs[1] < 70) tokenColor = Color::BLUE;
 
-  std::cout << bgrhsv[token_color].second << " detected" << std::endl;
+
+  if(tokenColor == Color::BLUE) std::cout << "Blue Detected" << std::endl;
+  else if (tokenColor == Color::CYAN) std::cout << "Cyan Detected" << std::endl;
+  else std::cout << bgrhsv[tokenColor].second << " detected" << std::endl;
   std::cout << "(B, G, R): (" << avgs[0] << ", " << avgs[1] << ", " << avgs[2] << ")" << std::endl;
   std::cout << "(H, S, V): (" << avgs[3] << ", " << avgs[4] << ", " << avgs[5] << ")" << std::endl;
-  return token_color;
+
+  return tokenColor;
+}
+
+bool Camera::checkSortingPlate() {
+  cv::Mat img;
+  for(int i = 0; i < 5; i++) cap >> img;
+  //cv::imwrite("tokenarmclear.jpg", img);
+  return true;
 }
