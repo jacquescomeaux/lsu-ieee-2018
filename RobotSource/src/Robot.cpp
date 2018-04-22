@@ -149,11 +149,17 @@ bool Robot::center() {
   int iter = 0;
   if(!int_cam.atIntersection(true)) return false;
   for(bool found = int_cam.getTokenErrors(&x, &y); (iter++ < 100) && (std::abs(x) >= x_tol || std::abs(y) >= y_tol); found = int_cam.getTokenErrors(&x, &y)) {
-    if(!found) continue;
-    //std::cout << "nudging" << std::endl;
+    if(!found) {
+      std::cout << "circle not found; undoing previous nudge" << std::endl;
+      nudge(Direction::LEFT, x);
+      nudge(Direction::BACK, y);
+      continue;
+    }
+    std::cout << "nudging" << std::endl;
     nudge(Direction::RIGHT, x);
     nudge(Direction::FRONT, y);
   }
+  if(iter == 100) std::cout << "iter = 100" << std::endl;
   std::cout << "Robot.center() Done" << std::endl << std::endl;
   return int_cam.atIntersection(true);
 }

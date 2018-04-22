@@ -22,30 +22,10 @@ void LineFollower::align(VelocityVector v, int range) const {
   transmitChar(' ');
   transmitChar('f');
   std::this_thread::sleep_for(std::chrono::seconds(2));
-  //std::this_thread::sleep_for(std::chrono::seconds(10));
   transmitChar(' ');
   std::cout << "Done snapping to line" << std::endl << std::endl;
 }
 
 void LineFollower::toggleCalibration() const {
   transmitChar('c');
-}
-
-/*void LineFollower::startCentering(bool cross, int offset) const {
-  transmitChar('/');
-  transmitIndex(offset);
-  char centerChar = cross ? '|' : '\\';
-  transmitChar(centerChar);
-  
-  //std::this_thread::sleep_for(std::chrono::seconds(6)); //prev 6 secs
-  //transmitChar(centerChar);
-  //transmitChar(' ');
-}
-*/
-
-void LineFollower::center() const {
-  transmitChar('|');
-  std::this_thread::sleep_for(std::chrono::seconds(6));
-  transmitChar('|');
-  transmitChar(' ');
 }
