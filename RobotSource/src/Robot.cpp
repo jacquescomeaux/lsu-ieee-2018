@@ -85,4 +85,22 @@ bool Robot::center(bool cross, int offset) {
   return true;
 }
 
+bool Robot::intSeen() {
+  float x, y;
+  int certainty = 0;
+  int not_certainty = 0;
+  for(int i = 0; i < 5; ++i) {
+    if(int_cam.getTokenErrors(&x, &y, 1)) {
+    certainty++;
+    not_certainty = 0;
+    }
+    else {
+      not_certainty++;
+    }
+    if(certainty > 1) return true;
+    else if (not_certainty > 2) return false;
+  }
+  return false;
+}
+
 SortBot::SortBot() : control(*this) {}

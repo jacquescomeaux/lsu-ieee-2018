@@ -25,6 +25,7 @@ class Robot : public Drivetrain, public LineFollower {
     bool followUntilIntersection(Direction);
     bool tokenSeen();
     bool center(bool, int);
+    bool intSeen();
 };
 
 class SortBot : public Robot, public SortingSystem {
