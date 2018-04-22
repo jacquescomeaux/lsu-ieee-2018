@@ -242,9 +242,12 @@ Color Camera::getTokenColor() {
     min = kv.second;
     tokenColor = kv.first;
   }
-  //std::cout << bgrhsv[tokenColor].second << " detected" << std::endl;
-  //std::cout << "(B, G, R): (" << avgs[0] << ", " << avgs[1] << ", " << avgs[2] << ")" << std::endl;
-  //std::cout << "(H, S, V): (" << avgs[3] << ", " << avgs[4] << ", " << avgs[5] << ")" << std::endl;
 
+  if(tokenColor == Color::BLUE) if(avgs[1] > 70) tokenColor = Color::CYAN;
+  else if(tokenColor == Color::CYAN) if(avgs[1] < 70) tokenColor = Color::BLUE;
+
+  std::cout << bgrhsv[tokenColor].second << " detected" << std::endl;
+  std::cout << "(B, G, R): (" << avgs[0] << ", " << avgs[1] << ", " << avgs[2] << ")" << std::endl;
+  std::cout << "(H, S, V): (" << avgs[3] << ", " << avgs[4] << ", " << avgs[5] << ")" << std::endl;
   return tokenColor;
 }
