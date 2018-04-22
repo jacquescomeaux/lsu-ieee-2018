@@ -160,6 +160,13 @@ bool Robot::center() {
   return int_cam.atIntersection(true);
 }
 
+bool Robot::findIntersection(Direction dir) {
+  if(dir == Direction::NONE) return false;
+  if(dir == Direction::CLOCKWISE) return false;
+  if(dir == Direction::COUNTER_CLOCKWISE) return false;
+  return findIntersection(resolveDirection(dir));
+}
+
 bool Robot::findIntersection(VelocityVector v) {
   for(double speed_scalar = 1; speed_scalar > 0.3; speed_scalar -= 0.1) {
     Drivetrain::travel(v, -1.2, true);
@@ -197,7 +204,7 @@ bool Robot::goToIntersection(int int_num) {
     if(!followUntilIntersection(follow_vect)) while(!findIntersection(follow_vect));
     location = new_loc;
     current_intersection = shortest_route[i];
-    if(!center()) return false;
+    //if(!center()) if(!centreturn false;
   }
   return true;
 }

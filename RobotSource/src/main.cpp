@@ -79,7 +79,7 @@ int main() {
   if(!robot.setCurrentIntersection(20)) std::cout << "setCurrentIntersection failed";
   
   //collect tokens
-  int visited = robot.followPath(collection_path, true);
+  unsigned int visited = robot.followPath(collection_path, true);
   std::cout << "followPath finished, visited " << visited << " tokens" << std::endl;
   if(visited != collection_path.size()) return 0;
   
@@ -93,17 +93,17 @@ int main() {
     Direction::BACK, Direction::BACK, Direction::LEFT
   };
   double dist_sequence[6] = {16.97, 12, 16.97, 16.97, 12, 16.97};
-  Color color_sequence[7] = {Color::YELLOW, Color::MAGENTA, Color::CYAN, Color::RED, Color::GREEN, Color::BLUE, Color::GRAY}
+  Color color_sequence[7] = {Color::YELLOW, Color::MAGENTA, Color::CYAN, Color::RED, Color::GREEN, Color::BLUE, Color::GRAY};
   for(int i = 0; i < 6; i++) {
     robot.travel(drop_sequence[i], 70, dist_sequence[i], true);
     robot.dropTokenStack(color_sequence[i]);
     robot.setSpeed(70);
     robot.travel(box_sequence[i], 70, 10, true);
-    robot.moveUntilLine(drop_sequence[(i+3)%6], 80);
+    robot.moveUntilLine(drop_sequence[(i+3)%6]);
     robot.align(box_sequence[i], 5);
     robot.followLine(box_sequence[i]);
     robot.travel(box_sequence[i], 70, 8, false);
-    if(!robot.followUntilIntersection(box_sequence[i])) while(!findIntersection(box_sequence[i]));
+    if(!robot.followUntilIntersection(box_sequence[i])) while(!robot.findIntersection(box_sequence[i]));
     robot.center();
   }
 

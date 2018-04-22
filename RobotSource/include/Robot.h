@@ -36,6 +36,7 @@ class Robot : public Drivetrain, public LineFollower {
     void followLine(Direction) const;
     bool moveUntilLine(Direction);
     bool moveUntilLine(VelocityVector);
+    bool findIntersection(Direction);
     bool findIntersection(VelocityVector);
     bool followUntilIntersection(Direction);
     bool followUntilIntersection(VelocityVector);

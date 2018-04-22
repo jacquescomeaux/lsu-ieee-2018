@@ -58,10 +58,12 @@ bool Camera::onLine() {
 
 bool Camera::atIntersection(bool check_for_circle) {
   if(check_for_circle) {
+    std::cout << "checking for cirlc:" << std::endl;
     double x, y;
     int seen = 0;
-    for(int i = 0; i < 5; i++) if(getTokenErrors(&x, &y)) seen++;
-    return seen > 3;
+    for(int i = 0; i < 10; i++) if(getTokenErrors(&x, &y)) seen++;
+    std::cout << "seen: " << seen << std::endl;
+    return seen > 8;
   }
   else {
     //if(countBlack() > 160) return true;
