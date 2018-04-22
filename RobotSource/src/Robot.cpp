@@ -19,11 +19,11 @@ Coord Robot::getLocation() const {
 VelocityVector Robot::determineVelocityVector(Coord dest) const {
   VelocityVector diff(dest.x - location.x, dest.y - location.y, 0);
   VelocityVector v(base_speed * cos(diff.angle), base_speed * sin(diff.angle), 0);
-  std::cout << "current location: " << location.x << "<-x y->" << location.y << std::endl;
+  /*std::cout << "current location: " << location.x << "<-x y->" << location.y << std::endl;
   std::cout << "destination: "<< dest.x << "<-x y->" << dest.y << std::endl;
   std::cout << "diff: " << diff.x << "<-x y->" << diff.y << std::endl;
   std::cout << "v   : "<< v.x << "<-x y->" << v.y << std::endl;
-  return v;
+  */return v;
 }
 
 VelocityVector Robot::resolveDirection(Direction dir) const {
@@ -145,9 +145,9 @@ bool Robot::center() {
   static const double y_tol = 0.1;
   double x = x_tol;
   double y = y_tol;
-  if(!int_cam.atIntersection(true)) return false;
+  //if(!int_cam.atIntersection(true)) return false;
   //LineFollower::center();
-  std::cout << "Done with line follow centering, starting camera centering" << std::endl;
+  std::cout << "starting camera centering" << std::endl;
   int iter = 0;
   if(!int_cam.atIntersection(true)) return false;
   for(bool found = int_cam.getTokenErrors(&x, &y); (iter++ < 100) && (std::abs(x) >= x_tol || std::abs(y) >= y_tol); found = int_cam.getTokenErrors(&x, &y)) {

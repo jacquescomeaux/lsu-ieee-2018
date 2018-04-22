@@ -80,5 +80,27 @@ int main() {
   if(!robot.setCurrentIntersection(20)) std::cout << "setCurrentIntersection failed";
   int visited = robot.followPath(collection_path, true);
   std::cout << "followPath finished, visited " << visited << " tokens" << std::endl;
+  if(visited != collection_path.size()) return 0;
+  for(int i = 0; i < NUM_LINES; i++) {
+    robot.travel(drop_sequence[i], 70, blind_sequence[i], true);
+    robot.dropTokenStack(Color::RED);
+    if(i == 5) break;
+    robot.setSpeed(70);
+    robot.travel(box_sequence[i], 70, 10, true);
+    robot.moveUntilLine(drop_sequence[(i+3)%6], 80);
+    robot.align(box_sequence[i], 5);
+    robot.followLine(box_sequence[i]);
+    robot.travel(box_sequence[i], 70, 8, false);
+    if(!robot.intSeen()) robot.followUntilIntersection(box_sequence[i]);
+    robot.center(type_sequence[i], offset_sequence[5-i]);
+  }
+
+  //robot.travel(Direction::FRONT_RIGHT, 50, 48, true);
+  robot.travel(Direction::FRONT_RIGHT, 65, 16, true);
+  for(int i = 0; i < 5; i++) {
+    robot.followUntilIntersection(Direction::FRONT_RIGHT);
+    robot.followLine(Direction::FRONT_RIGHT);
+    robot.travel(Direction::FRONT_RIGHT, 65, 6, false);
+  }
   return 0;
 }
