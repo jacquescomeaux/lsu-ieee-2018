@@ -44,7 +44,7 @@ class Robot : public Drivetrain, public LineFollower {
     bool followWhileIntersection(VelocityVector);
     bool tokenSeen();
     bool center();
-    bool goToIntersection(int);
+    bool goToIntersection(int, bool centering);
     bool setCurrentIntersection(int int_num);
     void recover();
 };

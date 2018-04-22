@@ -88,7 +88,7 @@ bool Robot::moveUntilLine(Direction dir) {
   if(dir == Direction::NONE) return false;
   if(dir == Direction::CLOCKWISE) return false;
   if(dir == Direction::COUNTER_CLOCKWISE) return false;
-  return moveUntilLine(resolveDirection(dir));
+  return moveUntilLine(resolveDirection(dir, 70));
 }
 
 bool Robot::moveUntilLine(VelocityVector v) {
@@ -181,7 +181,7 @@ bool Robot::findIntersection(VelocityVector v) {
   return false;
 }
 
-bool Robot::goToIntersection(int int_num) {
+bool Robot::goToIntersection(int int_num, bool centering) {
   /*if(!int_cam.atIntersection(true)) {
   std::cout << "Calling recover\n";
   recover();
@@ -200,12 +200,15 @@ bool Robot::goToIntersection(int int_num) {
     VelocityVector follow_vect = determineVelocityVector(new_loc);
     std::cout << "going to int " << shortest_route[i] << std::endl;
     LineFollower::followLine(follow_vect, 2);
-    Drivetrain::travel(follow_vect, distance/2, true);
-    LineFollower::align(follow_vect, 2);
+    if(distance < 18) {
+      Drivetrain::travel(follow_vect, distance/2, true);
+      LineFollower::align(follow_vect, 2);
+    }
+    else Drivetrain::travel(follow_vect, 10, false);
     if(!followUntilIntersection(follow_vect)) while(!findIntersection(follow_vect));
     location = new_loc;
     current_intersection = shortest_route[i];
-    if(!center()) return false;
+    //if(centering) if(!center()) return false;
   }
   return true;
 }
@@ -227,7 +230,8 @@ int SortBot::followPath(std::vector<int>& path, bool sorting) {
   setSpeed(80);
   int visited = 0;
   for(unsigned int i = 0; i < path.size(); i++) {
-    if(!goToIntersection(path[i])) break;
+    if(!goToIntersection(path[i], true)) break;
+    if(!center()) break;
     if(sorting) sortToken();
     visited = i + 1;
   }

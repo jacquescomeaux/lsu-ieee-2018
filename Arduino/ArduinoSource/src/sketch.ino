@@ -30,8 +30,7 @@ unsigned int receiveIndex() {
 
 Fixed receiveFixed() {
   union eight_byte_object x;
-  unsigned long start = millis();
-  while(Serial.available() < 8) if((millis() - start) > 20000) Serial.write(Serial.read());
+  while(Serial.available() < 8);
   Serial.readBytes(x.chars, 8);
   return Fixed(x.number);
 }
@@ -101,13 +100,9 @@ void parseCommand() {
       break;
     }
     case 't': {
-      Serial.write('0');
       VelocityVector v = receiveVelocityVector();
-      Serial.write('1');
       Fixed dist = receiveFixed();
-      Serial.write('2');
       robot->travel(v, dist);
-      Serial.write('3');
       break;
     }
     case 's': {
