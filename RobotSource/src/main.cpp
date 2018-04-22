@@ -74,7 +74,7 @@ int main() {
   robot.toggleCalibration();
   
   //get to first intersection
-  robot.setSpeed(80);
+  /*robot.setSpeed(80);
   robot.align(Direction::LEFT, 6);
   while(!robot.followUntilIntersection(Direction::LEFT)) robot.travel(Direction::LEFT, 80, -0.75, false);
   robot.center();
@@ -84,16 +84,15 @@ int main() {
   unsigned int visited = robot.followPath(collection_path, true);
   std::cout << "followPath finished, visited " << visited << " tokens" << std::endl;
   if(visited != collection_path.size()) return 0;
-  
+  */
   
   //TEMP get to last intersection 
-  /*robot.setSpeed(80);
+  robot.setSpeed(80);
   robot.align(Direction::RIGHT, 6);
   while(!robot.followUntilIntersection(Direction::RIGHT)) robot.travel(Direction::RIGHT, 80, -0.75, false);
   robot.center();
   if(!robot.setCurrentIntersection(21)) std::cout << "setCurrentIntersection failed";
-  */
-
+  
   //drop off tokens
   Direction drop_sequence[6] = {
     Direction::BACK_RIGHT, Direction::RIGHT, Direction::FRONT_RIGHT,
@@ -121,16 +120,16 @@ int main() {
   //get to center square
   //if(!robot.setCurrentIntersection(20)) std::cout << "setCurrentIntersection failed";
   robot.followLine(Direction::FRONT_RIGHT);
-  robot.travel(Direction::FRONT_RIGHT, 70, 34, true);
+  robot.travel(Direction::FRONT_RIGHT, 70, 44, true);
   robot.stop();
-  robot.travel(Direction::FRONT_RIGHT, 70, 10, true);
+  robot.travel(Direction::FRONT_RIGHT, 70, 20, true);
   //robot.goToIntersection(2, false);
   //robot.travel(Direction::FRONT_RIGHT, 70, 18, true);
   robot.dropTokenStack(color_sequence[6]);
 
   //return to start
-  robot.travel(Direction::FRONT, 65, 46, true);
-  robot.travel(Direction::LEFT, 65, 6, true);
+  robot.travel(Direction::FRONT, 65, 44, true);
+  robot.travel(Direction::LEFT, 65, 8, true);
 
   return 0;
 }

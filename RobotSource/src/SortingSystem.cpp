@@ -8,13 +8,22 @@ SortingSystem::SortingSystem() :
   plate_position(0) {}
 
 bool SortingSystem::pickUpToken() {
-  //static int c = 1;
+  static const Color color_sequence[24] = {
+    Color::RED, Color::RED, Color::RED, Color::RED, Color::RED,
+    Color::BLUE, Color::BLUE, Color::BLUE,
+    Color::CYAN, Color::CYAN, Color::CYAN, Color::CYAN, Color::CYAN,
+    Color::YELLOW, Color::YELLOW, Color::YELLOW, Color::YELLOW, Color::YELLOW,
+    Color::MAGENTA, Color::MAGENTA, Color::MAGENTA, Color::MAGENTA,
+    Color::GREEN, Color::GREEN
+  };
+  static int c = 0;
   transmitChar('p');
   waitForChar('p');
   std::cout << "done waiting" << std::endl;
+  Color seen = color_sequence[c];
   //Color seen = static_cast<Color>(c);//
-  Color seen = token_cam.getTokenColor();
-  //if(++c > 7) c = 1;
+  //Color seen = token_cam.getTokenColor();
+  if(++c > 24) c = 0;
   std::cout << "color checked" << std::endl;
   //if(seen == Color::NONE || seen == Color::WHITE || seen == Color::BLACK) return false;
   if(seen == Color::NONE || seen == Color::WHITE || seen == Color::BLACK) seen = Color::GRAY;

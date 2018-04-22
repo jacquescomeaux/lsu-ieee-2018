@@ -1,0 +1,54 @@
+[Sun Apr 22 16:30:39 2018] Processing megaatmega2560 (platform: atmelavr; board: megaatmega2560; framework: arduino)
+--------------------------------------------------------------------------------------------------------------------------------------------------------------
+Verbose mode can be enabled via `-v, --verbose` option
+PLATFORM: Atmel AVR > Arduino Mega or Mega 2560 ATmega2560 (Mega 2560)
+SYSTEM: ATMEGA2560 16MHz 8KB RAM (248KB Flash)
+Converting sketch.ino
+Library Dependency Finder -> http://bit.ly/configure-pio-ldf
+LDF MODES: FINDER(chain) COMPATIBILITY(light)
+Collected 25 compatible libraries
+Scanning dependencies...
+Dependency Graph
+|-- <QTRSensors> v3.0.0
+Compiling .pioenvs/megaatmega2560/src/sketch.ino.cpp.o
+Linking .pioenvs/megaatmega2560/firmware.elf
+Checking program size
+text	   data	    bss	    dec	    hex	filename
+4578	    148	    270	   4996	   1384	.pioenvs/megaatmega2560/firmware.elf
+Building .pioenvs/megaatmega2560/firmware.hex
+Configuring upload protocol...
+AVAILABLE: wiring
+CURRENT: upload_protocol = wiring
+Looking for upload port...
+
+Warning! Please install `99-platformio-udev.rules` and check that your board's PID and VID are listed in the rules.
+http://docs.platformio.org/en/latest/faq.html#platformio-udev-rules
+Auto-detected: /dev/ttyACM0
+Uploading .pioenvs/megaatmega2560/firmware.hex
+
+avrdude: AVR device initialized and ready to accept instructions
+
+Reading | ################################################## | 100% 0.01s
+
+avrdude: Device signature = 0x1e9801 (probably m2560)
+avrdude: reading input file ".pioenvs/megaatmega2560/firmware.hex"
+avrdude: writing flash (4726 bytes):
+
+Writing | ################################################## | 100% 0.86s
+
+avrdude: 4726 bytes of flash written
+avrdude: verifying flash memory against .pioenvs/megaatmega2560/firmware.hex:
+avrdude: load data flash data from input file .pioenvs/megaatmega2560/firmware.hex:
+avrdude: input file .pioenvs/megaatmega2560/firmware.hex contains 4726 bytes
+avrdude: reading on-chip flash data:
+
+Reading | ################################################## | 100% 0.63s
+
+avrdude: verifying ...
+avrdude: 4726 bytes of flash verified
+
+avrdude: safemode: Fuses OK (E:FD, H:D8, L:FF)
+
+avrdude done.  Thank you.
+
+================================================================ [SUCCESS] Took 6.97 seconds ================================================================

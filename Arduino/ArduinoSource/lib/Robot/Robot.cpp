@@ -114,7 +114,12 @@ void Robot::setTravelStop(bool stopping) {
 SortBot::SortBot() {}
 
 void SortBot::update() {
-  continueSorting();
+  //static long last_time = 0;
+  //long this_time = millis();
+  static bool running = true;
+  if(running) continueSorting();
+  //last_time = this_time;
+  running = !running;
   Robot::update();
 }
 
