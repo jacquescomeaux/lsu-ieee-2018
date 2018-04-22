@@ -145,8 +145,6 @@ bool Robot::center() {
   static const double y_tol = 0.1;
   double x = x_tol;
   double y = y_tol;
-  //if(!int_cam.atIntersection(true)) return false;
-  //LineFollower::center();
   std::cout << "starting camera centering" << std::endl;
   int iter = 0;
   if(!int_cam.atIntersection(true)) return false;
@@ -204,7 +202,7 @@ bool Robot::goToIntersection(int int_num) {
     if(!followUntilIntersection(follow_vect)) while(!findIntersection(follow_vect));
     location = new_loc;
     current_intersection = shortest_route[i];
-    //if(!center()) if(!centreturn false;
+    if(!center()) return false;
   }
   return true;
 }

@@ -16,9 +16,6 @@ Flag Drivetrain::checkDestination(bool stopping) {
   for(int i = 0; i < 2; i++) { //only two encoders working
     if((wheels[i].getPosition() - starting_positions[i]).mag() < steps_to_travel) continue;
     if(stopping) stop();
-    const Fixed speeds[4] = {0, 0, 0, 0};
-    correctWheelSpeeds(speeds);
-    //adjustWheelSpeeds(speeds); //changed this
     Serial.write('+');
     return Flag::TRAVELLING;
   }

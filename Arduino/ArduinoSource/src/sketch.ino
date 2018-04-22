@@ -81,14 +81,15 @@ void parseCommand() {
   switch(command) {
     case 'c': robot->toggleFlags(Flag::CALIBRATING_LINE); break;
     case 'f': robot->setFlags(Flag::FOLLOWING_LINE); break;
-    
+   
+    //picocom testing case — changing this will not break stuff — use it for whatever is needed
     case '"': {
       robot->move(VelocityVector(0, 70, 0));
       //robot->setTravelStop(true);
       //robot->travel(VelocityVector(-120, 0, 0), 5);
       break;
     }
-    case '/': robot->setCenterOffset(receiveIndex()); break;
+    case '/': robot->setFollowOffset(receiveIndex()); break;
     case '.': robot->setFollowRange(receiveIndex()); break;
     case 'k': robot->setTravelStop(receiveBool()); break;
     case 'm': robot->move(receiveVelocityVector()); break;
@@ -124,10 +125,6 @@ void parseCommand() {
 
     case 'd': robot->dropNextTokenStack(); break;
     
-    case '|': robot->toggleFlags(Flag::CENTERING); break;
-    //case '|': robot->toggle(Flag::CENTERING_CROSS); break;
-    //case '\\': robot->toggle(Flag::CENTERING_CORNER); break;
-
     default: robot->stop();
   }
 }
@@ -138,7 +135,6 @@ void setup() {
   TWBR = ((F_CPU /400000l) - 16) / 2; //change i2c clock to 400KHz
   robot->stop();
   while(!robot->ready());
-  //Serial.println("Robot ready");
   delay(500);
 }
 

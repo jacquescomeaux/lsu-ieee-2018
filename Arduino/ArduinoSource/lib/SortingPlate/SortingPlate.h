@@ -12,8 +12,6 @@ class SortingPlate {
     Adafruit_StepperMotor* motor;
     void stepForward(unsigned int);
     void stepBackward(unsigned int);
-    void quickstepForward(unsigned int);
-    void quickstepBackward(unsigned int);
   public:
     SortingPlate(Adafruit_StepperMotor*);
     bool ready();

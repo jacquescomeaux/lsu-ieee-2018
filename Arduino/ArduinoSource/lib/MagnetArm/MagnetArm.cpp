@@ -44,8 +44,6 @@ void MagnetArm::pickUpToken() {
 }
 
 void MagnetArm::storeToken() {
-  //magnet->run(BACKWARD); //maybe short reverse in polarity will help it drop
-  //delay(50);
   demagnetize();
 }
 

@@ -43,7 +43,6 @@ void LineSensor::calibrateSensors() {
 
 void LineSensor::getLineErrors(Fixed* x, Fixed* y, Fixed* rot, int offset, int range) {
   readSensors();
-  //Fixed x, y, rot;
   int fi = offset % 16;
   int bi = fi + 16;
   int li = ((offset + 24) % 16) + 8;
@@ -60,40 +59,4 @@ void LineSensor::getLineErrors(Fixed* x, Fixed* y, Fixed* rot, int offset, int r
   r = getLinePosition(ri, range, false);
   *x = (b - f) * SINES[fi];
   *y = (r - l)  * COSINES[ri];
-  //VelocityVector errors(x, y, rot);
-  //return errors;
 }
-
-void LineSensor::getIntersectionErrors(Fixed* x, Fixed* y, Fixed* rot) {
-  static const Fixed ZERO = 0;
-  *x = ZERO;
-  *y = ZERO;
-  *rot = ZERO;
-  //VelocityVector errors(ZERO, ZERO, ZERO);
-  //return errors;
-}
-
-
-/*void LineSensor::getCrossIntersectionErrors(Fixed* x, Fixed* y, Fixed* rot, int offset) {
-  readSensors();
-  Fixed x_p, y_p, rot_p, x_s, y_s, rot_s;
-  getLineErrors(&x_p, &y_p, &rot_p, offset, 4);
-  getLineErrors(&x_s, &y_s, &rot_s, (offset + 8) % 32, 4);
-  *x = x_p + x_s;
-  *y = y_p + y_s;
-  *rot = SINES[4] * SINES[4] * (rot_p + rot_s);
-}
-
-void LineSensor::getCornerIntersectionErrors(Fixed* x, Fixed* y, Fixed* rot, int offset) {
-  readSensors();
-  int bi = (offset + 16) % 32;
-  int di = (bi + 4) % 32;
-  int ri = (bi + 8) % 32;
-  Fixed x_d, y_d, rot_d;
-  getLineErrors(&x_d, &y_d, &rot_d, di, 1);
-  Fixed b = getLinePosition(bi % 32, 1, false);
-  Fixed r = getLinePosition(ri % 32, 1, false);
-  *x = x_d + b * COSINES[di] + r * SINES[(di + 8) % 32];
-  *y = y_d + b * SINES[di] + r * COSINES[(di + 8) % 32];
-  *rot = Fixed(0);
-}*/

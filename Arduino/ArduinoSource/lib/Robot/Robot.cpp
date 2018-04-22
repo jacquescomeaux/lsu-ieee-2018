@@ -2,7 +2,7 @@
 
 Robot::Robot() :
   stopped(true),
-  center_offset(0),
+  follow_offset(0),
   follow_range(2),
   flags(Flag::NONE),
   edge_detectors {
@@ -18,7 +18,6 @@ Robot::Robot() :
 
 void Robot::checkEdges() {
   //for(ProximitySensor& s : edge_detectors) if(s.edgeDetected()) stop();
-
   /* COMMENTED OUT WORKING CODE */
   /*if(current_direction == Direction::FRONT) if(edge_detectors[1].edgeDetected()) stop();
   if(current_direction == Direction::BACK) if(edge_detectors[3].edgeDetected()) stop();
@@ -28,9 +27,6 @@ void Robot::checkEdges() {
 
 void Robot::stop() {
   flags &= ~Flag::FOLLOWING_LINE;
-  flags &= ~Flag::CENTERING;
-  //flags &= ~Flag::CENTERING_CROSS;
-  //flags &= ~Flag::CENTERING_CORNER;
   Drivetrain::stop();
   resetPIDData();
 }
@@ -55,7 +51,7 @@ void Robot::update() {
   if((dt[1] > 0) ? (last_ran[1] = time) : false) {
     if((flags & Flag::FOLLOWING_LINE) != Flag::NONE) {
       Fixed xcrr, ycrr, rcrr;
-      getLineCorrections(&xcrr, &ycrr, &rcrr, center_offset, follow_range);
+      getLineCorrections(&xcrr, &ycrr, &rcrr, follow_offset, follow_range);
       veer(xcrr, ycrr, rcrr);
     }
   }
@@ -76,27 +72,6 @@ void Robot::update() {
   if((dt[5] > 0) ? (last_ran[5] = time) : false) {
     if((flags & Flag::TRAVELLING) != Flag::NONE) flags &= ~Drivetrain::checkDestination((flags & Flag::STOP_AFTER_TRAVEL) != Flag::NONE);
   }
-  
-  if((dt[6] > 0) ? (last_ran[6] = time) : false) {
-    if((flags & Flag::CENTERING) != Flag::NONE) {
-      Fixed xcrr, ycrr, rcrr;
-      getCenterCorrections(&xcrr, &ycrr, &rcrr);
-      veer(xcrr, ycrr, rcrr);
-    }
-    /*if((flags & Flag::CENTERING_CROSS) != Flag::NONE) {
-      Fixed xcrr, ycrr, rcrr;
-      getCenterCorrections(&xcrr, &ycrr, &rcrr, true, center_offset);
-      veer(xcrr, ycrr, rcrr);
-    }*/
-  }
-  
-  /*if((dt[7] > 0) ? (last_ran[7] = time) : false) {
-    if((flags & Flag::CENTERING_CORNER) != Flag::NONE) {
-      Fixed xcrr, ycrr, rcrr;
-      getCenterCorrections(&xcrr, &ycrr, &rcrr, false, center_offset);
-      veer(xcrr, ycrr, rcrr);
-    }
-  }*/
   
   if(!ready()) stop();
 }
@@ -123,8 +98,8 @@ void Robot::toggleFlags(Flag settings) {
   flags ^= settings;
 }
 
-void Robot::setCenterOffset(unsigned int offset) {
-  center_offset = offset;
+void Robot::setFollowOffset(unsigned int offset) {
+  follow_offset = offset;
 }
 
 void Robot::setFollowRange(unsigned int range) {

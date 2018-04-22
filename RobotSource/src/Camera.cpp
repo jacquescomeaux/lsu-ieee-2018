@@ -61,9 +61,9 @@ bool Camera::atIntersection(bool check_for_circle) {
     std::cout << "checking for cirlc:" << std::endl;
     double x, y;
     int seen = 0;
-    for(int i = 0; i < 10; i++) if(getTokenErrors(&x, &y)) seen++;
+    for(int i = 0; i < 3; i++) if(getTokenErrors(&x, &y)) seen++;
     std::cout << "seen: " << seen << std::endl;
-    return seen > 8;
+    return seen > 2;
   }
   else {
     //if(countBlack() > 160) return true;
@@ -238,18 +238,19 @@ Color Camera::getTokenColor() {
     //distances[kv.first] = total;
   //}
   for(auto& kv : bgrhsv) distances[kv.first] = std::sqrt(distances[kv.first]);
-  Color tokenColor;
+  Color token_color;
   double min = 700;
   for(auto& kv : distances) if(kv.second < min) {
     min = kv.second;
-    tokenColor = kv.first;
+    token_color = kv.first;
   }
 
-  if(tokenColor == Color::BLUE) if(avgs[1] > 70) tokenColor = Color::CYAN;
-  else if(tokenColor == Color::CYAN) if(avgs[1] < 70) tokenColor = Color::BLUE;
+  if(token_color == Color::BLUE || token_color == Color::CYAN) token_color = (avgs[1] > 70) ? Color::CYAN : Color::BLUE;
+  //if(token_color == Color::BLUE) if(avgs[1] > 70) token_color = Color::CYAN;
+  //else if(token_color == Color::CYAN) if(avgs[1] < 70) token_color = Color::BLUE;
 
-  std::cout << bgrhsv[tokenColor].second << " detected" << std::endl;
+  std::cout << bgrhsv[token_color].second << " detected" << std::endl;
   std::cout << "(B, G, R): (" << avgs[0] << ", " << avgs[1] << ", " << avgs[2] << ")" << std::endl;
   std::cout << "(H, S, V): (" << avgs[3] << ", " << avgs[4] << ", " << avgs[5] << ")" << std::endl;
-  return tokenColor;
+  return token_color;
 }

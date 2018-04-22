@@ -9,7 +9,6 @@
 class LineSensor {
   private:
     const int NUM_PINS;
-    //const unsigned int line_threshold;
     const Fixed OFFSET_TO_RAD;
     unsigned char pins[32];
     QTRSensorsRC qtrrc1, qtrrc2;
@@ -21,7 +20,6 @@ class LineSensor {
     LineSensor();
     void calibrateSensors();
     void getLineErrors(Fixed*, Fixed*, Fixed*, int offset, int range);
-    void getIntersectionErrors(Fixed*, Fixed*, Fixed*);
 };
 
 #endif//LINESENSOR_H
