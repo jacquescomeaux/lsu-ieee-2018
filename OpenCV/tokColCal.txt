@@ -1,7 +1,0 @@
-Use Hough Circle Transform to get circle (token in image)
-Mask out every other pixel
-Find average RGB value
-Find extreme RGB value
-pass them to main algorithm
-in main algorithm build function to calculate ranges based off
-	calibrated RGB
